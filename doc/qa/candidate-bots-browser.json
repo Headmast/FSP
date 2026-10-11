@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "base": "ce709f85e8fe5a5ad63d79b5e71f9a7778eb19f5",
+  "checked_at": "2026-10-11T20:54:28.884Z",
+  "url": "http://127.0.0.1:8067/",
+  "scenarios": [
+    "desktop",
+    "mobile-390",
+    "explicit-consent",
+    "shared-decisions",
+    "decline",
+    "notification-opt-out",
+    "notification-delivery",
+    "reload",
+    "FAQ-search",
+    "HTML-escaping",
+    "scoped-reset",
+    "keyboard-send",
+    "corrupt-storage",
+    "blocked-storage",
+    "no-external-requests"
+  ],
+  "browserErrors": [],
+  "externalRequests": []
+}

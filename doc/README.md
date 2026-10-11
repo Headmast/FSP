@@ -6,6 +6,8 @@
 
 ## Материалы проекта
 
+[Информационный бот Telegram/MAX на моках](../bots/README.md), [результат и проверки BOT-001](responses/BOT-001.md).
+
 [Корневое оглавление](../README.md) объединяет документацию, презентацию, демо, прототип и дополнительные материалы.
 
 - [Презентация PPTX](presentation/trudyazhki-fsp.pptx), [HTML](presentation/trudyazhki-fsp.html), [текст выступления](presentation/trudyazhki-fsp.md).
