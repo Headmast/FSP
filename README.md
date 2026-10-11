@@ -172,7 +172,7 @@ GitHub показывает HTML как исходный код: для прос
 | Валидация оценки | [Протокол](doc/qa/validation-protocol.md), [результаты](doc/qa/validation-results.md), [разбор вопросов](doc/qa/validation-question-review.md) |
 | Выпуск MVP | [Отчёт выпуска](doc/delivery/mvp-release.md), [результаты](doc/qa/release-results.md) |
 | Помощник и черновики | [Checkpoint](doc/delivery/assistant-checkpoint.md), [общий evidence](doc/qa/assistant-checkpoint.json), [HTTPS-сценарий](doc/qa/assistant-checkpoint-live.json) |
-| Аудит полноты | [Исходный аудит](doc/qa/scope-audit.md), [повторная сверка](doc/qa/scope-recheck.md) |
+| Аудит полноты | [Актуальная сверка](doc/qa/scope-current.md), [исходный аудит](doc/qa/scope-audit.md), [историческая сверка](doc/qa/scope-recheck.md) |
 | Восстановление демо | [Watchdog](doc/qa/watchdog-results.md), [evidence восстановления](doc/qa/watchdog-recovery.json) |
 | Все свидетельства | [Каталог QA](doc/qa/) — отчёты, JSON и скриншоты |
 
