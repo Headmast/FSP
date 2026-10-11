@@ -18,6 +18,9 @@ class ProfileChanges(Changes):
     experience_months:Annotated[int,Field(ge=0,le=600)]|None=None
     roles:list[Literal['developer','reviewer','mentor','lead']]|None=None
     soft_skills:list[Literal['communication','teamwork','planning','feedback']]|None=None
+    preferred_work_formats:list[Literal['remote','office','hybrid']]|None=None
+    preferred_employment_types:list[Literal['full_time','part_time','project','internship']]|None=None
+    preferred_task_types:list[Literal['development','testing','support','architecture','mentoring']]|None=None
     desired_grade:Literal['Junior','Middle']|None=None
     description:Annotated[str,Field(max_length=3000)]|None=None
 
@@ -34,6 +37,8 @@ class NeedChanges(Changes):
     salary_min:Annotated[int,Field(ge=1,le=2147483647)]|None=None
     salary_max:Annotated[int,Field(ge=1,le=2147483647)]|None=None
     work_format:Literal['remote','office','hybrid']|None=None
+    employment_type:Literal['','full_time','part_time','project','internship']|None=None
+    task_types:list[Literal['development','testing','support','architecture','mentoring']]|None=None
     next_step:Annotated[str,Field(max_length=200)]|None=None
 
 class NewNeed(BaseModel):
@@ -45,4 +50,6 @@ class NewNeed(BaseModel):
     salary_min:Annotated[int,Field(ge=1,le=2147483647)]
     salary_max:Annotated[int,Field(ge=1,le=2147483647)]
     work_format:Literal['remote','office','hybrid']
+    employment_type:Literal['','full_time','part_time','project','internship']=''
+    task_types:list[Literal['development','testing','support','architecture','mentoring']]=Field(default_factory=list)
     next_step:Annotated[str,Field(max_length=200)]='Знакомство с командой'

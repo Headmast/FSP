@@ -205,6 +205,48 @@
             },
             "x-django-field": "MultipleChoiceField"
           },
+          "preferred_work_formats": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "remote",
+                "office",
+                "hybrid"
+              ]
+            },
+            "x-django-field": "CatalogChoices",
+            "description": "Optional stated preferences. Omitted in browser save clears to []; omitted in V2 patch preserves value. Public before contact; empty is unknown, never a positive match."
+          },
+          "preferred_employment_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "full_time",
+                "part_time",
+                "project",
+                "internship"
+              ]
+            },
+            "x-django-field": "CatalogChoices",
+            "description": "Optional stated preferences. Omitted in browser save clears to []; omitted in V2 patch preserves value. Public before contact; empty is unknown, never a positive match."
+          },
+          "preferred_task_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "development",
+                "testing",
+                "support",
+                "architecture",
+                "mentoring"
+              ]
+            },
+            "x-django-field": "CatalogChoices",
+            "description": "Optional stated preferences. Omitted in browser save clears to []; omitted in V2 patch preserves value. Public before contact; empty is unknown, never a positive match."
+          },
           "description": {
             "type": "string",
             "maxLength": 3000,
@@ -422,6 +464,33 @@
             ],
             "minLength": 1,
             "x-django-field": "TypedChoiceField"
+          },
+          "employment_type": {
+            "type": "string",
+            "enum": [
+              "",
+              "full_time",
+              "part_time",
+              "project",
+              "internship"
+            ],
+            "x-django-field": "TypedChoiceField",
+            "description": "Optional fixed employment choice; empty means unknown."
+          },
+          "task_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "development",
+                "testing",
+                "support",
+                "architecture",
+                "mentoring"
+              ]
+            },
+            "x-django-field": "CatalogChoices",
+            "description": "Optional fixed task codes. All demand task codes must be in candidate preferences for a match; a partial overlap is a conflict to clarify. Free tasks text is not inferred."
           },
           "next_step": {
             "type": "string",
@@ -1573,6 +1642,42 @@
               "type": "string"
             }
           },
+          "preferred_work_formats": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "remote",
+                "office",
+                "hybrid"
+              ]
+            }
+          },
+          "preferred_employment_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "full_time",
+                "part_time",
+                "project",
+                "internship"
+              ]
+            }
+          },
+          "preferred_task_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "development",
+                "testing",
+                "support",
+                "architecture",
+                "mentoring"
+              ]
+            }
+          },
           "published": {
             "type": "boolean"
           },
@@ -1604,6 +1709,9 @@
           "experience_months",
           "roles",
           "soft_skills",
+          "preferred_work_formats",
+          "preferred_employment_types",
+          "preferred_task_types",
           "published",
           "desired_grade",
           "confirmed_grade",
@@ -1877,6 +1985,29 @@
           "work_format": {
             "type": "string"
           },
+          "employment_type": {
+            "type": "string",
+            "enum": [
+              "",
+              "full_time",
+              "part_time",
+              "project",
+              "internship"
+            ]
+          },
+          "task_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "development",
+                "testing",
+                "support",
+                "architecture",
+                "mentoring"
+              ]
+            }
+          },
           "tasks": {
             "type": "string"
           },
@@ -1895,7 +2026,98 @@
           "currency",
           "salary_period",
           "salary_tax",
-          "work_format"
+          "work_format",
+          "employment_type",
+          "task_types"
+        ],
+        "additionalProperties": false
+      },
+      "ApiConditionRow": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "enum": [
+              "work_format",
+              "employment_type",
+              "task_types"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "candidate": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "required": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "candidate_labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "required_labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "candidate",
+          "required",
+          "candidate_labels",
+          "required_labels",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "ApiConditions": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "const": "conditions-v1"
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiConditionRow"
+            }
+          },
+          "conflicts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiConditionRow"
+            }
+          },
+          "unknown": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiConditionRow"
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "matches",
+          "conflicts",
+          "unknown",
+          "note"
         ],
         "additionalProperties": false
       },
@@ -1929,13 +2151,17 @@
             "items": {
               "type": "string"
             }
+          },
+          "conditions": {
+            "$ref": "#/components/schemas/ApiConditions"
           }
         },
         "required": [
           "declared_matches",
           "declared_gaps",
           "confirmation",
-          "unknown"
+          "unknown",
+          "conditions"
         ],
         "additionalProperties": false
       },
@@ -2057,6 +2283,32 @@
               "null"
             ]
           },
+          "employment_type": {
+            "type": "string",
+            "enum": [
+              "",
+              "full_time",
+              "part_time",
+              "project",
+              "internship"
+            ]
+          },
+          "task_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "development",
+                "testing",
+                "support",
+                "architecture",
+                "mentoring"
+              ]
+            }
+          },
+          "conditions": {
+            "$ref": "#/components/schemas/ApiConditions"
+          },
           "status": {
             "type": "string"
           },
@@ -2105,6 +2357,9 @@
           "salary_period",
           "salary_tax",
           "work_format",
+          "employment_type",
+          "task_types",
+          "conditions",
           "status",
           "created_at",
           "responded_at",
@@ -2235,6 +2490,24 @@
               "type": "string"
             }
           },
+          "work_formats": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "employment_types": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "task_types": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
           "features": {
             "type": "array",
             "items": {
@@ -2251,6 +2524,9 @@
           "skills",
           "roles",
           "soft_skills",
+          "work_formats",
+          "employment_types",
+          "task_types",
           "features",
           "fsp_source"
         ],
@@ -2501,6 +2777,48 @@
                     },
                     "x-django-field": "MultipleChoiceField"
                   },
+                  "preferred_work_formats": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "remote",
+                        "office",
+                        "hybrid"
+                      ]
+                    },
+                    "x-django-field": "CatalogChoices",
+                    "description": "Optional stated preferences. Omitted in browser save clears to []; omitted in V2 patch preserves value. Public before contact; empty is unknown, never a positive match."
+                  },
+                  "preferred_employment_types": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "full_time",
+                        "part_time",
+                        "project",
+                        "internship"
+                      ]
+                    },
+                    "x-django-field": "CatalogChoices",
+                    "description": "Optional stated preferences. Omitted in browser save clears to []; omitted in V2 patch preserves value. Public before contact; empty is unknown, never a positive match."
+                  },
+                  "preferred_task_types": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "development",
+                        "testing",
+                        "support",
+                        "architecture",
+                        "mentoring"
+                      ]
+                    },
+                    "x-django-field": "CatalogChoices",
+                    "description": "Optional stated preferences. Omitted in browser save clears to []; omitted in V2 patch preserves value. Public before contact; empty is unknown, never a positive match."
+                  },
                   "description": {
                     "type": "string",
                     "maxLength": 3000,
@@ -2664,6 +2982,33 @@
                     "minLength": 1,
                     "x-django-field": "TypedChoiceField"
                   },
+                  "employment_type": {
+                    "type": "string",
+                    "enum": [
+                      "",
+                      "full_time",
+                      "part_time",
+                      "project",
+                      "internship"
+                    ],
+                    "x-django-field": "TypedChoiceField",
+                    "description": "Optional fixed employment choice; empty means unknown."
+                  },
+                  "task_types": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "development",
+                        "testing",
+                        "support",
+                        "architecture",
+                        "mentoring"
+                      ]
+                    },
+                    "x-django-field": "CatalogChoices",
+                    "description": "Optional fixed task codes. All demand task codes must be in candidate preferences for a match; a partial overlap is a conflict to clarify. Free tasks text is not inferred."
+                  },
                   "next_step": {
                     "type": "string",
                     "maxLength": 200,
@@ -2769,6 +3114,33 @@
                     ],
                     "minLength": 1,
                     "x-django-field": "TypedChoiceField"
+                  },
+                  "employment_type": {
+                    "type": "string",
+                    "enum": [
+                      "",
+                      "full_time",
+                      "part_time",
+                      "project",
+                      "internship"
+                    ],
+                    "x-django-field": "TypedChoiceField",
+                    "description": "Optional fixed employment choice; empty means unknown."
+                  },
+                  "task_types": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "development",
+                        "testing",
+                        "support",
+                        "architecture",
+                        "mentoring"
+                      ]
+                    },
+                    "x-django-field": "CatalogChoices",
+                    "description": "Optional fixed task codes. All demand task codes must be in candidate preferences for a match; a partial overlap is a conflict to clarify. Free tasks text is not inferred."
                   },
                   "next_step": {
                     "type": "string",
@@ -6042,6 +6414,17 @@
                     "soft_skills": [
                       "teamwork"
                     ],
+                    "preferred_work_formats": [
+                      "remote",
+                      "hybrid"
+                    ],
+                    "preferred_employment_types": [
+                      "full_time"
+                    ],
+                    "preferred_task_types": [
+                      "development",
+                      "testing"
+                    ],
                     "description": "Приватное описание",
                     "contact_email": "contact@demo.invalid",
                     "contact_phone": "+70000000000",
@@ -6056,6 +6439,18 @@
                   "explode": true
                 },
                 "soft_skills": {
+                  "style": "form",
+                  "explode": true
+                },
+                "preferred_work_formats": {
+                  "style": "form",
+                  "explode": true
+                },
+                "preferred_employment_types": {
+                  "style": "form",
+                  "explode": true
+                },
+                "preferred_task_types": {
                   "style": "form",
                   "explode": true
                 }
@@ -6080,6 +6475,17 @@
                     "soft_skills": [
                       "teamwork"
                     ],
+                    "preferred_work_formats": [
+                      "remote",
+                      "hybrid"
+                    ],
+                    "preferred_employment_types": [
+                      "full_time"
+                    ],
+                    "preferred_task_types": [
+                      "development",
+                      "testing"
+                    ],
                     "description": "Приватное описание",
                     "contact_email": "contact@demo.invalid",
                     "contact_phone": "+70000000000",
@@ -6094,6 +6500,18 @@
                   "explode": true
                 },
                 "soft_skills": {
+                  "style": "form",
+                  "explode": true
+                },
+                "preferred_work_formats": {
+                  "style": "form",
+                  "explode": true
+                },
+                "preferred_employment_types": {
+                  "style": "form",
+                  "explode": true
+                },
+                "preferred_task_types": {
                   "style": "form",
                   "explode": true
                 }
@@ -6857,10 +7275,20 @@
                     "salary_min": 90000,
                     "salary_max": 120000,
                     "work_format": "remote",
+                    "employment_type": "full_time",
+                    "task_types": [
+                      "development"
+                    ],
                     "next_step": "Знакомство с командой",
                     "company_name": "Демо компания",
                     "company_email": "company@demo.invalid"
                   }
+                }
+              },
+              "encoding": {
+                "task_types": {
+                  "style": "form",
+                  "explode": true
                 }
               }
             },
@@ -6878,10 +7306,20 @@
                     "salary_min": 90000,
                     "salary_max": 120000,
                     "work_format": "remote",
+                    "employment_type": "full_time",
+                    "task_types": [
+                      "development"
+                    ],
                     "next_step": "Знакомство с командой",
                     "company_name": "Демо компания",
                     "company_email": "company@demo.invalid"
                   }
+                }
+              },
+              "encoding": {
+                "task_types": {
+                  "style": "form",
+                  "explode": true
                 }
               }
             }
@@ -7011,6 +7449,21 @@
                 "demo_history"
               ]
             }
+          },
+          {
+            "name": "conditions",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "compatible",
+                "matched",
+                "conflicts"
+              ],
+              "description": "Requires own Need. compatible permits unknowns but rejects known conflicts; matched requires all three dimensions known/matching; conflicts requires at least one conflict. Does not change score."
+            }
           }
         ]
       },
@@ -7138,6 +7591,21 @@
                 "demo_history"
               ]
             }
+          },
+          {
+            "name": "conditions",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "compatible",
+                "matched",
+                "conflicts"
+              ],
+              "description": "Requires own Need. compatible permits unknowns but rejects known conflicts; matched requires all three dimensions known/matching; conflicts requires at least one conflict. Does not change score."
+            }
           }
         ]
       }
@@ -7146,7 +7614,7 @@
       "get": {
         "operationId": "candidate_get",
         "summary": "Доступная карточка кандидата · GET",
-        "description": "Visible when published + confirmed category OR this Company has an accepted invitation. Private texts/contacts only under that Company grant. Optional need must be own; absent selects first own matching-grade need. Safe finished witnesses of current grade.\nRepeat: \nRead effects: May lazily create own Company.",
+        "description": "Visible when published + confirmed category OR this Company has an accepted invitation. Private texts/contacts only under that Company grant. Optional need must be own and of candidate current grade; absent selects first own matching-grade need. Safe finished witnesses of current grade.\nRepeat: \nRead effects: May lazily create own Company.",
         "x-django-url-name": "candidate",
         "x-role": "employer",
         "x-repeat": "",
@@ -7168,7 +7636,7 @@
             }
           },
           "404": {
-            "description": "Invisible/missing candidate or malformed/foreign need",
+            "description": "Invisible/missing candidate or malformed/foreign/wrong-grade need",
             "content": {
               "text/html": {
                 "schema": {
@@ -7246,7 +7714,7 @@
       "head": {
         "operationId": "candidate_head",
         "summary": "Доступная карточка кандидата · HEAD",
-        "description": "Visible when published + confirmed category OR this Company has an accepted invitation. Private texts/contacts only under that Company grant. Optional need must be own; absent selects first own matching-grade need. Safe finished witnesses of current grade.\nRepeat: \nRead effects: May lazily create own Company.",
+        "description": "Visible when published + confirmed category OR this Company has an accepted invitation. Private texts/contacts only under that Company grant. Optional need must be own and of candidate current grade; absent selects first own matching-grade need. Safe finished witnesses of current grade.\nRepeat: \nRead effects: May lazily create own Company.",
         "x-django-url-name": "candidate",
         "x-role": "employer",
         "x-repeat": "",
@@ -7269,7 +7737,7 @@
             }
           },
           "404": {
-            "description": "Invisible/missing candidate or malformed/foreign need",
+            "description": "Invisible/missing candidate or malformed/foreign/wrong-grade need",
             "headers": {
               "Content-Type": {
                 "required": true,
@@ -7351,7 +7819,7 @@
       "get": {
         "operationId": "candidate_resume_get",
         "summary": "PDF доступного кандидата · GET",
-        "description": "Same visibility and contact grant as HTML, including old grant after unpublishing. No contact leak in PDF without acceptance.\nRepeat: \nRead effects: May lazily create own Company.",
+        "description": "Same visibility and contact grant as HTML, including old grant after unpublishing. No contact leak in PDF without acceptance. Optional owned same-grade need compares stated conditions.\nRepeat: \nRead effects: May lazily create own Company.",
         "x-django-url-name": "candidate-resume",
         "x-role": "employer",
         "x-repeat": "",
@@ -7377,7 +7845,7 @@
             }
           },
           "404": {
-            "description": "Invisible/missing candidate",
+            "description": "Invisible/missing candidate or malformed/foreign/wrong-grade need",
             "content": {
               "text/html": {
                 "schema": {
@@ -7430,13 +7898,32 @@
               "maximum": 9223372036854775807,
               "description": "Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404."
             }
+          },
+          {
+            "name": "need",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9223372036854775807,
+                  "description": "Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404."
+                },
+                {
+                  "const": ""
+                }
+              ],
+              "description": "Omitted/empty selects the documented default; explicit ID must be owned/visible."
+            }
           }
         ]
       },
       "head": {
         "operationId": "candidate_resume_head",
         "summary": "PDF доступного кандидата · HEAD",
-        "description": "Same visibility and contact grant as HTML, including old grant after unpublishing. No contact leak in PDF without acceptance.\nRepeat: \nRead effects: May lazily create own Company.",
+        "description": "Same visibility and contact grant as HTML, including old grant after unpublishing. No contact leak in PDF without acceptance. Optional owned same-grade need compares stated conditions.\nRepeat: \nRead effects: May lazily create own Company.",
         "x-django-url-name": "candidate-resume",
         "x-role": "employer",
         "x-repeat": "",
@@ -7465,7 +7952,7 @@
             }
           },
           "404": {
-            "description": "Invisible/missing candidate",
+            "description": "Invisible/missing candidate or malformed/foreign/wrong-grade need",
             "headers": {
               "Content-Type": {
                 "required": true,
@@ -7519,6 +8006,25 @@
               "minimum": 1,
               "maximum": 9223372036854775807,
               "description": "Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404."
+            }
+          },
+          {
+            "name": "need",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9223372036854775807,
+                  "description": "Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404."
+                },
+                {
+                  "const": ""
+                }
+              ],
+              "description": "Omitted/empty selects the documented default; explicit ID must be owned/visible."
             }
           }
         ]
@@ -12648,6 +13154,18 @@
                 "demo_history"
               ]
             }
+          },
+          {
+            "name": "conditions",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "",
+                "compatible",
+                "matched",
+                "conflicts"
+              ]
+            }
           }
         ],
         "x-required-scopes": [
@@ -15163,6 +15681,15 @@
               "type": "boolean",
               "default": false
             }
+          },
+          {
+            "name": "need_id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Own need of the candidate grade; compare conditions in PDF."
           }
         ],
         "responses": {

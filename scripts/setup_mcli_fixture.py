@@ -22,6 +22,6 @@ for role,user in [('candidate',candidate),('employer',employer)]:
     items[role]={'candidate_id':candidate.profile.pk,'need_id':need.pk,'invitation_id':invitation.pk,
         'result_id':candidate.profile.attempt_set.filter(status='finished').first().pk}
     for kind in ['cli','mcp']:
-        items[role][kind]=issue_token(user,'QA '+kind,kind,contacts=kind=='cli')[1]
+        items[role][kind]=issue_token(user,'QA '+kind,kind,contacts=kind=='cli',drafts=True)[1]
 path=Path(sys.argv[1]);path.write_text(json.dumps(items));path.chmod(0o600)
 print('Synthetic fixture: ready')

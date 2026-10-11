@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F,Q
 from profiles.models import Profile
+from profiles.conditions import WORK_FORMATS, EMPLOYMENT_TYPES
 
 class Company(models.Model):
     user=models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
@@ -27,7 +28,9 @@ class Need(models.Model):
     tasks=models.TextField(max_length=1500)
     salary_min=models.PositiveIntegerField(validators=[MinValueValidator(1)])
     salary_max=models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    work_format=models.CharField(max_length=10,choices=[('remote','Удалённо'),('office','Офис'),('hybrid','Гибрид')])
+    work_format=models.CharField(max_length=10,choices=WORK_FORMATS)
+    employment_type=models.CharField(max_length=12,choices=EMPLOYMENT_TYPES,default='',blank=True)
+    task_types=models.JSONField(default=list,blank=True)
     next_step=models.CharField(max_length=200,default='Знакомство с командой')
     class Meta:
         constraints=[models.CheckConstraint(condition=Q(salary_min__gt=0)&Q(salary_max__gte=F('salary_min')),name='valid_need_salary')]

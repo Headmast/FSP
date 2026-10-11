@@ -6,6 +6,7 @@ from hiring.models import Need,Invitation
 from hiring.services import explain,contacts_allowed
 from assessments.models import Attempt
 from assessments.proofs import witness
+from profiles.conditions import snapshot_conditions
 
 
 def safe_proof(proof):
@@ -21,7 +22,7 @@ def matching(user,mode,need_id,candidate_id):
     explanation=explain(profile,need)
     context={'grade_requirement':need.grade,'candidate_grade':profile.confirmed_grade,
         'declared_matches':explanation['declared_matches'],'declared_gaps':explanation['declared_gaps'],
-        'unknown':explanation['unknown'],
+        'unknown':explanation['unknown'],'conditions':explanation['conditions'],
         'confirmation':safe_proof(explanation['confirmation']) if explanation['confirmation'] else None,
         'salary_min':need.salary_min,'salary_max':need.salary_max,'work_format':need.get_work_format_display()}
     proofs=[witness(item) for item in Attempt.objects.filter(candidate=profile,status='finished',grade=need.grade).order_by('-finished_at','-pk')]
@@ -36,5 +37,5 @@ def conversation(user,invitation_id):
     snapshot=invitation.snapshot
     context={'role':user.role,'status':invitation.status,
         'grade':snapshot['grade'],'salary_min':snapshot['salary_min'],'salary_max':snapshot['salary_max'],
-        'work_format':snapshot['work_format'],'accepted_results':[safe_proof(p) for p in snapshot.get('accepted_results',[])]}
+        'work_format':snapshot['work_format'],'conditions':snapshot_conditions(snapshot),'accepted_results':[safe_proof(p) for p in snapshot.get('accepted_results',[])]}
     return context,{'selected_invitation':invitation}

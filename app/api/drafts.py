@@ -182,7 +182,8 @@ def draft_data(draft,mcp=False,private=False):
     else:
         # No private payload or free text, even for a draft originally created through CLI.
         allowed={'city','name','title','grade','desired_grade','specialization','experience_months','roles','soft_skills',
-            'skills','salary_min','salary_max','work_format','candidate_id','accepted_attempts'}
+            'skills','salary_min','salary_max','work_format','employment_type','task_types',
+            'preferred_work_formats','preferred_employment_types','preferred_task_types','candidate_id','accepted_attempts'}
         preview={k:v for k,v in draft.payload.items() if k in allowed}
         for key in ['city','name','title']:
             if key in preview:preview[key]=label(preview[key],'Смотрите в веб-кабинете')

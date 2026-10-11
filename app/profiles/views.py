@@ -16,6 +16,7 @@ from .fsp_service import connect, disconnect
 from .models import FspLink
 from django.core.exceptions import ValidationError
 from .models import Profile
+from .conditions import preferences, labels, WORK_FORMATS, EMPLOYMENT_TYPES, TASK_TYPES, compare_conditions
 
 @role_required("candidate")
 @require_http_methods(["GET", "POST"])
@@ -40,7 +41,7 @@ def profile(request):
     return render(request, "profiles/profile.html", {"form": form, "profile": obj, "experiences": experiences})
 
 
-def build_pdf(profile, include_contacts=False):
+def build_pdf(profile, include_contacts=False, need=None):
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
     from reportlab.lib.styles import ParagraphStyle
@@ -55,6 +56,21 @@ def build_pdf(profile, include_contacts=False):
              f"Софт-скиллы (самоописание): {profile.soft_skill_labels or 'не указаны'}",
              f"Подтверждённая категория: {profile.confirmed_grade or 'не подтверждена'}", f"Результат теста: {profile.test_score:.0%}",
              f"ФСП: {profile.get_fsp_status_display()} (мок интеграции)"]
+    pref=preferences(profile)
+    texts.extend(['Предпочтения кандидата (не подтверждение навыков):',
+        'Формат работы: '+(', '.join(labels(pref['work_formats'],WORK_FORMATS)) or 'неизвестно'),
+        'Занятость: '+(', '.join(labels(pref['employment_types'],EMPLOYMENT_TYPES)) or 'неизвестно'),
+        'Типы задач: '+(', '.join(labels(pref['task_types'],TASK_TYPES)) or 'неизвестно')])
+    if need:
+        comparison=compare_conditions(profile,need)
+        texts.append('Сравнение с выбранной потребностью: '+need.title)
+        for key,title in [('matches','Совпадения'),('conflicts','Противоречия'),('unknown','Неизвестно')]:
+            texts.append(title+':')
+            for row in comparison[key]:
+                texts.append(row['label']+': кандидат — '+(', '.join(row['candidate_labels']) or 'неизвестно')+
+                    '; потребность — '+(', '.join(row['required_labels']) or 'неизвестно')+'. '+row['reason'])
+            if not comparison[key]:texts.append('Нет.')
+        texts.append(comparison['note'])
     for event in profile.achievement_events:
         texts.append(f"{event.event_name}: {event.occurred_on}, {event.discipline}, {event.result}, "
                      f"{'команда' if event.team else 'личное участие'} (источник: мок)")

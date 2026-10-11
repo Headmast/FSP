@@ -1,0 +1,6 @@
+<section data-testid="conditions"><h3>Условия до контакта</h3>
+<p>{{ conditions.note }}</p>
+<h4>Совпадения</h4><ul>{% for row in conditions.matches %}<li>{{ row.label }}: кандидат — {{ row.candidate_labels|join:', '|default:'неизвестно' }}; потребность — {{ row.required_labels|join:', '|default:'неизвестно' }}. {{ row.reason }}</li>{% empty %}<li>Совпадений пока нет.</li>{% endfor %}</ul>
+<h4>Противоречия</h4><ul>{% for row in conditions.conflicts %}<li>{{ row.label }}: кандидат — {{ row.candidate_labels|join:', '|default:'неизвестно' }}; потребность — {{ row.required_labels|join:', '|default:'неизвестно' }}. {{ row.reason }}</li>{% empty %}<li>Известных противоречий нет; неизвестные условия нужно уточнить.</li>{% endfor %}</ul>
+<h4>Неизвестно</h4><ul>{% for row in conditions.unknown %}<li>{{ row.label }}: кандидат — {{ row.candidate_labels|join:', '|default:'неизвестно' }}; потребность — {{ row.required_labels|join:', '|default:'неизвестно' }}. {{ row.reason }}</li>{% empty %}<li>Все три условия указаны обеими сторонами.</li>{% endfor %}</ul>
+</section>

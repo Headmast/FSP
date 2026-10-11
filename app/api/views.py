@@ -12,6 +12,7 @@ from django.http import FileResponse
 from accounts.identifiers import parse_identifier
 from profiles.models import Profile, FspLink, ROLES, SOFT_SKILLS
 from profiles.skills import SKILLS
+from profiles.conditions import WORK_FORMATS, EMPLOYMENT_TYPES, TASK_TYPES
 from profiles.views import build_pdf
 from assessments.models import Attempt
 from hiring.access import invitation_query
@@ -30,7 +31,8 @@ def owned_profile(request):
 @endpoint()
 def catalog(request):
     return reply(request, {'specializations':['ios_swift'],'grades':['Junior','Middle'],'skills':list(SKILLS),
-        'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'features':['read','drafts'],'fsp_source':'mock'})
+        'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'work_formats':dict(WORK_FORMATS),
+        'employment_types':dict(EMPLOYMENT_TYPES),'task_types':dict(TASK_TYPES),'features':['read','drafts','conditions-v1'],'fsp_source':'mock'})
 
 
 @endpoint('candidate')
@@ -43,14 +45,14 @@ def profile_private(request):
     return reply(request,private_profile(owned_profile(request)))
 
 
-def pdf_response(request,obj,grant):
+def pdf_response(request,obj,grant,need=None):
     require(not is_mcp(request))
     flag=request.GET.get('with_contacts','false')
     require(flag in {'false','true'},400,'INVALID_PARAMETER','with_contacts должен быть true/false.')
     with_contacts=flag=='true'
     if with_contacts:
         require(grant and 'contacts.read' in request.api_token.scopes)
-    return FileResponse(build_pdf(obj,include_contacts=with_contacts),as_attachment=True,filename='resume.pdf')
+    return FileResponse(build_pdf(obj,include_contacts=with_contacts,need=need),as_attachment=True,filename='resume.pdf')
 
 
 @endpoint('candidate')
@@ -144,7 +146,7 @@ def candidates(request):
     chosen=chosen_need(request)
     grade=request.GET.get('grade') or (chosen.grade if chosen else '')
     form=SearchForm({'need':chosen.pk if chosen else '', 'grade':grade, 'skill':request.GET.get('skill',''),
-        'fsp':request.GET.get('fsp_status','')},company=company)
+        'fsp':request.GET.get('fsp_status',''),'conditions':request.GET.get('conditions','')},company=company)
     require(form.is_valid(),400,'INVALID_FILTERS','Проверьте категорию, навык и потребность.')
     results=search(**form.cleaned_data)
     rows,pagination=paged(request,results)
@@ -162,7 +164,7 @@ def explanation_data(obj,chosen):
     from .serializers import proof_snapshot
     return {'declared_matches':value['declared_matches'],'declared_gaps':value['declared_gaps'],
         'confirmation':proof_snapshot(value['confirmation']) if value['confirmation'] else None,
-        'unknown':value['unknown']}
+        'unknown':value['unknown'],'conditions':value['conditions']}
 
 
 @endpoint('employer')
@@ -191,7 +193,9 @@ def candidate_private(request,pk):
 @endpoint('employer')
 def candidate_pdf(request,pk):
     obj,grant=visible_profile(company_read(request.user),parse_identifier(pk))
-    return pdf_response(request,obj,grant)
+    chosen=chosen_need(request)
+    require(not chosen or chosen.grade==obj.confirmed_grade,400,'INVALID_FILTERS','Категории не совпадают.')
+    return pdf_response(request,obj,grant,chosen)
 
 
 @endpoint()

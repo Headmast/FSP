@@ -30,4 +30,9 @@ def generate(mode,context):
             text+=('Проверьте условия и примите или отклоните предложение самостоятельно. Контакты открываются только после принятия.' if context['status']=='sent' else
                 'Согласуйте время встречи и критерии дальнейшего отбора. Помощник не бронирует встречу и не отправляет сообщения.')
     else:raise ValueError('Unsupported assistant mode')
+    if 'conditions' in context:
+        comparison=context['conditions']
+        text+='\nУсловия: совпадений '+str(len(comparison['matches']))+', противоречий '+str(len(comparison['conflicts']))+', неизвестных '+str(len(comparison['unknown']))+'.\n'+comparison['note']
+        for group in ['conflicts','unknown']:
+            for row in comparison[group]:text+='\n'+row['label']+': '+row['reason']
     return 'Мок помощника · внешний AI не вызывался.\n\n'+text

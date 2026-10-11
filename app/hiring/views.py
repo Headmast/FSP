@@ -17,6 +17,7 @@ from .access import visible_profile, invitation_query
 from .services import search,contacts_allowed,invite,decide,InvalidProof,explain
 from assessments.models import Attempt
 from assessments.proofs import witness
+from profiles.conditions import snapshot_conditions
 
 def posted_id(request, key):
     return parse_identifier(request.POST.get(key))
@@ -65,7 +66,7 @@ def candidates(request):
 def candidate(request,pk):
     company=company_for(request.user);profile,grant=visible_profile(company,pk)
     need_id=parse_identifier(request.GET.get('need'),required=False)
-    chosen=get_object_or_404(Need,pk=need_id,company=company) if need_id else Need.objects.filter(company=company,grade=profile.confirmed_grade).order_by('pk').first()
+    chosen=get_object_or_404(Need,pk=need_id,company=company,grade=profile.confirmed_grade) if need_id else Need.objects.filter(company=company,grade=profile.confirmed_grade).order_by('pk').first()
     return render(request,'hiring/candidate.html',{'profile':profile,'grant':grant,
         'needs':Need.objects.filter(company=company,grade=profile.confirmed_grade),'query':request.GET.urlencode(),'explanation':explain(profile,chosen),'chosen_need':chosen,
         'proofs':[witness(item) for item in Attempt.objects.filter(candidate=profile,status='finished',grade=profile.confirmed_grade).order_by('-finished_at')]})
@@ -73,8 +74,11 @@ def candidate(request,pk):
 @role_required('employer')
 @require_safe
 def resume(request,pk):
-    profile,grant=visible_profile(company_for(request.user),pk)
-    return FileResponse(build_pdf(profile,include_contacts=grant),as_attachment=True,filename='candidate-resume.pdf')
+    company=company_for(request.user)
+    profile,grant=visible_profile(company,pk)
+    need_id=parse_identifier(request.GET.get('need'),required=False)
+    chosen=get_object_or_404(Need,company=company,pk=need_id,grade=profile.confirmed_grade) if need_id else None
+    return FileResponse(build_pdf(profile,include_contacts=grant,need=chosen),as_attachment=True,filename='candidate-resume.pdf')
 
 @role_required('employer')
 @require_POST
@@ -109,7 +113,9 @@ def invitations(request):
         items.filter(viewed_at__isnull=True).update(viewed_at=timezone.now())
     elif request.user.role=='employer':items=invitation_query(request.user).select_related('candidate')
     else:raise PermissionDenied
-    return render(request,'hiring/invitations.html',{'items':items.order_by('-created_at')})
+    items=list(items.order_by('-created_at'))
+    for item in items:item.condition_comparison=snapshot_conditions(item.snapshot)
+    return render(request,'hiring/invitations.html',{'items':items})
 
 @role_required('candidate')
 @require_POST

@@ -49,10 +49,11 @@ def parser():
     candidates=group('candidates');search=command(candidates,'search','candidates',list=True)
     for name in ['grade','skill','fsp-status']:search.add_argument('--'+name)
     search.add_argument('--need-id',type=identifier)
+    search.add_argument('--conditions',choices=['compatible','matched','conflicts'])
     show=command(candidates,'show','candidates/{id}',id=True);show.add_argument('--need-id',type=identifier)
     command(candidates,'proofs','candidates/{id}/proofs',id=True,list=True)
     command(candidates,'private','candidates/{id}/private',id=True)
-    command(candidates,'resume','candidates/{id}/resume.pdf',id=True,pdf=True)
+    command(candidates,'resume','candidates/{id}/resume.pdf',id=True,pdf=True).add_argument('--need-id',type=identifier)
     drafts=group('drafts')
     command(drafts,'list','drafts',list=True)
     for action,path in [('show','drafts/{id}'),('cancel','drafts/{id}/cancel'),('open','drafts/{id}')]:
@@ -142,9 +143,9 @@ def run(args):
             if result['data']['approval_path']!=expected:raise ClientError('Неверный путь подтверждения.')
             if not webbrowser.open(api.server+expected):raise ClientError('Не удалось открыть браузер. Откройте '+api.server+expected,5)
             return
-        params={name:getattr(args,name,None) for name in ['limit','offset','grade','skill','fsp_status','need_id']}
+        params={name:getattr(args,name,None) for name in ['limit','offset','grade','skill','fsp_status','need_id','conditions']}
         if getattr(args,'output',None):
-            data=api.request('GET',path,params={'with_contacts':str(args.with_contacts).lower()},pdf=True)
+            data=api.request('GET',path,params={'with_contacts':str(args.with_contacts).lower(),'need_id':getattr(args,'need_id',None)},pdf=True)
             try:
                 with Path(args.output).open('xb') as stream:stream.write(data)
             except OSError:

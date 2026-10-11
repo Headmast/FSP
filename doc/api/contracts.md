@@ -593,6 +593,7 @@ Query (все необязательные):
 | grade | string; enum=(empty), Junior, Middle | См. поведение маршрута. |
 | skill | string | Comma-separated Swift, SwiftUI, UIKit, Combine, CoreData, Git, XCTest, URLSession; case/spacing aliases canonicalized; unknown skill is a form error. |
 | fsp | string; enum=(empty), no_history, demo_history | См. поведение маршрута. |
+| conditions | string; enum=(empty), compatible, matched, conflicts | Requires own Need. compatible permits unknowns but rejects known conflicts; matched requires all three dimensions known/matching; conflicts requires at least one conflict. Does not change score. |
 
 | Метод | Статус | Значение |
 | --- | --- | --- |
@@ -611,7 +612,7 @@ Query (все необязательные):
 
 Методы: **GET / HEAD**. Роль: **employer**.
 
-Visible when published + confirmed category OR this Company has an accepted invitation. Private texts/contacts only under that Company grant. Optional need must be own; absent selects first own matching-grade need. Safe finished witnesses of current grade.
+Visible when published + confirmed category OR this Company has an accepted invitation. Private texts/contacts only under that Company grant. Optional need must be own and of candidate current grade; absent selects first own matching-grade need. Safe finished witnesses of current grade.
 
 Повтор: Чтение текущего состояния.
 
@@ -626,12 +627,12 @@ Query (все необязательные):
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | Candidate HTML with grant-aware fields |
-| GET | 404 | Invisible/missing candidate or malformed/foreign need |
+| GET | 404 | Invisible/missing candidate or malformed/foreign/wrong-grade need |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Candidate HTML with grant-aware fields |
-| HEAD | 404 | Invisible/missing candidate or malformed/foreign need |
+| HEAD | 404 | Invisible/missing candidate or malformed/foreign/wrong-grade need |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -640,21 +641,27 @@ Query (все необязательные):
 
 Методы: **GET / HEAD**. Роль: **employer**.
 
-Same visibility and contact grant as HTML, including old grant after unpublishing. No contact leak in PDF without acceptance.
+Same visibility and contact grant as HTML, including old grant after unpublishing. No contact leak in PDF without acceptance. Optional owned same-grade need compares stated conditions.
 
 Повтор: Чтение текущего состояния.
 
 Побочные эффекты чтения: May lazily create own Company.
 
+Query (все необязательные):
+
+| Поле | Тип / границы | Правила |
+| --- | --- | --- |
+| need | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | application/pdf attachment |
-| GET | 404 | Invisible/missing candidate |
+| GET | 404 | Invisible/missing candidate or malformed/foreign/wrong-grade need |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | application/pdf attachment |
-| HEAD | 404 | Invisible/missing candidate |
+| HEAD | 404 | Invisible/missing candidate or malformed/foreign/wrong-grade need |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -1142,6 +1149,7 @@ Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private
 | grade | query | object; enum=Junior, Middle |
 | skill | query | string |
 | fsp_status | query | object; enum=no_history, demo_history |
+| conditions | query | object; enum=(empty), compatible, matched, conflicts |
 
 | Статус | Ответ |
 | --- | --- |
@@ -1314,6 +1322,7 @@ Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private
 | --- | --- | --- |
 | pk | path | integer |
 | with_contacts | query | boolean |
+| need_id | query | integer; minimum=1 |
 
 | Статус | Ответ |
 | --- | --- |
@@ -1695,6 +1704,9 @@ Experience formset is validated only when TOTAL_FORMS is present; INITIAL_FORMS 
 | experience_months | нет | integer; minimum=0; maximum=600 | Omitted/empty becomes 0; self-reported. |
 | roles | нет | array[string; enum=developer, reviewer, mentor, lead] | — |
 | soft_skills | нет | array[string; enum=communication, teamwork, planning, feedback] | — |
+| preferred_work_formats | нет | array[string; enum=remote, office, hybrid] | Optional stated preferences. Omitted in browser save clears to []; omitted in V2 patch preserves value. Public before contact; empty is unknown, never a positive match. |
+| preferred_employment_types | нет | array[string; enum=full_time, part_time, project, internship] | Optional stated preferences. Omitted in browser save clears to []; omitted in V2 patch preserves value. Public before contact; empty is unknown, never a positive match. |
+| preferred_task_types | нет | array[string; enum=development, testing, support, architecture, mentoring] | Optional stated preferences. Omitted in browser save clears to []; omitted in V2 patch preserves value. Public before contact; empty is unknown, never a positive match. |
 | description | нет | string; maxLength=3000 | Private until this company has an accepted invitation. Plain text, not HTML. |
 | contact_email | нет | string; maxLength=254 | Valid email when non-empty. |
 | contact_phone | нет | string; maxLength=40 | — |
@@ -1747,6 +1759,8 @@ salary_min/max are positive rubles before tax per month; max >= min. Creates a n
 | salary_min | да | integer; minimum=1; maximum=9223372036854775807 | — |
 | salary_max | да | integer; minimum=1; maximum=9223372036854775807 | — |
 | work_format | да | string; minLength=1; enum=remote, office, hybrid | — |
+| employment_type | нет | string; enum=(empty), full_time, part_time, project, internship | Optional fixed employment choice; empty means unknown. |
+| task_types | нет | array[string; enum=development, testing, support, architecture, mentoring] | Optional fixed task codes. All demand task codes must be in candidate preferences for a match; a partial overlap is a conflict to clarify. Free tasks text is not inferred. |
 | next_step | да | string; minLength=1; maxLength=200 | — |
 | recruiter | нет | integer; minimum=1; maximum=9223372036854775807 / '' | Optional HR of own Company; empty means unassigned. Invitation stores current HR separately; reassigning Need does not rewrite old invitations. |
 | company_name | да | string; minLength=1; maxLength=120 | — |
@@ -2096,6 +2110,9 @@ Actual wheel and source archive of this client version; hashes and byte sizes ch
 | experience_months | да | integer | — |
 | roles | да | array[string] | — |
 | soft_skills | да | array[string] | — |
+| preferred_work_formats | да | array[string; enum=remote, office, hybrid] | — |
+| preferred_employment_types | да | array[string; enum=full_time, part_time, project, internship] | — |
+| preferred_task_types | да | array[string; enum=development, testing, support, architecture, mentoring] | — |
 | published | да | boolean | — |
 | desired_grade | да | string | — |
 | confirmed_grade | да | string | — |
@@ -2184,8 +2201,32 @@ Actual wheel and source archive of this client version; hashes and byte sizes ch
 | salary_period | да | 'month' | — |
 | salary_tax | да | 'gross' | — |
 | work_format | да | string | — |
+| employment_type | да | string; enum=(empty), full_time, part_time, project, internship | — |
+| task_types | да | array[string; enum=development, testing, support, architecture, mentoring] | — |
 | tasks | нет | string | — |
 | next_step | нет | string | — |
+
+### ApiConditionRow
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| key | да | object; enum=work_format, employment_type, task_types | — |
+| label | да | string | — |
+| candidate | да | array[string] | — |
+| required | да | array[string] | — |
+| candidate_labels | да | array[string] | — |
+| required_labels | да | array[string] | — |
+| reason | да | string | — |
+
+### ApiConditions
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| version | да | 'conditions-v1' | — |
+| matches | да | array[ApiConditionRow] | — |
+| conflicts | да | array[ApiConditionRow] | — |
+| unknown | да | array[ApiConditionRow] | — |
+| note | да | string | — |
 
 ### ApiExplanation
 
@@ -2195,6 +2236,7 @@ Actual wheel and source archive of this client version; hashes and byte sizes ch
 | declared_gaps | да | array[string] | — |
 | confirmation | да | ApiProof / null | — |
 | unknown | да | array[string] | — |
+| conditions | да | ApiConditions | — |
 
 ### ApiMatch
 
@@ -2230,6 +2272,9 @@ Actual wheel and source archive of this client version; hashes and byte sizes ch
 | salary_period | да | string | — |
 | salary_tax | да | string | — |
 | work_format | да | ['string', 'null'] | — |
+| employment_type | да | string; enum=(empty), full_time, part_time, project, internship | — |
+| task_types | да | array[string; enum=development, testing, support, architecture, mentoring] | — |
+| conditions | да | ApiConditions | — |
 | status | да | string | — |
 | created_at | да | string | — |
 | responded_at | да | ['string', 'null'] | — |
@@ -2280,6 +2325,9 @@ Actual wheel and source archive of this client version; hashes and byte sizes ch
 | skills | да | array[string] | — |
 | roles | да | object | — |
 | soft_skills | да | object | — |
+| work_formats | да | object | — |
+| employment_types | да | object | — |
+| task_types | да | object | — |
 | features | да | array[string] | — |
 | fsp_source | да | 'mock' | — |
 
@@ -2342,6 +2390,9 @@ Prepare only, no business mutation. Each role may prepare its own kinds with rol
 | experience_months | нет | integer; minimum=0; maximum=600 |
 | roles | нет | array[string; enum=developer, reviewer, mentor, lead] |
 | soft_skills | нет | array[string; enum=communication, teamwork, planning, feedback] |
+| preferred_work_formats | нет | array[string; enum=remote, office, hybrid] |
+| preferred_employment_types | нет | array[string; enum=full_time, part_time, project, internship] |
+| preferred_task_types | нет | array[string; enum=development, testing, support, architecture, mentoring] |
 | description | нет | string; maxLength=3000 |
 | contact_email | нет | string; maxLength=254 |
 | contact_phone | нет | string; maxLength=40 |
@@ -2384,6 +2435,8 @@ Prepare only, no business mutation. Each role may prepare its own kinds with rol
 | salary_min | да | integer; minimum=1; maximum=9223372036854775807 |
 | salary_max | да | integer; minimum=1; maximum=9223372036854775807 |
 | work_format | да | string; minLength=1; enum=remote, office, hybrid |
+| employment_type | нет | string; enum=(empty), full_time, part_time, project, internship |
+| task_types | нет | array[string; enum=development, testing, support, architecture, mentoring] |
 | next_step | нет | string; minLength=1; maxLength=200 |
 | recruiter | нет | integer; minimum=1; maximum=9223372036854775807 / null / '' |
 
@@ -2406,6 +2459,8 @@ Prepare only, no business mutation. Each role may prepare its own kinds with rol
 | salary_min | нет | integer; minimum=1; maximum=9223372036854775807 |
 | salary_max | нет | integer; minimum=1; maximum=9223372036854775807 |
 | work_format | нет | string; minLength=1; enum=remote, office, hybrid |
+| employment_type | нет | string; enum=(empty), full_time, part_time, project, internship |
+| task_types | нет | array[string; enum=development, testing, support, architecture, mentoring] |
 | next_step | нет | string; minLength=1; maxLength=200 |
 | recruiter | нет | integer; minimum=1; maximum=9223372036854775807 / null / '' |
 

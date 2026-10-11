@@ -43,6 +43,23 @@ async def check(values):
                 assert 'fsp_get_contacts' not in names
                 call=await client.call_tool('fsp_get_profile' if role=='candidate' else 'fsp_search_candidates',{} if role=='candidate' else {'need_id':value['need_id']})
                 assert not call.is_error and call.structured_content['meta']['data_mode']=='demo'
+                if role=='employer':
+                    conditions=await client.call_tool('fsp_search_candidates',{'need_id':value['need_id'],'conditions':'compatible'})
+                    assert not conditions.is_error
+                    rows=conditions.structured_content['data']
+                    assert rows and 'preferred_work_formats' in rows[0]['profile']
+                    assert len(rows[0]['explanation']['conditions']['unknown'])==3
+                    assert not rows[0]['explanation']['conditions']['matches']
+                    result['conditions_stdio_'+mode]=True
+                if role=='candidate':
+                    prepared=await client.call_tool('fsp_prepare_profile',{'changes':{'preferred_work_formats':['remote'],'preferred_task_types':['testing']}})
+                else:
+                    prepared=await client.call_tool('fsp_prepare_need_update',{'id':value['need_id'],'changes':{'employment_type':'project','task_types':['testing']}})
+                assert not prepared.is_error
+                identifier=prepared.structured_content['data']['id']
+                cancelled=await client.call_tool('fsp_cancel_draft',{'id':identifier})
+                assert not cancelled.is_error
+                result[role+'_conditions_prepare_'+mode]=True
                 result[role+'_stdio_'+mode]=True
         # Native store and the packaged CLI, when the platform provides a protected backend.
         with tempfile.TemporaryDirectory() as directory:
@@ -54,6 +71,23 @@ async def check(values):
                 assert config.load('qa')[1]==value['cli']
                 completed=subprocess.run([sys.executable,'-m','fsp_client.cli','--connection','qa','--json','me'],capture_output=True,text=True,check=True)
                 assert json.loads(completed.stdout)['data']['role']==role
+                if role=='candidate':
+                    command=['profile','draft'];payload={'preferred_work_formats':['remote'],'preferred_task_types':['testing']}
+                    read_path='me/profile';condition_key='preferred_work_formats';unchanged=[]
+                else:
+                    command=['needs','update',str(value['need_id'])];payload={'employment_type':'project','task_types':['testing']}
+                    read_path=f'needs/{value["need_id"]}';condition_key='employment_type';unchanged=''
+                    completed=subprocess.run([sys.executable,'-m','fsp_client.cli','--connection','qa','--json','candidates','search','--need-id',str(value['need_id']),'--conditions','compatible'],capture_output=True,text=True,check=True)
+                    rows=json.loads(completed.stdout)['data'];assert rows and len(rows[0]['explanation']['conditions']['unknown'])==3
+                changes=Path(directory)/'changes.json';changes.write_text(json.dumps(payload))
+                completed=subprocess.run([sys.executable,'-m','fsp_client.cli','--connection','qa','--json',*command,'--file',str(changes)],capture_output=True,text=True,check=True)
+                prepared=json.loads(completed.stdout)['data'];assert set(payload)<=set(prepared['fields'])
+                verify_api=FspClient(base,value['cli'])
+                try:
+                    assert verify_api.get(read_path)['data'][condition_key]==unchanged
+                    verify_api.request('POST','drafts/'+prepared['id']+'/cancel',data={})
+                finally:verify_api.close()
+                result[role+'_conditions_native_cli']=True
                 result[role+'_native_keyring_cli']=True
             except ClientError as exc:
                 assert exc.exit_code==3

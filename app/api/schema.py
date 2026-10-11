@@ -1,4 +1,5 @@
 """OpenAPI 3.1 contract for the token API, independent of historical HTML routes."""
+from profiles.conditions import WORK_FORMATS, EMPLOYMENT_TYPES, TASK_TYPES
 S={'type':'string'}
 I={'type':'integer'}
 B={'type':'boolean'}
@@ -10,12 +11,16 @@ def obj(properties,required=None):
     return {'type':'object','properties':properties,'required':list(properties) if required is None else required,'additionalProperties':False}
 def ref(name):return {'$ref':'#/components/schemas/'+name}
 
+def choice(choices,empty=False):return {'type':'string','enum':([''] if empty else [])+[k for k,_ in choices]}
+
 schemas={
  'Meta':obj({'api_version':{'const':'1'},'data_mode':{'const':'demo'},'request_id':S}),
  'Pagination':obj({'limit':I,'offset':I,'total':I}),
  'Identity':obj({'id':I,'role':{'enum':['candidate','employer']},'token_kind':{'enum':['cli','mcp']},'scopes':array(S),'expires_at':S}),
  'Profile':obj({'id':I,'name':S,'city':S,'skills':array(S),'specialization':{'const':'ios_swift'},'experience_months':I,
-    'roles':array(S),'soft_skills':array(S),'published':B,'desired_grade':S,'confirmed_grade':S,'test_score':F,
+    'roles':array(S),'soft_skills':array(S),'preferred_work_formats':array(choice(WORK_FORMATS)),
+    'preferred_employment_types':array(choice(EMPLOYMENT_TYPES)),'preferred_task_types':array(choice(TASK_TYPES)),
+    'published':B,'desired_grade':S,'confirmed_grade':S,'test_score':F,
     'fsp_status':S,'self_declared':array(S)}),
  'Experience':obj({'id':I,'organization':S,'role':S,'months':I,'description':S}),
  'PrivateProfile':obj({'id':I,'contact_email':S,'contact_phone':S,'description':S,'experiences':array(ref('Experience'))}),
@@ -26,23 +31,30 @@ schemas={
  'Company':obj({'id':I,'name':S,'industry':S,'description':S},['id','name']),
  'CompanyState':obj({'state':{'enum':['ready','company_not_created']},'company':{'anyOf':[ref('Company'),{'type':'null'}]}}),
  'Need':obj({'id':I,'company_id':I,'title':S,'grade':S,'skills':array(S),'salary_min':I,'salary_max':I,
-    'currency':{'const':'RUB'},'salary_period':{'const':'month'},'salary_tax':{'const':'gross'},'work_format':S,'tasks':S,'next_step':S},
-    ['id','company_id','title','grade','skills','salary_min','salary_max','currency','salary_period','salary_tax','work_format']),
- 'Explanation':obj({'declared_matches':array(S),'declared_gaps':array(S),'confirmation':{'anyOf':[ref('Proof'),{'type':'null'}]},'unknown':array(S)}),
+    'currency':{'const':'RUB'},'salary_period':{'const':'month'},'salary_tax':{'const':'gross'},'work_format':S,
+    'employment_type':choice(EMPLOYMENT_TYPES,True),'task_types':array(choice(TASK_TYPES)),'tasks':S,'next_step':S},
+    ['id','company_id','title','grade','skills','salary_min','salary_max','currency','salary_period','salary_tax','work_format','employment_type','task_types']),
+ 'ConditionRow':obj({'key':{'enum':['work_format','employment_type','task_types']},'label':S,'candidate':array(S),'required':array(S),
+    'candidate_labels':array(S),'required_labels':array(S),'reason':S}),
+ 'Conditions':obj({'version':{'const':'conditions-v1'},'matches':array(ref('ConditionRow')),
+    'conflicts':array(ref('ConditionRow')),'unknown':array(ref('ConditionRow')),'note':S}),
+ 'Explanation':obj({'declared_matches':array(S),'declared_gaps':array(S),'confirmation':{'anyOf':[ref('Proof'),{'type':'null'}]},'unknown':array(S),'conditions':ref('Conditions')}),
  'Match':obj({'profile':ref('Profile'),'score':F,'parts':obj({'test':F,'skills':F,'fsp':F}),'explanation':ref('Explanation')}),
  'Candidate':obj({'profile':ref('Profile'),'contacts_allowed':B,'explanation':ref('Explanation')}),
  'Invitation':obj({'id':I,'candidate_id':I,'need_id':I,'company_id':I,'company':N,'title':N,'grade':S,
     'salary_min':{'type':['integer','null']},'salary_max':{'type':['integer','null']},'currency':S,'salary_period':S,'salary_tax':S,
-    'work_format':N,'status':S,'created_at':S,'responded_at':N,'accepted_results':array(ref('Proof')),
+    'work_format':N,'employment_type':choice(EMPLOYMENT_TYPES,True),'task_types':array(choice(TASK_TYPES)),
+    'conditions':ref('Conditions'),'status':S,'created_at':S,'responded_at':N,'accepted_results':array(ref('Proof')),
     'company_description':S,'company_industry':S,'tasks':S,'next_step':S,'discussion':S},
-    ['id','candidate_id','need_id','company_id','company','title','grade','salary_min','salary_max','currency','salary_period','salary_tax','work_format','status','created_at','responded_at','accepted_results']),
+    ['id','candidate_id','need_id','company_id','company','title','grade','salary_min','salary_max','currency','salary_period','salary_tax','work_format','employment_type','task_types','conditions','status','created_at','responded_at','accepted_results']),
  'CompanyContact':obj({'company_id':I,'contact_email':S}),
  'Achievement':obj({'id':I,'source':{'const':'mock'},'event_name':S,'occurred_on':S,'team':B,'prize':B,'event_id':S,'discipline':S,'result':S},
     ['id','source','event_name','occurred_on','team','prize']),
  'Achievements':obj({'source':{'const':'mock'},'status':S,'changes_grade':{'const':False},'events':array(ref('Achievement')),'external_id':N},
     ['source','status','changes_grade','events']),
  'Catalog':obj({'specializations':array(S),'grades':array(S),'skills':array(S),'roles':{'type':'object','additionalProperties':S},
-    'soft_skills':{'type':'object','additionalProperties':S},'features':array(S),'fsp_source':{'const':'mock'}}),
+    'soft_skills':{'type':'object','additionalProperties':S},'work_formats':{'type':'object','additionalProperties':S},
+    'employment_types':{'type':'object','additionalProperties':S},'task_types':{'type':'object','additionalProperties':S},'features':array(S),'fsp_source':{'const':'mock'}}),
  'Error':obj({'error':obj({'code':S,'message':S,'details':{'type':'object'}},['code','message']),'meta':ref('Meta')})
 }
 
@@ -73,7 +85,7 @@ def document():
         if path in {'/candidates','/candidates/{id}'}:
             params.append({'name':'need_id','in':'query','schema':{'type':'integer','minimum':1}})
         if path=='/candidates':
-            params.extend([{'name':name,'in':'query','schema':schema} for name,schema in [('grade',{'enum':['Junior','Middle']}),('skill',S),('fsp_status',{'enum':['no_history','demo_history']})]])
+            params.extend([{'name':name,'in':'query','schema':schema} for name,schema in [('grade',{'enum':['Junior','Middle']}),('skill',S),('fsp_status',{'enum':['no_history','demo_history']}),('conditions',{'enum':['','compatible','matched','conflicts']})]])
         scope=([role+'.read'] if role else ['candidate.read OR employer.read'])+(['contacts.read; kind=cli'] if private else [])
         responses={'200':{'description':'Success; MCP omits free text and contact fields','content':{'application/json':{'schema':obj(properties)}}}}
         for status in [400,401,403,404,405,409,429,503]:responses[str(status)]={'description':'API error','content':{'application/json':{'schema':ref('Error')}}}
@@ -82,7 +94,8 @@ def document():
     for path,role in [('/me/profile/resume.pdf','candidate'),('/candidates/{id}/resume.pdf','employer')]:
         paths[path]={'get':{'x-required-scopes':[role+'.read; kind=cli','contacts.read when with_contacts=true'],
             'parameters':([{'name':'id','in':'path','required':True,'schema':I}] if '{id}' in path else [])+
-                [{'name':'with_contacts','in':'query','schema':{'type':'boolean','default':False}}],
+                [{'name':'with_contacts','in':'query','schema':{'type':'boolean','default':False}}]+
+                ([{'name':'need_id','in':'query','schema':{'type':'integer','minimum':1},'description':'Own need of the candidate grade; compare conditions in PDF.'}] if role=='employer' else []),
             'responses':{'200':{'description':'PDF, contacts opt-in subject to accepted grant',
                 'content':{'application/pdf':{'schema':{'type':'string','format':'binary'}}}}}}}
     return {'openapi':'3.1.0','info':{'title':'FSP token API','version':'1.0.0','description':'Demo. Separate from HTML/session forms. MCP has no private/PDF/contact access.'},

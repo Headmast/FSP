@@ -78,9 +78,10 @@ def build_server(api):
             return get(f'needs/{id}')
         @server.tool(annotations=read)
         def fsp_search_candidates(grade:Literal['Junior','Middle']|None=None,need_id:ID|None=None,
-            skill:str|None=None,fsp_status:Literal['demo_history','no_history']|None=None,limit:Limit=20,offset:Offset=0)->Result:
+            skill:str|None=None,fsp_status:Literal['demo_history','no_history']|None=None,
+            conditions:Literal['compatible','matched','conflicts']|None=None,limit:Limit=20,offset:Offset=0)->Result:
             """Поиск опубликованных подтверждённых кандидатов. Нужна категория либо своя потребность."""
-            return get('candidates',grade=grade,need_id=need_id,skill=skill,fsp_status=fsp_status,limit=limit,offset=offset)
+            return get('candidates',grade=grade,need_id=need_id,skill=skill,fsp_status=fsp_status,conditions=conditions,limit=limit,offset=offset)
         @server.tool(annotations=read)
         def fsp_get_candidate(id:ID,need_id:ID|None=None)->Result:
             """Доступная карточка, совпадения, пробелы и неизвестное; контакты исключены."""

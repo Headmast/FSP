@@ -7,6 +7,7 @@ from profiles.skills import normalized,canonical_skill
 from .models import Company,Need,Invitation
 from assessments.models import Attempt
 from assessments.proofs import witness
+from profiles.conditions import compare_conditions, preferences, codes, TASK_TYPES, filter_conditions
 
 
 class InvalidProof(ValueError):
@@ -27,7 +28,7 @@ def explain(profile,need=None):
     else:unknown.append('Достижения ФСП синтетические; реестр не проверялся.')
     return {'declared_matches':[canonical_skill(s) for s in sorted(desired&declared)],
         'declared_gaps':[canonical_skill(s) for s in sorted(desired-declared)],
-        'confirmation':witness(result) if result else None,'unknown':unknown}
+        'confirmation':witness(result) if result else None,'unknown':unknown,'conditions':compare_conditions(profile,need)}
 
 def rank(profile,need=None):
     desired=normalized(need.skills) if need else set()
@@ -36,13 +37,15 @@ def rank(profile,need=None):
     parts={'test':85*profile.test_score,'skills':10*matches,'fsp':fsp}
     return round(sum(parts.values()),2),parts
 
-def search(grade,need=None,skill='',fsp=''):
+def search(grade,need=None,skill='',fsp='',conditions=''):
     profiles=Profile.objects.filter(published=True,confirmed_grade=grade).order_by('pk')
     if fsp=='demo_history':profiles=profiles.filter(fsp_status='demo_history')
     elif fsp=='no_history':profiles=profiles.filter(fsp_status='no_history')
     results=[]
     for p in profiles:
         if skill and not normalized(skill).issubset(normalized(p.skills)):continue
+        comparison=compare_conditions(p,need)
+        if not filter_conditions(comparison,conditions):continue
         score,parts=rank(p,need)
         results.append({'id':p.pk,'name':p.name,'city':p.city,'skills':p.skills,'grade':p.confirmed_grade,
             'test_score':p.test_score,'fsp_status':p.fsp_status,'score':score,'parts':parts,'explanation':explain(p,need)})
@@ -70,6 +73,9 @@ def invite(company,need_id,candidate_id,accepted_ids=(),discussion=''):
             'company_description':company.description,'company_industry':company.industry,'title':need.title,'grade':need.grade,
             'tasks':need.tasks,'salary_min':need.salary_min,'salary_max':need.salary_max,
             'work_format':need.get_work_format_display(),'next_step':need.next_step,
+            'work_format_code':need.work_format,'employment_type':need.employment_type,
+            'conditions_version':'conditions-v1',
+            'task_types':codes(need.task_types,TASK_TYPES),'candidate_preferences':preferences(profile),
             'accepted_results':[witness(attempt) for attempt in attempts],
             'accepted_at':timezone.now().isoformat(),'discussion':discussion.strip()}
         invitation,_=Invitation.objects.get_or_create(company=company,need=need,candidate=profile,defaults={'snapshot':snapshot,'recruiter':need.recruiter})

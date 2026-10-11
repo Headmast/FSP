@@ -159,7 +159,7 @@ def runtime_checks(spec, report):
     company=Company.objects.create(user=employer,name='Company',contact_email='company@demo.invalid')
     foreign_company=Company.objects.create(user=other_employer,name='Other',contact_email='other@demo.invalid')
     need_data={'title':'iOS разработчик','grade':'Junior','skills':'Swift, Core Data','tasks':'Сделать экран',
-        'salary_min':90000,'salary_max':120000,'work_format':'remote','next_step':'Встреча','company_name':'Компания','company_email':'company@demo.invalid'}
+        'salary_min':90000,'salary_max':120000,'work_format':'remote','employment_type':'full_time','task_types':['development'],'next_step':'Встреча','company_name':'Компания','company_email':'company@demo.invalid'}
     def run(label, key, path, method='GET', data=None, expected=200, template=None, location=None, csrf=True, raw_json=False, valid_body=None,bearer=None):
         client=clients[key] if isinstance(key,str) else key
         if valid_body:
@@ -240,6 +240,7 @@ def runtime_checks(spec, report):
     profile_data={'name':'Анна','city':'Москва','skills':'Swift, Core Data','desired_grade':'Junior','published':True,
         'contact_email':'private@demo.invalid','description':'Приватный текст','roles':['developer','reviewer'],'soft_skills':['teamwork'],
         'specialization':'ios_swift','experience_months':12,'confirmed_grade':'Middle',
+        'preferred_work_formats':['remote'],'preferred_employment_types':['full_time'],'preferred_task_types':['development'],
         'experience-TOTAL_FORMS':1,'experience-INITIAL_FORMS':0,'experience-0-organization':'Проект','experience-0-role':'Разработчик','experience-0-months':12,'experience-0-description':'Описание опыта'}
     run('profile-invalid','candidate','/profile/','POST',{},200)
     run('profile-valid','candidate','/profile/','POST',profile_data,302,location='/profile/',valid_body='Profile')
@@ -501,7 +502,7 @@ def main():
             connections.close_all()
         source_names=['app/config/urls.py','app/accounts/views.py','app/profiles/views.py','app/assessments/views.py','app/hiring/views.py','app/assistant/views.py',
             'app/accounts/forms.py','app/profiles/forms.py','app/profiles/models.py','app/assessments/models.py','app/assessments/learning_tracks.py','app/accounts/integrations.py','app/api/tests.py','app/api/drafts.py','app/api/web.py','app/api/models.py','app/assessments/learning_views.py','app/assessments/learning.py','app/assessments/learning_urls.py','app/hiring/dashboard.py','app/hiring/forms.py','app/api/urls.py','app/api/core.py','app/api/schema.py','app/api/views.py','app/api/serializers.py',
-            'scripts/http_contracts.py','scripts/http_contract_scenarios.py','scripts/build_http_spec.py','scripts/check_http_contracts.py','doc/api/openapi.json']
+            'app/profiles/conditions.py','app/hiring/models.py','app/hiring/services.py','scripts/http_contracts.py','scripts/http_contract_scenarios.py','scripts/build_http_spec.py','scripts/check_http_contracts.py','doc/api/openapi.json']
         report['source_hashes']={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in source_names}
         report['status']='PASS';report['completed_at']=datetime.datetime.now(datetime.timezone.utc).isoformat()
     except Exception as exc:

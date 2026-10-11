@@ -1,0 +1,116 @@
+{
+  "task": "PROD-001",
+  "status": "PASS",
+  "task_status": "IN_PROGRESS",
+  "checked_at": "2026-10-11T23:57:48.067854+00:00",
+  "base_commit": "0e62c96f08d6ccfbd298d29c2b8526b63d971f21",
+  "source_state": "working source; verified fingerprints, code commit follows",
+  "source_sha256": {
+    "app/api/drafts.py": "8771cbf0204fe9f190340abdb1c27a5d448d0a0d3adf2513a76e238a0e43daff",
+    "app/api/schema.py": "912736b72dbfda1ba8861ca3a48516c37621c71285447eb490b2aaccb9f42d28",
+    "app/api/serializers.py": "4b283c129e837c906483378e37311f1cea34a1673146acf822c0c89904acecda",
+    "app/api/views.py": "9765ae8ed698f1c548e904436e89a1125f16e1448eceec932ffdea5067582d1e",
+    "app/assistant/contexts.py": "51a465536a89ce9e8c3c52c53f18bd2ceafaebf136630fbd38407fe39a85f275",
+    "app/assistant/provider.py": "63de9db6302ca1044678bcd4ab1510504259b1aa928e170d3dca24f9ab01efa6",
+    "app/hiring/forms.py": "322d4482be1f7730a6e5babe185cc14eb1c0293d1dbedcfea844dd9fdc3079f7",
+    "app/hiring/models.py": "a4ebb9e181b627e0fe0019fdd400159b11b4cc02bdce3a860133bb71b0bb8721",
+    "app/hiring/services.py": "6c31d1627cbcedcf80adfd9e9f43b653660094f2e0b71fe9a0b598e2396208ce",
+    "app/hiring/views.py": "eddc6e28b6d5ddd91b0284fbfa0b4bc4ce03761de65ff0c01a32af3fbfc76487",
+    "app/profiles/forms.py": "f3038cb091bc65b2e36e3ef1e270a37a2dea608312b50a1e0e2c27f8043e87d4",
+    "app/profiles/models.py": "870743f9f36ff7ed38eb844880426806259282a91fcf7d41472f42993a7aab3e",
+    "app/profiles/views.py": "57d176d7c73f80eb405dcdc59082cf022a8b532d4737f3adb3f4a6131e21781a",
+    "app/templates/accounts/privacy.html": "9331168256a1d14fab21d9aa4991b59bc11cc26fd0434a36a147bb814a2fed37",
+    "app/templates/hiring/candidate.html": "73e9e3c01494bd2bc643afc8a5d3c3481349f445a742d37079d316b4867a8538",
+    "app/templates/hiring/explanation.html": "91435d09a886ba91784ff34e2dc70cc5d0d2aa39f88d000ef3bc7aabf7471afc",
+    "app/templates/hiring/invitations.html": "12500578ce66c38cbf2b2dda38e11ff9da708e23f90762b3f4f566020c871599",
+    "clients/python/src/fsp_client/cli.py": "95400275410651fa86c08336d10a4276b0a39979a0a05982bf96724f7afa3711",
+    "clients/python/src/fsp_client/draft_types.py": "618e747067c8dac75bd3b961e99e346f1717e1570fd434740cc0c1b1ad99a3b9",
+    "clients/python/src/fsp_client/mcp.py": "c411f2a75704e39e425b7a3a6c912cb6bf264da3a1ed01463449203d05c8c965",
+    "clients/python/tests/test_client.py": "9dedf1479fb13d9c15b613a40f7ba63350d3104f3abb3d72a6ed350c19214de0",
+    "clients/python/tests/test_mcp.py": "139d40e075d73eeefe0e1a27971405ac282093ee6e84ddf9c2a335ae26a0b883",
+    "scripts/check_http_contracts.py": "5ba6a41bf3e234d85762c5f27228af7727ea12c270c06a59d9135da5859d3cb6",
+    "scripts/check_mcp_cli.py": "54a2ccc52c189c991dddefdce1ea17b75f97153baabdeefbd2f4d2917f9117d1",
+    "scripts/http_contracts.py": "87bc88b70ce09756d574da90ccc1a9107f39ab1f43d18b262a692c1cc7b37407",
+    "scripts/record_delivery.cjs": "e80f1dbfd1c0851ecafd7f7413e8a29483147089e333c003c07755de7d528b61",
+    "scripts/setup_mcli_fixture.py": "b9d138b398c70d3e89bab97d1f10dbeb611587e84b1aab203e559df0df889221",
+    "app/hiring/migrations/0004_work_conditions.py": "4f9b57ce16ef5a9886d9f96002f729a37867cb98bd56118558fb919996a1dd18",
+    "app/profiles/conditions.py": "ccf504dcba8ca99486a6cac9d125fe63f4dca1b57f7d873ecd10a31a031dba02",
+    "app/profiles/migrations/0006_work_conditions.py": "072eb7c21f52d7450a6c881e7eb7ad835fc2a116beb615dcd8143709cb3770ec",
+    "app/profiles/test_conditions.py": "9073a4cdba5444bc4286cf622491fa5ff02c7690b7dcc6970c43aea72bdab17e",
+    "app/templates/hiring/conditions.html": "16b4ddb99033e18a3b6de7b1775ffa58f3a8f0829969a86a653e6b975c665d79",
+    "scripts/check_conditions_migration.py": "2abdacc511aed622f3b45994e80b192b91bf34a158bd79980aa0177f275a3916"
+  },
+  "checks": {
+    "django_regression": {
+      "count": 162,
+      "seconds": 15.409,
+      "status": "PASS",
+      "new_conditions_tests": 14
+    },
+    "client_tests": {
+      "count": 11,
+      "seconds": 0.504,
+      "status": "PASS"
+    },
+    "http": {
+      "status": "PASS",
+      "cases": 577,
+      "paths": 69,
+      "operations": 111,
+      "examples": 57,
+      "counterfactuals": 4
+    },
+    "migration_upgrade": {
+      "task": "PROD-001",
+      "status": "PASS",
+      "checked_at": "2026-10-11T23:52:50.336084+00:00",
+      "base_commit": "0e62c96f08d6ccfbd298d29c2b8526b63d971f21",
+      "checks": [
+        "old-schema database created",
+        "existing data retained",
+        "five new fields default to unknown",
+        "accepted legacy invitation snapshot unchanged",
+        "three unknown conditions, no false match"
+      ],
+      "database": "isolated temporary database removed"
+    },
+    "actual_http_stdio_native_cli": {
+      "candidate_http": 9,
+      "candidate_conditions_prepare_auto": true,
+      "candidate_stdio_auto": true,
+      "candidate_conditions_prepare_legacy": true,
+      "candidate_stdio_legacy": true,
+      "candidate_conditions_native_cli": true,
+      "candidate_native_keyring_cli": true,
+      "employer_http": 10,
+      "conditions_stdio_auto": true,
+      "employer_conditions_prepare_auto": true,
+      "employer_stdio_auto": true,
+      "conditions_stdio_legacy": true,
+      "employer_conditions_prepare_legacy": true,
+      "employer_stdio_legacy": true,
+      "employer_conditions_native_cli": true,
+      "employer_native_keyring_cli": true
+    },
+    "locked_client_source_match": {
+      "status": "PASS",
+      "format": "wheel",
+      "scope": "all current fsp_client Python sources match packaged bytes"
+    },
+    "migration_drift": "PASS",
+    "docs": "PASS: 147 Markdown documents",
+    "diff": "PASS",
+    "worktree": "PASS port8041"
+  },
+  "pending": [
+    "clean clone actual browser both roles and visual inspection",
+    "integrated release verification"
+  ],
+  "corrected_failures": [
+    {
+      "step": "QA native CLI verifier",
+      "error": "Attempted verification with a previously closed httpx client",
+      "resolution": "Separate short-lived verification client; repeated actual CLI and modern/legacy stdio successfully"
+    }
+  ]
+}

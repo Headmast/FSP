@@ -2,13 +2,24 @@ import re
 from django import forms
 from .models import Profile, Experience, ROLES, SOFT_SKILLS
 from .skills import validate_skills
+from .conditions import WORK_FORMATS, EMPLOYMENT_TYPES, TASK_TYPES
+
+
+class CatalogChoices(forms.MultipleChoiceField):
+    def clean(self, value):
+        return list(dict.fromkeys(super().clean(value)))
 
 class ProfileForm(forms.ModelForm):
+    preferred_work_formats = CatalogChoices(choices=WORK_FORMATS, required=False, label='Предпочитаемый формат работы', widget=forms.CheckboxSelectMultiple,
+        help_text='Можно выбрать несколько. Пустое поле означает неизвестные предпочтения. Видно работодателю до контакта.')
+    preferred_employment_types = CatalogChoices(choices=EMPLOYMENT_TYPES, required=False, label='Предпочитаемая занятость', widget=forms.CheckboxSelectMultiple)
+    preferred_task_types = CatalogChoices(choices=TASK_TYPES, required=False, label='Интересующие типы задач', widget=forms.CheckboxSelectMultiple,
+        help_text='Это предпочтения, а не подтверждённые навыки. Для совпадения все типы задач потребности должны входить в ваш выбор.')
     roles = forms.MultipleChoiceField(choices=ROLES, required=False, label='Роли в команде (самоописание)', widget=forms.CheckboxSelectMultiple)
     soft_skills = forms.MultipleChoiceField(choices=SOFT_SKILLS, required=False, label='Софт-скиллы (самоописание)', widget=forms.CheckboxSelectMultiple)
     class Meta:
         model = Profile
-        fields = ("name", "city", "skills", "specialization", "experience_months", "roles", "soft_skills", "description", "contact_email", "contact_phone", "desired_grade", "published")
+        fields = ("name", "city", "skills", "specialization", "experience_months", "roles", "soft_skills", "preferred_work_formats", "preferred_employment_types", "preferred_task_types", "description", "contact_email", "contact_phone", "desired_grade", "published")
         labels = {"name": "Имя", "city": "Город", "skills": "Навыки через запятую", "contact_email": "Контактный email (скрыт)",
                   "contact_phone": "Телефон (скрыт)", "desired_grade": "Категория для теста", "published": "Разрешаю публикацию профиля",
                   "specialization": "Специализация", "experience_months": "Общий стаж, месяцев (самоописание)", "description": "О себе / черновик помощника (скрыт до согласия)"}

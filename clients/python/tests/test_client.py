@@ -86,3 +86,25 @@ class ClientTests(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+
+
+class ConditionsClientTests(unittest.TestCase):
+    def test_search_and_pdf_pass_condition_parameters(self):
+        from pathlib import Path
+        requests=[]
+        def handle(request):
+            requests.append(request)
+            if request.url.path.endswith('.pdf'):return httpx.Response(200,content=b'%PDF-synthetic',headers={'Content-Type':'application/pdf'})
+            return httpx.Response(200,json={'data':[],'meta':{}})
+        with tempfile.TemporaryDirectory() as folder:
+            for command in [['candidates','search','--need-id','2','--conditions','matched'],
+                            ['candidates','resume','1','--need-id','2','--output',str(Path(folder)/'resume.pdf')]]:
+                api=FspClient('https://demo.invalid','synthetic',transport=httpx.MockTransport(handle))
+                with patch.object(Connections,'load',return_value=({'server':'https://demo.invalid'},'synthetic')),patch('fsp_client.cli.FspClient',return_value=api),contextlib.redirect_stdout(io.StringIO()):
+                    run(parser().parse_args(command))
+        self.assertEqual(requests[0].url.params['conditions'],'matched')
+        self.assertEqual(requests[0].url.params['need_id'],'2')
+        self.assertEqual(requests[1].url.params['need_id'],'2')
+        self.assertEqual(requests[1].url.params['with_contacts'],'false')
+        with contextlib.redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):
+            parser().parse_args(['candidates','search','--conditions','anything'])

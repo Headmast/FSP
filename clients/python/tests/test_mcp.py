@@ -94,3 +94,25 @@ class DraftMcpTests(unittest.IsolatedAsyncioTestCase):
             before=len(api.calls)
             result=await client.call_tool('fsp_prepare_company',{'changes':{'contact_email':'hidden@example.invalid'}})
             self.assertTrue(result.is_error);self.assertEqual(len(api.calls),before)
+
+
+class ConditionsMcpTests(unittest.IsolatedAsyncioTestCase):
+    async def test_preferences_and_typed_filters_through_official_sdk(self):
+        api=DraftApi()
+        async with Client(build_server(api)) as client:
+            result=await client.call_tool('fsp_prepare_profile',{'changes':{'preferred_work_formats':['remote'],
+                'preferred_employment_types':['part_time'],'preferred_task_types':['testing']}})
+            self.assertFalse(result.is_error)
+            self.assertEqual(api.calls[-1][1]['payload']['preferred_work_formats'],['remote'])
+            before=len(api.calls)
+            result=await client.call_tool('fsp_prepare_profile',{'changes':{'preferred_task_types':['hidden@demo.invalid']}})
+            self.assertTrue(result.is_error);self.assertEqual(len(api.calls),before)
+        api=DraftApi('employer')
+        async with Client(build_server(api)) as client:
+            result=await client.call_tool('fsp_search_candidates',{'need_id':2,'conditions':'compatible'})
+            self.assertFalse(result.is_error);self.assertEqual(api.calls[-1][1]['conditions'],'compatible')
+            result=await client.call_tool('fsp_prepare_need_update',{'id':2,'changes':{'employment_type':'project','task_types':['support']}})
+            self.assertFalse(result.is_error);self.assertEqual(api.calls[-1][1]['payload']['task_types'],['support'])
+            before=len(api.calls)
+            result=await client.call_tool('fsp_search_candidates',{'need_id':2,'conditions':'PRIVATE'})
+            self.assertTrue(result.is_error);self.assertEqual(len(api.calls),before)
