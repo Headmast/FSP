@@ -14,3 +14,6 @@
 - [Yandex completion API](https://aistudio.yandex.ru/ru/docs/ai-studio/text-generation/api-ref/TextGeneration/completion)
 
 Не переносить доступы из связанных чатов в sources, prompts или responses.
+
+- [localhost.run HTTP и HTTPS туннели](https://localhost.run/docs/cli/)
+- [Ограничения временных адресов localhost.run](https://localhost.run/docs/forever-free/)

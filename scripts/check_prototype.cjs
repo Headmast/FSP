@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 (async()=>{
  const browser=await chromium.launch({headless:true});const page=await browser.newPage();const errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
- const url=process.argv[2]||'http://127.0.0.1:8010';await page.goto(url);await page.getByRole('button',{name:'Сбросить демо'}).click();
+ const url=process.argv[2]||'http://127.0.0.1:8010';await page.goto(url);await page.locator('#profile').waitFor();await page.getByRole('button',{name:'Сбросить демо'}).click();
  async function qualify(){await page.getByRole('button',{name:'Сохранить профиль',exact:true}).click();await page.getByRole('button',{name:'Перейти к тесту'}).click();for(let i=0;i<4;i++)await page.locator(`input[name=q${i}][value="${i}"]`).check();await page.getByRole('button',{name:'Завершить тест'}).click();await page.getByRole('heading',{name:'Категория подтверждена'}).waitFor();}
  async function offer(){await page.getByRole('button',{name:'Посмотреть глазами работодателя'}).click();await page.locator('article').filter({hasText:'Алексей Демо'}).getByRole('button',{name:'Профиль и предложение'}).click();assert.match(await page.getByTestId('contact').innerText(),/Скрыты/);await page.getByRole('button',{name:'Отправить предложение'}).click();await page.getByRole('button',{name:'Кандидат',exact:true}).click();await page.getByRole('button',{name:'03 · Предложения'}).click();}
  async function inspect(){await page.getByRole('button',{name:'Работодатель',exact:true}).click();await page.locator('article').filter({hasText:'Алексей Демо'}).getByRole('button',{name:'Профиль и предложение'}).click();}

@@ -3,10 +3,10 @@
   "gates": [
     {
       "id": "P0",
-      "status": "NOT_RUN",
-      "checked_at": null,
-      "commit": null,
-      "evidence": null
+      "status": "PASS",
+      "checked_at": "2026-10-11T12:36:39+00:00",
+      "commit": "5e40c4a2014658f4056305bf8980245072618c3d",
+      "evidence": "prototype-results.md"
     },
     {
       "id": "G1",

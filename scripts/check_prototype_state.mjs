@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {initial,completeTest,sendInvitation,canSeeContact} from '../prototype/state.mjs';
+const state=initial();
+assert.equal(canSeeContact(state,1),false);
+assert.equal(completeTest(state,[0,1,2,3],'Junior').passed,true);
+assert.equal(state.profile.grade,'Junior');
+const invite=sendInvitation(state,{candidate:1,min:100,max:200,title:'iOS',tasks:'demo'});
+assert.equal(sendInvitation(state,{candidate:1,min:100,max:200}).id,invite.id);
+assert.equal(state.invitations.length,1);
+assert.equal(canSeeContact(state,1),false);
+invite.status='accepted';assert.equal(canSeeContact(state,1),true);
+invite.status='declined';assert.equal(canSeeContact(state,1),false);
+assert.throws(()=>sendInvitation(state,{candidate:2,min:200,max:100}));
+completeTest(state,[3,3,3,3],'Middle');assert.equal(state.profile.grade,'Junior');
+console.log('PASS: prototype grade, duplicate, salary, acceptance and rejection');
