@@ -4,6 +4,8 @@
 
 Статус проекта: концепция и план MVP. Презентация описывает выбранное устройство продукта. Файлы проекта не подтверждают готовую платформу, живую интеграцию ФСП или результаты пилота.
 
+[Видео: запись прототипа](https://github.com/Headmast/FSP/blob/main/video/6.mp4) · [Все 6 роликов](https://github.com/Headmast/FSP/tree/main/video).
+
 ## Слайд 1. Трудяжки
 
 ### Текст на слайде
@@ -370,6 +372,19 @@ Backend-разработчик. Развитие API и работа с PostgreS
 ### Подпись на слайде
 
 Первичный грейд вычисляет рубрика теста. Для базового сценария GPU не нужен.
+
+### Видео
+
+Ролики 1–5 иллюстрируют концепцию, ролик 6 показывает моковый прототип. Видео и текущий сайт могут отличаться по интерфейсу и составу функций.
+
+- [1. Профиль](https://github.com/Headmast/FSP/blob/main/video/1.mp4)
+- [2. Материалы](https://github.com/Headmast/FSP/blob/main/video/2.mp4)
+- [3. Проверка навыков](https://github.com/Headmast/FSP/blob/main/video/3.mp4)
+- [4. Подбор кандидатов](https://github.com/Headmast/FSP/blob/main/video/4.mp4)
+- [5. Достижения](https://github.com/Headmast/FSP/blob/main/video/5.mp4)
+- [6. Прототип (1:10)](https://github.com/Headmast/FSP/blob/main/video/6.mp4)
+
+[Каталог всех видео](https://github.com/Headmast/FSP/tree/main/video).
 
 ### Выступление
 

@@ -10,6 +10,7 @@
 
 [Корневое оглавление](../README.md) объединяет документацию, презентацию, демо, прототип и дополнительные материалы.
 
+- [Все видео проекта](../video/README.md), [запись прототипа](../video/6.mp4), [галерея](../video/index.html).
 - [Презентация PPTX](presentation/trudyazhki-fsp.pptx), [HTML](presentation/trudyazhki-fsp.html), [текст выступления](presentation/trudyazhki-fsp.md).
 - [Исходное ТЗ и уточнения](sources/README.md).
 - [Исследование конкурентов](research/competitor-analysis-2026-10-11.md).
