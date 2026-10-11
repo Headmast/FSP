@@ -67,6 +67,18 @@
       <p id="a11y-status" class="a11y-status" role="status" aria-live="polite" aria-atomic="true"></p>`;
     const skip = document.querySelector('.skip-link');
     if (skip) skip.after(panel); else document.body.prepend(panel);
+    // A submitted server form must expose its error before the user starts again.
+    const errors = Array.from(main.querySelectorAll('.errorlist')).filter(list => list.getClientRects().length);
+    if (errors.length) {
+      for (const list of errors) {
+        const region = document.createElement('div');
+        region.setAttribute('role', 'alert');
+        list.before(region); region.append(list);
+      }
+      const firstError = errors[0].parentElement;
+      firstError.tabIndex = -1;
+      firstError.focus();
+    }
     const byId = id => panel.querySelector(`#a11y-${id}`);
     const status = text => {byId('status').textContent = text;};
     const supported = Boolean(window.speechSynthesis && typeof window.SpeechSynthesisUtterance === 'function');

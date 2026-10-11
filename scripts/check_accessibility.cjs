@@ -115,6 +115,17 @@ async function keyboardActivate(page, locator) {await locator.focus(); await pag
   assert.equal(await noJs.locator('main').evaluate(e => e === document.activeElement), true);
   assert.equal(await noJs.locator('input[type=password]').count(), 1);
   passed('Django main content and login form remain available without JavaScript');
+  const invalidLogin = await browser.newPage();
+  await invalidLogin.goto(appUrl + '/accounts/login/');
+  await invalidLogin.locator('[name=username]').fill('a11y-missing-user@demo.invalid');
+  await invalidLogin.locator('[name=password]').fill('Incorrect-demo-password!');
+  await invalidLogin.getByRole('button', {name: 'Войти', exact: true}).click();
+  const errorList = invalidLogin.locator('main .errorlist').first();
+  await errorList.waitFor();
+  assert.equal(await errorList.evaluate(e => e.parentElement.getAttribute('role')), 'alert');
+  assert.equal(await errorList.evaluate(e => e.parentElement === document.activeElement), true);
+  await audit(invalidLogin, 'Django: invalid login error'); await invalidLogin.close();
+  passed('server form validation announces and focuses the first error');
 
   for (const [email, paths] of [
     ['fixture-junior-01@demo.invalid', ['/profile/', '/assessments/', '/profile/fsp/link/', '/assistant/', '/invitations/']],
