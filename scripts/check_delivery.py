@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 from pypdf import PdfReader
 
 ROOT=Path(__file__).resolve().parents[1]
-REQUIRED={'doc/delivery/current-mvp.md','doc/delivery/requirements-coverage.md','doc/delivery/mvp-handbook.pdf',
+REQUIRED={'doc/delivery/index.html','doc/delivery/current-mvp.md','doc/delivery/requirements-coverage.md','doc/delivery/mvp-handbook.pdf',
  'doc/delivery/current-mvp.pptx','doc/delivery/current-mvp-slides.pdf','doc/delivery/current-mvp-slides.md','doc/delivery/current-mvp-slides.html',
  'doc/delivery/demo-script.md','doc/delivery/README.md','doc/delivery/assets/current-demo.mp4','doc/delivery/assets/timed-rehearsal.mp4'}
 
