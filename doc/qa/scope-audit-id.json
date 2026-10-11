@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "task": "DOC-002",
+  "observed_on": "2026-10-11",
+  "recorded_at": "2026-10-11T15:46:42+00:00",
+  "commit": "02cedf8e175bab87aac7144e3154b3ca3e979b23",
+  "status": "FAIL",
+  "isolation": "temporary SQLite database only",
+  "cases": [
+    {
+      "method": "GET",
+      "route": "/candidates/",
+      "data": {
+        "need": "²",
+        "grade": "Junior"
+      },
+      "status": 500,
+      "exception": "ValueError: Field 'id' expected a number but got '²'."
+    },
+    {
+      "method": "POST",
+      "route": "/assistant/",
+      "data": {
+        "mode": "need",
+        "identifier": "²"
+      },
+      "status": 500,
+      "exception": "ValueError: Field 'id' expected a number but got '²'."
+    },
+    {
+      "method": "GET",
+      "route": "/candidates/",
+      "data_summary": "need=198 ASCII nines, grade=Junior",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/assistant/",
+      "data_summary": "mode=need, identifier=198 ASCII nines",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "route": "/candidates/",
+      "data": {
+        "need": "abc",
+        "grade": "Junior"
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/assistant/",
+      "data": {
+        "mode": "need",
+        "identifier": "abc"
+      },
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "route": "/candidates/",
+      "data": {
+        "need": "-1",
+        "grade": "Junior"
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/assistant/",
+      "data": {
+        "mode": "need",
+        "identifier": "-1"
+      },
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "route": "/assistant/",
+      "data_summary": "mode=need, own valid identifier",
+      "status": 200
+    }
+  ],
+  "repository_data_writes": false,
+  "production_writes": false,
+  "reproduction": "scope-audit-reproduction.md"
+}

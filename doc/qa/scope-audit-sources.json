@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "task": "DOC-002",
+  "observed_on": "2026-10-11",
+  "base_commit": "02cedf8e175bab87aac7144e3154b3ca3e979b23",
+  "files": [
+    {
+      "source": "FSP/Task/ФСП спец. трек ТЗ.pdf",
+      "size_bytes": 551797,
+      "sha256": "a39ec8ccb300f4d06c7408b7ab13eff6f71610e86cc0e6d6650bc664f656eba1",
+      "copied_to_repository": false
+    },
+    {
+      "source": "FSP/Task/Ответы на вопросы трек ФСП ЛЦТ__.xlsx",
+      "size_bytes": 9581,
+      "sha256": "c7f6a492aa117470e672997dfab22fe9cd4a72b4facdd59bdb196891ad91c8a4",
+      "copied_to_repository": false
+    },
+    {
+      "source": "FSP/Task/qa-summary-fsp-2026.md",
+      "size_bytes": 34277,
+      "sha256": "536765976fe3f3c132e436dc2eab6340fce02ce91e7a2b744904bb55a6de9fee",
+      "copied_to_repository": false
+    },
+    {
+      "source": "FSP/tmp/research/requirements.md",
+      "size_bytes": 20964,
+      "sha256": "3a4449e274c471cc616f1b904520273e0c2f63397d9ad50438f11ec0a91c039d",
+      "copied_to_repository": false
+    },
+    {
+      "source": "FSP/tmp/research/brief-extracted.txt",
+      "size_bytes": 35590,
+      "sha256": "4c4f79f68237ec6146621f90788b93d8518e7560c978f854851a76fc1afd62ec",
+      "copied_to_repository": false
+    },
+    {
+      "source": "FSP/Docs/Presentation/trudyazhki-fsp.md",
+      "size_bytes": 36645,
+      "sha256": "6f9ff80b35ccba470d71127f95d7ad868c4c9013447edbb203ab39995c0c785d",
+      "copied_to_repository": false
+    },
+    {
+      "source": "FSP/Docs/Presentation/trudyazhki-fsp.html",
+      "size_bytes": 6001637,
+      "sha256": "3e2ad3d09914d074c6d6508551e2086b687283f496036ab27fd28cb562c6733a",
+      "copied_to_repository": false
+    },
+    {
+      "source": "FSP/Docs/Presentation/trudyazhki-fsp.pptx",
+      "size_bytes": 12286557,
+      "sha256": "0a6161ee88fe04e322ca589c01c18362074dd97b89665757cb969ccb83095d76",
+      "copied_to_repository": false
+    }
+  ],
+  "note": "Original binary documents remain external. requirements-map.md is a normalized textual source; original-mvp-plan.md is the preserved plan item from the main chat."
+}

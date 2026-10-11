@@ -1,0 +1,9 @@
+# Repository documentation is the user's chosen destination.
+hash_max_bytes: 4194304
+exclude_dirs:
+  - .runtime
+  - .venv
+  - __pycache__
+  - .pytest_cache
+local_chat_paths:
+  - doc/sources

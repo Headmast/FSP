@@ -16,7 +16,7 @@
 
 Ветки называются mvp/<name>. Checkout по умолчанию создаётся рядом с репозиторием в FSP-worktrees/<name>. У каждого свой .env.worktree, .venv и .runtime с базой, логами и PID. Эти пути исключены из Git. Общие секреты не копируются автоматически.
 
-Порт выбирается явно и не должен совпадать с портом другого worktree. Для приложения использовать APP_PORT и DATABASE_PATH из .env.worktree; будущий Django bootstrap обязан подключить эти значения. Пока приложения нет, это подготовленные настройки, а не действующая база.
+Порт выбирается явно и не должен совпадать с портом другого worktree. Приложение читает DATABASE_PATH из .env.worktree через app/config/settings.py; scripts/run_app.py использует APP_PORT. База и runtime остаются внутри собственного checkout. Перед тестами с ManifestStaticFilesStorage выполнить collectstatic по [локальной инструкции](local-run.md).
 
 Посмотреть checkout: python3 scripts/worktree.py list. Проверить локальную конфигурацию и её изоляцию: python3 scripts/worktree.py check. Загружать переменные в bash/zsh: set -a; source .env.worktree; set +a. В основном checkout при необходимости создать собственную конфигурацию командой configure --port 8011.
 
