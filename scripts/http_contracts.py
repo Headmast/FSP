@@ -8,6 +8,8 @@ from profiles.forms import ProfileForm, FspLinkForm, ExperienceFormSet
 from hiring.forms import CompanyForm, NeedForm, RecruiterForm, AssignmentForm
 from accounts.integrations import TokenForm
 from assistant.forms import NeedPromptForm, ProfileDraftForm
+from api.web import ApprovalForm
+from api.drafts import ExperienceInput, PROFILE_FIELDS, COMPANY_FIELDS, NEED_FIELDS
 
 MAX_ID = 2**63 - 1
 CSRF = {'type': 'string', 'minLength': 32, 'maxLength': 64, 'writeOnly': True,
@@ -15,6 +17,8 @@ CSRF = {'type': 'string', 'minLength': 32, 'maxLength': 64, 'writeOnly': True,
 ID = {'type': 'integer', 'minimum': 1, 'maximum': MAX_ID,
       'description': 'Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404.'}
 OPTIONAL_ID = {'anyOf': [ID, {'const': ''}], 'description': 'Omitted/empty selects the documented default; explicit ID must be owned/visible.'}
+UUID_ID = {'type':'string','format':'uuid','description':'Owned action draft UUID. Browser converter requires canonical lower-case UUID; token API also accepts Python UUID representations.'}
+TRACK = {'type':'string','enum':['ios','android','flutter','aurora']}
 GRADE = {'type': 'string', 'enum': ['Junior', 'Middle']}
 SKILLS_NOTE = 'Comma-separated Swift, SwiftUI, UIKit, Combine, CoreData, Git, XCTest, URLSession; case/spacing aliases canonicalized; unknown skill is a form error.'
 
@@ -113,6 +117,17 @@ def schemas():
     result['FspConnect']['properties']['external_id']['pattern'] = r'^DEMO-(?:(?!000)[0-9]{3}|EMPTY|DOWN)$'
     result['FspConnect']['description'] = 'Explicit fsp-mock-v1 consent; external ID unique in this app, not verified by a real registry.'
     result.update({
+        'LearningRead': object_schema({'read':{'const':'on'},'csrfmiddlewaretoken':CSRF},['read'],additionalProperties=True),
+        'LearningStart': object_schema({'track':dict(TRACK,default='ios'),'grade':GRADE,
+            'topic':{'type':'string','default':'all','description':'all or a topic of the selected track: ios swift/arc/async/ui-data; android kotlin/compose/coroutines/data-testing; flutter dart/widgets/state-async/testing-arch; aurora cpp-qt/qml/models-async/sdk-packaging.'},
+            'source':OPTIONAL_ID,'csrfmiddlewaretoken':CSRF},['grade'],additionalProperties=True,
+            description='Owned finished source overrides track/grade/content version and creates an error-repeat session. Without source grade is required; an existing active track session is reused.'),
+        'LearningAnswers': object_schema({'action':{'type':'string','enum':['save','pause','finish'],'default':'save'},'csrfmiddlewaretoken':CSRF},additionalProperties=True,
+            patternProperties={r'^q_.+$':{'type':'integer','minimum':0,'maximum':3}},
+            description='Unknown q_ key or invalid answer rejects the entire save. Non-q_ fields ignored. Missing/unknown action saves; pause redirects to dashboard; finish computes immutable practice result. No time limit or category change.'),
+        'ActionApproval': {'anyOf':[object_schema({'action':{'const':'cancel'},'csrfmiddlewaretoken':CSRF},['action'],additionalProperties=True),
+            object_schema({'action':{'const':'apply'},'acknowledge':{'const':True},'publication_consent':{'type':'boolean'},'csrfmiddlewaretoken':CSRF},['action','acknowledge'],additionalProperties=True)],
+            'description':'Publication consent=true additionally required for profile.publish; all other kinds need acknowledge=true. Values edited here never replace immutable draft payload. Browser session only, Bearer is ignored.'},
         'CsrfOnly': object_schema({'csrfmiddlewaretoken': CSRF}, additionalProperties=True),
         'Confirmation': object_schema({'token': {'type': 'string', 'minLength': 1, 'writeOnly': True}, 'csrfmiddlewaretoken': CSRF}, ['token'], additionalProperties=True),
         'FspAction': {'anyOf': [ref('FspConnect'), object_schema({'action': {'const': 'unlink'}, 'csrfmiddlewaretoken': CSRF}, ['action'], additionalProperties=True)]},
@@ -145,12 +160,14 @@ def schemas():
         'FspHistory': object_schema({'source': {'const': 'mock'}, 'status': {'type': 'string', 'enum': ['not_connected','no_history','demo_history','unavailable']},
             'changes_grade': {'const': False}, 'external_id': {'type': ['string','null']}, 'events': {'type': 'array','items': ref('FspEvent')}},
             ['source','status','changes_grade','external_id','events'], additionalProperties=False)})
+    result['LearningStart']={'anyOf':[result['LearningStart'],object_schema({'source':ID,'csrfmiddlewaretoken':CSRF},['source'],additionalProperties=True)],'description':'Finished source overrides track/grade/topic; supplied selectors ignored and may be omitted. Source accepts Python int syntax then positive ID bounds. Without source normal selector fields apply.'}
     return result
 
 
 FORM_CLASSES = {'Registration': RegistrationForm, 'Login': AccessibleAuthenticationForm, 'Consent': ConsentForm,
     'Profile': ProfileForm, 'FspConnect': FspLinkForm, 'Company': CompanyForm, 'Need': NeedForm,
-    'NeedPrompt': NeedPromptForm, 'ProfileDraft': ProfileDraftForm,'Recruiter':RecruiterForm,'Assignment':AssignmentForm,'Token':TokenForm}
+    'NeedPrompt': NeedPromptForm, 'ProfileDraft': ProfileDraftForm,'Recruiter':RecruiterForm,'Assignment':AssignmentForm,'Token':TokenForm,
+    'Approval':ApprovalForm,'ExperienceInput':ExperienceInput}
 
 
 def endpoint(path, methods, role, summary, detail, statuses, *, body=None, query=None, repeat='', effects=''):
@@ -160,6 +177,16 @@ def endpoint(path, methods, role, summary, detail, statuses, *, body=None, query
 
 # Statuses are explicit reviewed semantics, never inferred from a green response.
 ENDPOINTS = {
+    'action-drafts': endpoint('/drafts/','GET','both','Свои MCP/CLI черновики','Session only; active confirmed user and processing consent. Last 100 own immutable drafts, newest first. No apply on GET.',{200:'Own draft list HTML'}),
+    'action-draft': endpoint('/drafts/{pk}/','GET POST','both','Подтверждение MCP/CLI V2','Owned UUID; kind must match current role. GET shows immutable payload and current before-state, including stale/expired/final state. POST action=apply requires acknowledgement and publication consent for profile.publish. action=cancel needs no acknowledgement. No bearer apply endpoint.',{200:'GET draft state',302:'Successful apply/cancel: same draft URL',400:'Missing acknowledgement, publication consent or failed payload revalidation',403:'Inactive/unconfirmed/wrong kind-role',404:'Missing/foreign draft or inaccessible target',409:'Stale target, cancelled/final conflict',410:'Expired pending draft'},body='ActionApproval',repeat='Applied apply returns same state without another mutation even after expiry. Cancel repeated cancelled safe; cancelling applied is 409. Expired pending draft can be cancelled.'),
+    'learning': endpoint('/learning/','GET','candidate','Учебный маршрут','Own profile; selected track is persisted in Django session. Invalid track 404; missing track uses session then ios; invalid grade falls back Junior. Active exam shows return-to-exam screen with 200. Practice does not change category.',{200:'Track/progress or active-exam lock screen',404:'Unknown track/missing own profile'},query={'track':TRACK,'grade':GRADE},effects='Stores selected learning_track in session only.'),
+    'learning-lesson': endpoint('/learning/lessons/{grade}/{topic}/','GET','candidate','Урок iOS (совместимый URL)','Legacy route always ios. Known grade/topic required; unknown values 404. Active exam returns 423 without lesson solutions.',{200:'Lesson HTML',404:'Unknown grade/topic',423:'Active exam'},effects='Stores ios track in session.'),
+    'learning-track-lesson': endpoint('/learning/tracks/{track}/lessons/{grade}/{topic}/','GET','candidate','Урок выбранного трека','Known track/grade/topic only; own progress/version. Active exam returns 423.',{200:'Lesson HTML',404:'Unknown track/grade/topic',423:'Active exam'},effects='Stores selected track in session.'),
+    'learning-lesson-complete': endpoint('/learning/lessons/{grade}/{topic}/complete/','POST','candidate','Отметить изучение iOS','Known ios lesson. Requires exact read=on; missing/other value returns message + same canonical track lesson without mutation. Active exam rechecked inside transaction.',{302:'Canonical /learning/tracks/ios/lessons/{grade}/{topic}/',404:'Unknown lesson',423:'Active exam'},body='LearningRead',repeat='Same candidate/track/grade/topic/version progress updated without duplicates.'),
+    'learning-track-lesson-complete': endpoint('/learning/tracks/{track}/lessons/{grade}/{topic}/complete/','POST','candidate','Отметить изучение трека','Known lesson; exact read=on needed. Missing checkbox gives message+redirect without write. Exam lock rechecked in transaction.',{302:'Canonical selected track lesson',404:'Unknown track/grade/topic',423:'Active exam'},body='LearningRead',repeat='Same version progress is idempotent.'),
+    'learning-start': endpoint('/learning/start/','POST','candidate','Начать / продолжить самопроверку','One active practice per track. 8 questions for all, 4 for topic. Optional owned finished source overrides supplied track/grade/version and repeats errors. Invalid selection gives message+302 dashboard. Source parsed with Python int (including numeric Unicode/whitespace) and bounded positive ID.',{302:'Session ?question=<next> or /learning/ on invalid selection',404:'Malformed/foreign/not-finished source',423:'Active exam'},body='LearningStart',repeat='Active session in selected track reused; completed source repeat creates new session. No expiry/cooldown/grade assignment.'),
+    'learning-session': endpoint('/learning/sessions/{pk}/','GET','candidate','Своя самопроверка / разбор','Active session exposes current question without solution; question is a bounded zero-based index parsed by Python int. Finished session ignores question parameter and shows full review. Active exam hides content with 423.',{200:'Question/review HTML',404:'Foreign/missing session or invalid active question index',423:'Active exam'},query={'question':{'type':'integer','minimum':0,'description':'Less than tasks length; default first unanswered or last. Ignored when finished.'}},effects='Stores session track in browser session.'),
+    'learning-answer': endpoint('/learning/sessions/{pk}/answer/','POST','candidate','Сохранить / закончить практику','Own session; validates all q_ answers atomically. Unknown/invalid question gives message+302 unchanged; all non-q_ fields ignored. action=pause saves then dashboard; action=finish saves and computes practice result only. Active exam returns 423 including transactional recheck.',{302:'Session/review or dashboard for pause',404:'Missing/foreign session',423:'Active exam'},body='LearningAnswers',repeat='Finished session returns unchanged result. Active save replaces only submitted valid answers.'),
     'integrations': endpoint('/accounts/integrations/','GET POST','both','Персональные подключения CLI/MCP',
         'Own tokens only. Processing consent is checked before confirmed/active account here. Create action validates name/kind/contact/draft scopes, stores digest, shows secret once in no-store/no-referrer HTML. MCP contacts rejected. Revoke requires own positive id. No automatic web action from token.',
         {200:'GET list or successful create with one-time secret',400:'Invalid create form/action',302:'Revoke: /accounts/integrations/',404:'Malformed/foreign token id'},body='TokenAction',repeat='Create issues another token; revoke remains revoked on repeat.'),
@@ -205,6 +232,8 @@ ENDPOINTS = {
 }
 
 EXAMPLES = {
+    'LearningRead':{'read':'on'},'LearningStart':{'track':'android','grade':'Junior','topic':'all'},
+    'LearningAnswers':{'action':'pause'},'ActionApproval':{'action':'apply','acknowledge':True,'publication_consent':True},
     'Recruiter':{'name':'Рекрутер'},'Assignment':{'need':1},'Token':{'name':'Локальный CLI','kind':'cli','contacts':False,'drafts':False},
     'TeamAction':{'action':'add','name':'Рекрутер'},'TokenAction':{'action':'create','name':'Локальный CLI','kind':'cli','contacts':False,'drafts':False},
     'Registration': {'email':'contract@demo.invalid','role':'candidate','password1':'Demo-Contract-934!','password2':'Demo-Contract-934!','processing_consent':True},
@@ -234,7 +263,9 @@ def build_spec():
                 'x-django-url-name':name if name!='download-client' else None,'x-role':entry['role'],'x-repeat':entry['repeat'],'x-read-effects':entry['effects'],
                 'security':[{'Session':[]}] if protected or entry['role']=='pending-session' else [],'responses':{},'parameters':[]}
             if '{pk}' in entry['path']:
-                op['parameters'].append({'name':'pk','in':'path','required':True,'schema':ID})
+                op['parameters'].append({'name':'pk','in':'path','required':True,'schema':UUID_ID if name=='action-draft' else ID})
+            for param,shape in [('track',TRACK),('grade',GRADE),('topic',{'type':'string','minLength':1,'description':'Topic slug of selected track; unknown pairing is 404.'})]:
+                if '{'+param+'}' in entry['path']:op['parameters'].append({'name':param,'in':'path','required':True,'schema':shape})
             if '{filename}' in entry['path']:
                 op['parameters'].append({'name':'filename','in':'path','required':True,'schema':{'type':'string','description':'One allowed current-version artifact filename; slashes forbidden by route converter.'}})
             if method in {'GET','HEAD'}:
@@ -288,6 +319,7 @@ def build_spec():
                     else:response['content']={'text/html':{'schema':{'type':'string'}}}
                 if name=='integrations' and status in {200,400}:
                     response['headers']={'Cache-Control':{'required':True,'schema':{'const':'no-store'}},'Referrer-Policy':{'required':True,'schema':{'const':'no-referrer'}}}
+                if name=='action-draft' and status in {200,400,409,410}:response['headers']={'Cache-Control':{'required':True,'schema':{'const':'no-store'}}}
                 if method=='OPTIONS' and status==200:response['headers']={'Allow':{'required':True,'schema':{'type':'string'}}}
                 op['responses'][str(status)]=response
             operations[method.lower()]=op
@@ -311,9 +343,16 @@ def add_token_api(spec):
     for path,operations in api['paths'].items():
         full='/api/v1'+path.replace('{id}','{pk}')
         for method,op in operations.items():
-            op=rename(op);op['operationId']='token_'+op.get('operationId',full.strip('/').replace('/','_').replace('{pk}','id'))
+            op=rename(op);op['operationId']='token_'+op.get('operationId',full.strip('/').replace('/','_').replace('{pk}','id'))+'_'+method
             op['security']=[{'BearerToken':[]}];op['x-contract-group']='token-api';op['x-django-url-name']=None
-            op['description']='Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. '+'; '.join(op.get('x-required-scopes',[]))
+            op['description']='Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. Integer IDs use bounded positive parser; draft UUIDs use Python UUID parser; malformed/foreign IDs 404. '+'; '.join(op.get('x-required-scopes',[]))+' '+op.get('description','')
+            if path.startswith('/drafts'):
+                op['description']+=' Drafts are immutable for 24 hours. GET projects payload only to CLI contacts.read; otherwise safe preview. Prepare needs current role.draft scope; cancel repeats safely for cancelled or expired pending, applied cancel 409. Applying is browser-only, rechecks owner/role/consent/fingerprint and is idempotent after apply. '
+            if path=='/drafts' and method=='get':op['parameters']=[{'name':'limit','in':'query','schema':{'type':'integer','minimum':1,'maximum':100,'default':20}},{'name':'offset','in':'query','schema':{'type':'integer','minimum':0,'maximum':2**31-1,'default':0}}]
+            if path=='/drafts' and method=='post':
+                op['requestBody']['content']['application/json']={'schema':ref('ActionPrepare'),'examples':{'profile':{'value':{'kind':'profile.update','payload':{'city':'Казань'}}},'publish':{'value':{'kind':'profile.publish','payload':{}}},'need':{'value':{'kind':'need.create','payload':{'title':'Разработчик','grade':'Junior','tasks':'Создать экран','salary_min':90000,'salary_max':120000,'work_format':'remote'}}}}}
+            if path.endswith('/cancel') and method=='post':op['requestBody']['content']['application/json']['examples']={'cancel':{'value':{}}}
+            op['description']=op['description'].strip()
             for parameter in op.get('parameters',[]):
                 if parameter['in']=='path':parameter['name']='pk'
             for status in [400,401,403,404,405,429,503,500]:op['responses'].setdefault(str(status),copy.deepcopy(error))
@@ -339,4 +378,40 @@ def add_token_api(spec):
             if status=='405':response['headers']['Allow']={'required':True,'schema':{'const':'GET'}}
             if status=='401':response['headers']['WWW-Authenticate']={'required':True,'schema':{'const':'Bearer'}}
             if status=='429':response['headers']['Retry-After']={'required':True,'schema':{'const':'60'}}
-        spec['paths'][path]={'get':op}
+        if path.endswith('json'):spec['paths'][path]={'get':op}
+        else:
+            methods=['get','post','put','patch','delete','head','options']
+            spec['paths'][path]={}
+            for method in methods:
+                operation=copy.deepcopy(op);operation['operationId']+='_'+method
+                operation['description']='Authenticated explicit unknown-route fallback; GET/POST/PUT/PATCH/DELETE/HEAD/OPTIONS return JSON 404. TRACE is rejected with 405 after authentication.'
+                operation['responses']['405']['headers']['Allow']['schema']['const']='GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS'
+                if method=='head':
+                    for response in operation['responses'].values():response.pop('content',None)
+                spec['paths'][path][method]=operation
+    add_action_schemas(spec)
+
+
+def add_action_schemas(spec):
+    """Reviewed per-kind V2 write payloads; forms constrain fields, ownership remains server-side."""
+    schemas=spec['components']['schemas']
+    def payload(form_name,allowed,required=(),**extra):
+        props={key:copy.deepcopy(value) for key,value in schemas[form_name]['properties'].items() if key in allowed}
+        return object_schema(props,required,additionalProperties=False,**extra)
+    exp=payload('ExperienceInput',ExperienceInput.Meta.fields,['organization','role','months'])
+    exp['properties']['id']={'anyOf':[ID,{'type':'null'}]}
+    schemas['ActionExperience']=exp
+    profile=payload('Profile',PROFILE_FIELDS,minProperties=1)
+    profile['properties']['experiences']={'type':'array','maxItems':20,'items':ref('ActionExperience'),'description':'Replacement of entire own experience list; omitted existing rows deleted. CLI contacts.read only; unique owned IDs.'}
+    company=payload('Company',COMPANY_FIELDS,minProperties=1)
+    need=payload('Need',NEED_FIELDS,minProperties=1)
+    need['properties']['recruiter']={'anyOf':[ID,{'type':'null'},{'const':''}],'description':'Own Company recruiter ID; null/empty clears assignment. Stored as nullable ID, never model data.'}
+    empty=object_schema({},additionalProperties=False)
+    invitation=object_schema({'candidate_id':ID,'accepted_attempts':{'type':'array','maxItems':20,'uniqueItems':True,'items':ID},'discussion':{'type':'string','maxLength':2000}},['candidate_id'],additionalProperties=False)
+    variants=[]
+    for kind,shape in [('profile.update',profile),('company.update',company),('need.create',copy.deepcopy(need)),('need.update',need),('invitation.send',invitation),('profile.publish',empty),('profile.unpublish',empty),('invitation.accept',empty),('invitation.decline',empty)]:
+        if kind=='need.create':shape['required']=['title','grade','tasks','salary_min','salary_max','work_format']
+        target=copy.deepcopy(ID) if kind in {'need.update','invitation.send','invitation.accept','invitation.decline'} else {'type':'null'} if kind=='need.create' else {'anyOf':[ID,{'type':'null'}]}
+        required=['kind']+(['payload'] if kind in {'profile.update','company.update','need.create','need.update','invitation.send'} else [])+(['target_id'] if kind in {'need.update','invitation.send','invitation.accept','invitation.decline'} else [])
+        variants.append(object_schema({'kind':{'const':kind},'target_id':target,'payload':shape},required,additionalProperties=False))
+    schemas['ActionPrepare']={'oneOf':variants,'description':'Prepare only, no business mutation. Each role may prepare its own kinds with role.draft scope. profile/company partial patches merge existing values and validate whole form. MCP rejects contact_email/contact_phone/experiences; CLI requires contacts.read. salary_max>=salary_min; IDs owned and current. Empty action payload may be omitted. Private/free text accepted when allowed is not reflected in MCP safe preview. Publishing requires separate consent at browser apply.'}

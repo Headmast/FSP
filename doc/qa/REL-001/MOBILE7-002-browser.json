@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:8055",
+  "checked_at": "2026-10-11T20:57:25.786Z",
+  "tracks": [
+    "android",
+    "flutter",
+    "aurora"
+  ],
+  "scenarios": [
+    "track_selector",
+    "all_24_lessons_both_levels_render",
+    "independent_three_active_sessions",
+    "independent_progress_and_history",
+    "pause_resume_saved_answer",
+    "partial_finish_and_error_review",
+    "middle_eight_question_checks",
+    "result_links_keep_track",
+    "widths_320_390_768_1280",
+    "all_tracks_progress_persists_after_login",
+    "ios_remains_independent",
+    "ios_exam_preparation_ignores_selected_other_track",
+    "no_false_platform_certification",
+    "works_without_javascript"
+  ],
+  "browserErrors": [],
+  "verified_commit": "5e6996f946bdada286dc9801bc2293fa1a16f9a7"
+}

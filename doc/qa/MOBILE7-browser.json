@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:8057",
+  "checked_at": "2026-10-11T20:23:26.440Z",
+  "scenarios": [
+    "registration_and_consent",
+    "lesson_completion",
+    "topic_practice",
+    "save_pause_resume",
+    "partial_finish_and_explanations",
+    "repeat_errors",
+    "middle_full_check",
+    "history",
+    "widths_320_390_768_1280_no_overflow",
+    "active_exam_lock",
+    "resume_after_exam",
+    "category_unchanged",
+    "logout_login_progress_persisted",
+    "works_without_javascript"
+  ],
+  "browserErrors": [],
+  "code_commit": "f21cb541fde4e658d3576891ab7f38af9774fee1"
+}

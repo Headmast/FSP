@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Черновики действий</h1><p>CLI и MCP готовят изменения, вы подтверждаете их здесь.</p>{% for draft in drafts %}<section><a href="{% url 'action-draft' draft.pk %}">{{ draft.kind }}</a> · {{ draft.source }} · {{ draft.status }} · до {{ draft.expires_at }}</section>{% empty %}<p>Черновиков пока нет.</p>{% endfor %}{% endblock %}

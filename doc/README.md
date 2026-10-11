@@ -6,8 +6,11 @@
 
 ## Материалы проекта
 
+[Информационный бот Telegram/MAX на моках](../bots/README.md), [результат и проверки BOT-001](responses/BOT-001.md).
+
 [Корневое оглавление](../README.md) объединяет документацию, презентацию, демо, прототип и дополнительные материалы.
 
+- [Все видео проекта](../video/README.md), [запись прототипа](../video/6.mp4), [галерея](../video/index.html).
 - [Презентация PPTX](presentation/trudyazhki-fsp.pptx), [HTML](presentation/trudyazhki-fsp.html), [текст выступления](presentation/trudyazhki-fsp.md).
 - [Исходное ТЗ и уточнения](sources/README.md).
 - [Исследование конкурентов](research/competitor-analysis-2026-10-11.md).
@@ -31,6 +34,7 @@
 - [Результаты подготовки документации и worktree](qa/preparation-results.md)
 - [Результаты аккаунтов и профиля](qa/accounts-results.md)
 - [Результаты оценивания](qa/assessment-results.md)
+- [Учебный модуль mobile7](architecture/learning-mobile7.md): уроки, самопроверка, повтор ошибок; [QA](qa/learning-mobile7.md)
 - [Cron и постоянная страница демо](deployment/watchdog.md), [результаты](qa/watchdog-results.md)
 - [Публикация и откат](deployment/runbook.md)
 - [Отчёт о выпуске](delivery/mvp-release.md)

@@ -15,7 +15,7 @@ from http_contracts import ENDPOINTS, build_spec
 
 INTRO = '''# HTTP контракты FSP MVP
 
-Проверенный первый срез DOC-003: b82b455 + source hashes этапа. Задача IN_PROGRESS: новые learning/token V2/UUID approvals более позднего main ещё требуют включения. [Статус и границы](../responses/DOC-003-contracts.md).
+DOC-003: общий состав браузера, обучения, токенного API V1/V2 и веб-подтверждения UUID черновиков. [Проверки и границы](../responses/DOC-003-contracts.md). [Подробный контракт обучения](learning-mobile7.md).
 
 Все маршруты текущего Django-приложения описаны в [OpenAPI 3.1.1](openapi.json). Здесь закреплены поля, роли, ответы, повторы и границы моков. HTML формы используют session/CSRF; три прежних JSON маршрута чтения и PDF — те же browser permissions. Интегрированный JSON API /api/v1 использует Bearer: [его отдельный контракт](mcp-cli.md). Схемы API включены в общую спецификацию с префиксом Api, не смешивающим их с формами.
 
@@ -23,11 +23,11 @@ INTRO = '''# HTTP контракты FSP MVP
 
 - Cookie sessionid задаёт пользователя. candidate/employer/both требуют подтверждённый email и processing-v1. Неверная роль/email — 403; без сессии — 302 на login с next; без обработки — 302 consent после проверки роли/email. authenticated у consent требует только входа. pending-session у confirm — исходная сессия регистрации, ещё без входа.
 - Любой POST, включая register/login/confirm/logout, требует csrftoken cookie плюс csrfmiddlewaretoken из формы **или** X-CSRFToken. После входа сессия/CSRF обновляются. Отсутствие/несовпадение — 403 ещё до вызова view. GET не вызывает эту проверку.
-- Поддерживаемые тела: application/x-www-form-urlencoded и multipart/form-data без загрузки файлов. JSON не разбирается в request.POST: поля игнорируются, итог зависит от формы/значений по умолчанию; 415 не обещается. Для изменений используйте формы. Приватные поля не передавать в URL.
+- Для браузерных изменений поддерживаемые тела: application/x-www-form-urlencoded и multipart/form-data без загрузки файлов. JSON не разбирается в request.POST: поля игнорируются, итог зависит от формы/значений по умолчанию; 415 не обещается. Для browser изменений используйте формы; token V2 POST требует application/json, неверный JSON/media/поля дают JSON 400. Приватные поля не передавать в URL.
 - Массивы — повтор одного имени: roles=developer&roles=reviewer и accepted_attempts=1&accepted_attempts=2. Суффикс [] не входит в имя поля. Checkbox принимает on/true, false выключает; отсутствие необязательного флажка означает false. Необязательные числовые поля могут быть пустыми в HTML; описание задаёт нормализацию.
-- pk — положительный ID до 2^63−1. Query/form ID — 1..19 ASCII цифр в тех же границах, ведущие нули допустимы. Пробелы, Unicode цифры, отрицательное/слишком длинное значение или недоступный объект — 404. Пустой обязательный — 404; необязательный выбирает описанный default. Путь, не совпавший с URL converter, даёт 404 маршрутизатора.
+- Веб action-draft pk — UUID; токенные V2 drafts также используют UUID. Остальные pk — положительный ID до 2^63−1. Query/form ID — 1..19 ASCII цифр в тех же границах, ведущие нули допустимы. Пробелы, Unicode цифры, отрицательное/слишком длинное значение или недоступный объект — 404. Пустой обязательный — 404; необязательный выбирает описанный default. Путь, не совпавший с URL converter, даёт 404 маршрутизатора.
 - Обычные ошибки форм возвращают HTML 200. Для помощника/черновика 400/409/410/429/503 определены отдельно. Конфликты тестов и решения приглашения возвращают 302 с Django message. 302 содержит Location; клиент должен следовать ему и читать сообщение, а не считать каждый redirect успехом записи.
-- Страницы чтения допускают GET/HEAD; HEAD возвращает заголовки без тела. Формы с явным GET/POST не принимают HEAD. Login также допускает HEAD/OPTIONS, logout POST/OPTIONS. Остальные методы — 405 с Allow для пользователя, прошедшего внешние guard; auth/CSRF middleware может отвергнуть запрос раньше. Разрешённые методы перечислены ниже и проверяются по коду.
+- Страницы с require_safe допускают GET/HEAD; HEAD возвращает заголовки без тела. Учебные страницы и список V2 drafts допускают только GET (HEAD 405). Формы с явным GET/POST не принимают HEAD. Login также допускает HEAD/OPTIONS, logout POST/OPTIONS. Остальные методы — 405 с Allow для пользователя, прошедшего внешние guard; auth/CSRF middleware может отвергнуть запрос раньше. Разрешённые методы перечислены ниже и проверяются по коду.
 - Неизвестные обычные поля формы игнорируются; q_* проверяются по snapshot попытки, а experience-* — по formset. Параметры owner/score/confirmed_grade из браузера не выбирают владельца или результат. Нет обещания произвольного 500 в спецификации: такой ответ блокирует проверку.
 
 GET/HEAD invitations фиксирует viewed_at; некоторые страницы работодателя создают собственную Company при первом чтении. Это явные побочные эффекты существующего веб-интерфейса. Нельзя переиспользовать их как обещание чистого чтения нового MCP API.
@@ -45,8 +45,8 @@ OpenAPI request examples показывают допустимую форму т
 def type_text(schema):
     if '$ref' in schema:
         return schema['$ref'].rsplit('/', 1)[-1]
-    if 'anyOf' in schema:
-        return ' / '.join(type_text(s) for s in schema['anyOf'])
+    if 'anyOf' in schema or 'oneOf' in schema:
+        return ' / '.join(type_text(s) for s in schema.get('anyOf',schema.get('oneOf')))
     if 'const' in schema:
         return repr(schema['const'])
     kind = schema.get('type', 'object')
@@ -76,17 +76,28 @@ def markdown(spec):
     out += ['## Token API /api/v1\n','API не использует browser session и CSRF. Каждая операция требует активный Bearer token своей роли/скоупа, подтверждённый аккаунт и processing consent. 60 запросов/минуту, срок 30 дней; revoke/expiry → 401, scope/role/consent → 403. Данные/ошибки JSON без HTML redirect. Cache-Control=no-store, X-Request-ID; 429 также Retry-After=60, 401 WWW-Authenticate=Bearer. На GET меняется только учёт использования токена, бизнес-данные не меняются. MCP не получает контакты/свободные приватные тексты/PDF; CLI private требует contacts.read и действующий grant. Все DTO приведены в схемах Api ниже.\n']
     for path,operations in spec['paths'].items():
         if not path.startswith('/api/v1'):continue
-        op=operations['get'];out += [f'### GET {path}\n',op['description']+'\n']
-        if op.get('parameters'):
-            out += ['| Поле | Где | Тип / границы |','| --- | --- | --- |']
-            out += [f"| {p['name']} | {p['in']} | {type_text(p['schema'])} |" for p in op['parameters']];out += ['']
-        out += ['| Статус | Ответ |','| --- | --- |']
-        out += [f"| {status} | {response['description']} |" for status,response in op['responses'].items()];out += ['']
+        for method,operation in operations.items():
+            op=operation;out += [f'### {method.upper()} {path}\n',op['description']+'\n']
+            if op.get('parameters'):
+                out += ['| Поле | Где | Тип / границы |','| --- | --- | --- |']
+                out += [f"| {p['name']} | {p['in']} | {type_text(p['schema'])} |" for p in op['parameters']];out += ['']
+            out += ['| Статус | Ответ |','| --- | --- |']
+            out += [f"| {status} | {response['description']} |" for status,response in op['responses'].items()];out += ['']
     out += ['## Схемы полей\n', 'Числа/boolean ниже — логические типы после сериализации формы; на HTTP проводе URLencoded значения текстовые. Required относится к допустимому успешному POST. Схема не заменяет межполевую и владельческую проверку сервера.\n']
     for name,schema in spec['components']['schemas'].items():
         out += [f'### {name}\n']
         if schema.get('description'):out += [schema['description']+'\n']
         if 'anyOf' in schema:out += ['Варианты: '+', '.join(type_text(s) for s in schema['anyOf'])+'\n']
+        for index,variant in enumerate(schema.get('oneOf',schema.get('anyOf',[]))):
+            if not variant.get('properties'):continue
+            out += [f'Вариант {index+1}:\n','| Поле | Обязательно | Тип / границы |','| --- | --- | --- |']
+            out += [f"| {key} | {'да' if key in variant.get('required',[]) else 'нет'} | {type_text(field)} |" for key,field in variant['properties'].items()]
+            out += ['']
+            payload=variant['properties'].get('payload',{})
+            if payload.get('properties'):
+                out += ['Поля payload:\n','| Поле | Обязательно | Тип / границы |','| --- | --- | --- |']
+                out += [f"| {key} | {'да' if key in payload.get('required',[]) else 'нет'} | {type_text(field)} |" for key,field in payload['properties'].items()]
+                out += ['']
         if schema.get('properties'):
             out += ['| Поле | Обязательно | Тип / границы | Правила |','| --- | --- | --- | --- |']
             out += [f"| {key} | {'да' if key in schema.get('required',[]) else 'нет'} | {type_text(field)} | {field.get('description','—')} |" for key,field in schema['properties'].items()]

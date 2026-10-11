@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% load static %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'learning.css' %}">{% endblock %}
+{% block content %}<div class="learning">{% block learning_content %}{% endblock %}</div>{% endblock %}
+{% block footer %}{{ track_name }} / {{ track_stack }} · обучение и самопроверка · <a href="/accounts/privacy/">Данные и согласия</a>{% endblock %}

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-10-11T20:42:10.064506+00:00",
+  "from": "assessments/0003",
+  "to": "assessments/0004",
+  "database": "temporary SQLite; deleted after check",
+  "scenarios": [
+    "legacy_ios_snapshot_answers_version_and_timestamps_preserved",
+    "finished_score_and_history_preserved",
+    "lesson_completion_idempotent_after_migration",
+    "legacy_active_session_resumes",
+    "independent_android_session_created",
+    "legacy_session_finishes_correctly",
+    "profile_category_unchanged"
+  ]
+}

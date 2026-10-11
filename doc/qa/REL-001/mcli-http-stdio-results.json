@@ -1,0 +1,11 @@
+{
+  "candidate_http": 9,
+  "candidate_stdio_auto": true,
+  "candidate_stdio_legacy": true,
+  "candidate_native_keyring_cli": true,
+  "employer_http": 10,
+  "employer_stdio_auto": true,
+  "employer_stdio_legacy": true,
+  "employer_native_keyring_cli": true,
+  "verified_commit": "5e6996f946bdada286dc9801bc2293fa1a16f9a7"
+}

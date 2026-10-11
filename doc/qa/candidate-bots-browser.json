@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "base": "ce709f85e8fe5a5ad63d79b5e71f9a7778eb19f5",
+  "checked_at": "2026-10-11T20:54:28.884Z",
+  "url": "http://127.0.0.1:8067/",
+  "scenarios": [
+    "desktop",
+    "mobile-390",
+    "explicit-consent",
+    "shared-decisions",
+    "decline",
+    "notification-opt-out",
+    "notification-delivery",
+    "reload",
+    "FAQ-search",
+    "HTML-escaping",
+    "scoped-reset",
+    "keyboard-send",
+    "corrupt-storage",
+    "blocked-storage",
+    "no-external-requests"
+  ],
+  "browserErrors": [],
+  "externalRequests": [],
+  "code_commit": "c660fddd1bf9af8d396b2db40c312d7e20744b2c",
+  "source_sha256": {
+    "bots/app.mjs": "27eeac3a95d2523bf9c405d8f203d1363f3561fe5b981085e8ca645de480c119",
+    "bots/cli.mjs": "236d839b618ddd78679b5f4e514103fa94a4f80dbed3b6a668a71a26082033a4",
+    "bots/engine.mjs": "96c94d924ae126d7440f6583c13a3319b0784b1b4f62859b1736bf90754bc8d4",
+    "bots/index.html": "fd35fa34e5652dcdaa39153b3845f253c09951b1114ce917c59e9e101b884cd7",
+    "bots/style.css": "0859299bfa2b523062130ccd350540d4eec5e6303c2213eac3e89a2afd35b4de",
+    "bots/transports.mjs": "54a5b24df02a221c3cf50fd298dfec9ba90a31107984db41418b6b09062b3b7b"
+  },
+  "unit_tests": {
+    "status": "PASS",
+    "tests": 8,
+    "command": "node --test scripts/check_candidate_bots.mjs"
+  },
+  "cli_smoke": {
+    "status": "PASS",
+    "channel": "max",
+    "commands": [
+      "/profile",
+      "/event",
+      "/event",
+      "/exit"
+    ]
+  }
+}

@@ -30,7 +30,7 @@ def owned_profile(request):
 @endpoint()
 def catalog(request):
     return reply(request, {'specializations':['ios_swift'],'grades':['Junior','Middle'],'skills':list(SKILLS),
-        'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'features':['read'],'fsp_source':'mock'})
+        'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'features':['read','drafts'],'fsp_source':'mock'})
 
 
 @endpoint('candidate')
@@ -201,7 +201,7 @@ def openapi(request):
     return JsonResponse(document())
 
 
-@endpoint()
+@endpoint(methods=("GET","POST","PUT","PATCH","DELETE","HEAD","OPTIONS"))
 def not_found(request,unknown=""):
     raise ApiError(404,"NOT_FOUND","Маршрут не найден.")
 
@@ -227,3 +227,40 @@ def download_client(request,filename):
     response=FileResponse(path.open('rb'),as_attachment=True,filename=filename)
     response['Cache-Control']='no-cache'
     return response
+
+
+def json_body(request):
+    import json
+    require(len(request.body)<=65536,400,'INVALID_BODY','Запрос до 64 KiB.')
+    require(request.content_type=='application/json',400,'INVALID_BODY','Нужен application/json.')
+    try:body=json.loads(request.body)
+    except (ValueError,UnicodeDecodeError):raise ApiError(400,'INVALID_BODY','Неверный JSON.')
+    require(isinstance(body,dict),400,'INVALID_BODY','Нужен JSON объект.')
+    return body
+
+
+@endpoint(methods=('GET','POST'))
+def drafts(request):
+    from .models import ActionDraft
+    from .drafts import prepare,draft_data
+    if request.method=='POST':
+        body=json_body(request)
+        require(set(body)<={'kind','target_id','payload'} and isinstance(body.get('kind'),str),400,'INVALID_BODY','Нужны kind, target_id и payload.')
+        obj=prepare(request.user,request.api_token,body['kind'],body.get('target_id'),body.get('payload',{}))
+        return reply(request,draft_data(obj,is_mcp(request),private=not is_mcp(request) and "contacts.read" in request.api_token.scopes),201)
+    rows,pagination=paged(request,ActionDraft.objects.filter(user=request.user).order_by('-created_at','-pk'))
+    return reply(request,[draft_data(obj,is_mcp(request),private=not is_mcp(request) and "contacts.read" in request.api_token.scopes) for obj in rows],pagination=pagination)
+
+
+@endpoint()
+def draft(request,pk):
+    from .drafts import get_draft,draft_data
+    return reply(request,draft_data(get_draft(request.user,pk),is_mcp(request),private=not is_mcp(request) and "contacts.read" in request.api_token.scopes))
+
+
+@endpoint(methods=('POST',))
+def cancel_draft(request,pk):
+    from .drafts import get_draft,cancel,draft_data
+    require(f'{request.user.role}.draft' in request.api_token.scopes)
+    require(not json_body(request),400,'INVALID_BODY','Отмена не принимает параметры.')
+    return reply(request,draft_data(cancel(request.user,get_draft(request.user,pk)),is_mcp(request),private=not is_mcp(request) and "contacts.read" in request.api_token.scopes))

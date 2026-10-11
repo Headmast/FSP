@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Подтверждение действия</h1><p>{{ draft.kind }} · источник {{ draft.source }} · {{ state }}</p><p>Действует до {{ draft.expires_at }}. Параметры неизменяемы: для правок создайте новый черновик.</p>
+{% if error %}<div class="notice">{{ error }}</div>{% endif %}
+{% if stale and state == 'pending' %}<div class="notice">Исходные данные изменились. Нужен новый черновик.</div>{% endif %}
+<h2>Текущее состояние</h2><pre>{{ before }}</pre><h2>Подготовленные изменения</h2><pre>{{ payload }}</pre>
+{% if draft.kind == 'profile.publish' %}<p>Профиль станет доступен работодателям. Контакты открываются после принятия предложения.</p>{% endif %}
+{% if draft.kind == 'profile.unpublish' %}<p>Профиль исчезнет из поиска. Ранее принятые предложения сохраняют доступ соответствующим компаниям.</p>{% endif %}
+{% if draft.kind == 'invitation.accept' %}<p>Принятие предложения откроет ваши контакты этой компании.</p>{% endif %}
+{% if draft.kind == 'invitation.decline' %}<p>Предложение будет отклонено. Решение нельзя изменить в этом MVP.</p>{% endif %}
+{% if can_apply %}<form method="post">{% csrf_token %}<input type="hidden" name="action" value="apply">{{ form.as_p }}<button>Подтвердить действие</button></form>{% endif %}
+{% if state == 'pending' %}<form method="post">{% csrf_token %}<input type="hidden" name="action" value="cancel"><button>Отменить черновик</button></form>{% endif %}
+{% if state == 'applied' %}<p>Действие выполнено. Повторное подтверждение не создаёт дубликат.</p>{% endif %}<p><a href="/drafts/">Все черновики</a></p>
+{% endblock %}

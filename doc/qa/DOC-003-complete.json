@@ -1,0 +1,105 @@
+{
+  "task": "DOC-003",
+  "status": "PASS",
+  "task_status": "DONE",
+  "checked_at": "2026-10-11T22:08:39.920519+00:00",
+  "branch": "mvp/implementation",
+  "merge_source_commit": "7cb4db07fcb75c1ac87045358a120a4606627b20",
+  "source_state": "tested working tree; exact commit verification follows commit",
+  "http_evidence": "DOC-003-http-complete.json",
+  "checks": {
+    "http_runtime": 577,
+    "paths": 69,
+    "operations": 111,
+    "validated_examples": 57,
+    "counterfactuals": 4,
+    "openapi_validator": "PASS",
+    "generator_check": "PASS",
+    "django_regression": {
+      "status": "PASS",
+      "count": 148,
+      "seconds": 36.469,
+      "command": "uv run python app/manage.py test accounts profiles assessments hiring assistant api --verbosity 0"
+    },
+    "tools": {
+      "status": "PASS",
+      "count": 23,
+      "seconds": 7.182,
+      "command": "python3 -m unittest discover -s scripts/tests -v"
+    },
+    "migration_drift": "PASS",
+    "production_lock": "unchanged pyproject/uv.lock bytes versus verified 12c29ba; see DOC-003-production-lock.json",
+    "documentation_links": {
+      "status": "PASS",
+      "documents": 130
+    },
+    "diff_check": "PASS",
+    "worktree_isolation": "PASS",
+    "packaged_client_sources": "PASS"
+  },
+  "original_scope": {
+    "total": 27,
+    "done": 14,
+    "open": 13
+  },
+  "fixes": [
+    "Owned Company queryset for V2 recruiter payload",
+    "Nullable relation ID in JSON, recruiter_id assignment on apply",
+    "Relation attname in before-state HTML JSON"
+  ],
+  "failures_retained": [
+    {
+      "id": "http-contracts-v2-initial.json",
+      "status": "FAIL",
+      "checks_completed": 0,
+      "reason": "AssertionError: /api/v1/: method coverage mismatch"
+    },
+    {
+      "id": "http-contracts-v2-structure.json",
+      "status": "FAIL",
+      "checks_completed": 287,
+      "reason": "AssertionError: api-read-/api/v1/drafts/{pk}: expected 200, got 404"
+    },
+    {
+      "id": "http-contracts-v2.json",
+      "status": "FAIL",
+      "checks_completed": 309,
+      "reason": "IntegrityError: NOT NULL constraint failed: assessments_attempt.tasks"
+    },
+    {
+      "id": "http-contracts-v2b.json",
+      "status": "FAIL",
+      "checks_completed": 321,
+      "reason": "AssertionError: v2-apply-bearer-no-session: expected 403, got 302"
+    },
+    {
+      "id": "http-contracts-v2c.json",
+      "status": "FAIL",
+      "checks_completed": 355,
+      "reason": "AssertionError: v2-need-create: expected 201, got 400"
+    },
+    {
+      "id": "http-contracts-v2d.json",
+      "status": "FAIL",
+      "checks_completed": 387,
+      "reason": "AssertionError: api-read-/api/v1/me/assessments: expected 200, got 500"
+    },
+    {
+      "id": "http-contracts-v2e.json",
+      "status": "FAIL",
+      "checks_completed": 361,
+      "reason": "TypeError: Object of type Recruiter is not JSON serializable"
+    },
+    {
+      "id": "generated-markdown-whitespace",
+      "status": "FAIL initially; PASS after strip and regeneration",
+      "reason": "Merged token descriptions introduced trailing spaces; normalized at generator source."
+    }
+  ],
+  "limits": [
+    "HTTP calls use Django Client, not TLS/proxy/live browser",
+    "MCLI-013 full client V2 acceptance remains TODO",
+    "DEL-001 not complete; full C4 not PASS",
+    "C5/C6, manual screen readers, native builds and human pilot not run here"
+  ]
+}

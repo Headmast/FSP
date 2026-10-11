@@ -36,7 +36,7 @@ def actual_routes():
             if isinstance(route,URLResolver):yield from flattened(route.url_patterns,prefix+str(route.pattern))
             else:yield prefix+str(route.pattern),route
     for raw_path,route in flattened(urlpatterns):
-        path = '/' + re.sub(r'<(?:int|str|path):([^>]+)>', r'{\1}', raw_path)
+        path = '/' + re.sub(r'<(?:int|str|path|slug|uuid):([^>]+)>', r'{\1}', raw_path)
         callback = route.callback
         cls = getattr(callback, 'view_class', None)
         if cls:
@@ -184,6 +184,9 @@ def runtime_checks(spec, report):
             'content_type':response.get('Content-Type'),'location':response.get('Location'),'status':'PASS'})
         response.close()
         return response,body
+    def rendered_path(path,pk=1):
+        if path=='/drafts/{pk}/' and isinstance(pk,int):pk='00000000-0000-0000-0000-000000000001'
+        return path.replace('{pk}',str(pk)).replace('{track}','ios').replace('{grade}','Junior').replace('{topic}','swift').replace('{filename}','manifest.json')
     anonymous=Client(enforce_csrf_checks=True)
     run('welcome',anonymous,'/')
     run('privacy',anonymous,'/accounts/privacy/')
@@ -192,7 +195,7 @@ def runtime_checks(spec, report):
         if path.startswith('/api/v1'):continue
         role=next(iter(operations.values()))['x-role']
         if role not in {'candidate','employer','both','authenticated'}:continue
-        rendered=path.replace('{pk}','9223372036854775807')
+        rendered=rendered_path(path,9223372036854775807)
         method='GET' if 'get' in operations else 'POST'
         anonymous.get('/accounts/login/')
         response,_=run('auth-'+path,anonymous,rendered,method,expected=302,template=path)
@@ -367,12 +370,16 @@ def runtime_checks(spec, report):
         run('health-unavailable',anonymous,'/health/',expected=503)
     # Token API DTOs are exercised independently through the same Django handler.
     from api.core import issue_token
-    token_pairs={key:issue_token(users[key],'contract-'+key,'cli',contacts=True) for key in ['candidate','employer','otheremployer']}
+    token_pairs={key:issue_token(users[key],'contract-'+key,'cli',contacts=True,drafts=True) for key in ['candidate','employer','otheremployer']}
     mcp_token,mcp_secret=issue_token(candidate,'contract-mcp','mcp')
-    api_pk={'/api/v1/me/assessments/{pk}/result':attempt.pk,'/api/v1/needs/{pk}':need.pk,
+    from http_contract_scenarios import learning_scenarios, action_scenarios
+    learning_session=learning_scenarios(run,require,profile,other_profile)
+    action_draft=action_scenarios(run,require,anonymous,users,profile,company,need,token_pairs)
+    api_pk={'/api/v1/drafts/{pk}':action_draft.pk,'/api/v1/me/assessments/{pk}/result':attempt.pk,'/api/v1/needs/{pk}':need.pk,
         '/api/v1/invitations/{pk}':invitation.pk,'/api/v1/invitations/{pk}/contacts':invitation.pk}
     for path,operations in spec['paths'].items():
         if not path.startswith('/api/v1'):continue
+        if 'get' not in operations:continue
         op=operations['get'];scopes=' '.join(op.get('x-required-scopes',[]))
         key='employer' if 'employer.read' in scopes and ' OR ' not in scopes else 'candidate'
         pk=api_pk.get(path,profile.pk);rendered=path.replace('{pk}',str(pk)).replace('{unknown}','not-a-route')
@@ -382,7 +389,11 @@ def runtime_checks(spec, report):
         ApiToken.objects.filter(pk=token_pairs[key][0].pk).update(request_count=0)
         run('api-read-'+path,anonymous,rendered+query,expected=expected,template=path,bearer=token_pairs[key][1])
         run('api-no-token-'+path,anonymous,rendered,expected=401,template=path)
-        run('api-put-'+path,anonymous,rendered,'PUT',{},405,template=path,bearer=token_pairs[key][1])
+        run('api-put-'+path,anonymous,rendered,'PUT',{},404 if path in {'/api/v1/','/api/v1/{unknown}'} else 405,template=path,bearer=token_pairs[key][1])
+        if path in {'/api/v1/','/api/v1/{unknown}'}:
+            for method in ['POST','PATCH','DELETE','HEAD','OPTIONS']:
+                run('api-fallback-'+method+path,anonymous,rendered,method,{},404,template=path,bearer=token_pairs[key][1])
+            run('api-fallback-trace-'+path,anonymous,rendered,'TRACE',{},405,template=path,bearer=token_pairs[key][1])
     run('api-mcp-private',anonymous,'/api/v1/me/profile/private',expected=403,bearer=mcp_secret)
     run('api-mcp-pdf',anonymous,'/api/v1/me/profile/resume.pdf',expected=403,bearer=mcp_secret)
     run('api-other-company-contacts',anonymous,f'/api/v1/candidates/{profile.pk}/private',expected=403,template='/api/v1/candidates/{pk}/private',bearer=token_pairs['otheremployer'][1])
@@ -393,7 +404,7 @@ def runtime_checks(spec, report):
     ApiToken.objects.filter(pk=mcp_token.pk).update(revoked_at=timezone.now())
     run('api-revoked',anonymous,'/api/v1/me',expected=401,bearer=mcp_secret)
     # Every supported read/HEAD operation with valid context, and every method guard.
-    pk_map={'/candidates/{pk}/':profile.pk,'/candidates/{pk}/resume.pdf':profile.pk,
+    pk_map={'/drafts/{pk}/':action_draft.pk,'/learning/sessions/{pk}/':learning_session.pk,'/learning/sessions/{pk}/answer/':learning_session.pk,'/candidates/{pk}/':profile.pk,'/candidates/{pk}/resume.pdf':profile.pk,
         '/assessments/{pk}/':attempt.pk,'/assessments/{pk}/proof/':attempt.pk,
         '/assessments/{pk}/answer/':attempt.pk,'/assessments/{pk}/finish/':attempt.pk,
         '/assistant/drafts/{pk}/':draft.pk,'/invitations/{pk}/accept/':invitation.pk,'/invitations/{pk}/decline/':invitation.pk}
@@ -401,7 +412,7 @@ def runtime_checks(spec, report):
         if path.startswith('/api/v1'):continue
         role=next(iter(operations.values()))['x-role'];key='employer' if role=='employer' else 'candidate'
         if role in {'public','pending-session'}:key=anonymous
-        rendered=path.replace('{pk}',str(pk_map.get(path,1))).replace('{filename}','manifest.json')
+        rendered=rendered_path(path,pk_map.get(path,1))
         if path=='/accounts/confirm/':
             # Create a fresh pending registration for read coverage.
             pending=Client(enforce_csrf_checks=True);pending.get('/accounts/register/')
@@ -415,7 +426,7 @@ def runtime_checks(spec, report):
         require(set(response['Allow'].replace(' ','').lower().split(','))=={m for m in operations if m in HTTP_METHODS},f'{path}: Allow mismatch')
         if '{pk}' in path:
             method='GET' if 'get' in operations else 'POST'
-            run('foreign-object-'+path,key,path.replace('{pk}','9223372036854775807'),method,{},404,template=path)
+            run('foreign-object-'+path,key,rendered_path(path,9223372036854775807),method,{},404,template=path)
     from api.views import client_version
     for filename in [f'fsp_client-{client_version()}-py3-none-any.whl',f'fsp_client-{client_version()}.tar.gz']:
         run('download-'+filename,anonymous,'/downloads/'+filename,template='/downloads/{filename}')
@@ -424,6 +435,13 @@ def runtime_checks(spec, report):
     for artifact in manifest['files']:
         payload=(ROOT/'.runtime/downloads'/artifact['filename']).read_bytes()
         require(len(payload)==artifact['bytes'] and hashlib.sha256(payload).hexdigest()==artifact['sha256'],'Download manifest mismatch')
+    from zipfile import ZipFile
+    wheel=ROOT/'.runtime/downloads'/f'fsp_client-{client_version()}-py3-none-any.whl'
+    with ZipFile(wheel) as archive:
+        source_dir=ROOT/'clients/python/src/fsp_client'
+        for source in source_dir.rglob('*.py'):
+            require(archive.read('fsp_client/'+source.relative_to(source_dir).as_posix())==source.read_bytes(),'Client download is stale: '+source.name)
+    report['download_source_match']={'status':'PASS','format':'wheel','scope':'all current fsp_client Python sources match packaged bytes'}
     run('download-unknown',anonymous,'/downloads/not-allowed',expected=404,template='/downloads/{filename}')
     expected_ops={(p,m) for p,ops in spec['paths'].items() for m in ops if m in HTTP_METHODS}
     require(seen==expected_ops,'Runtime operations missing: '+str(expected_ops-seen))
@@ -444,6 +462,14 @@ def runtime_checks(spec, report):
         from jsonschema import ValidationError
         require(isinstance(exc,ValidationError),'Unexpected counterfactual exception');report['counterfactuals'].append({'id':'wrong-json-field','status':'PASS','meaning':'Rejected'})
     else:raise AssertionError('Verifier accepted false JSON schema')
+    bad=copy.deepcopy(spec)
+    variant=next(v for v in bad['components']['schemas']['ActionPrepare']['oneOf'] if v['properties']['kind']['const']=='profile.update')
+    variant['properties']['payload']['properties']['city']={'const':'Wrong city'}
+    try:schema_check(bad,{'$ref':'#/components/schemas/ActionPrepare'},{'kind':'profile.update','payload':{'city':'Казань'}})
+    except Exception as exc:
+        from jsonschema import ValidationError
+        require(isinstance(exc,ValidationError),'Unexpected request counterfactual exception');report['counterfactuals'].append({'id':'wrong-v2-request-field','status':'PASS','meaning':'Rejected'})
+    else:raise AssertionError('Verifier accepted false V2 request schema')
 
 
 def main():
@@ -474,8 +500,8 @@ def main():
             from django.db import connections
             connections.close_all()
         source_names=['app/config/urls.py','app/accounts/views.py','app/profiles/views.py','app/assessments/views.py','app/hiring/views.py','app/assistant/views.py',
-            'app/accounts/integrations.py','app/hiring/dashboard.py','app/hiring/forms.py','app/api/urls.py','app/api/core.py','app/api/schema.py','app/api/views.py','app/api/serializers.py',
-            'scripts/http_contracts.py','scripts/build_http_spec.py','scripts/check_http_contracts.py','doc/api/openapi.json']
+            'app/accounts/forms.py','app/profiles/forms.py','app/profiles/models.py','app/assessments/models.py','app/assessments/learning_tracks.py','app/accounts/integrations.py','app/api/tests.py','app/api/drafts.py','app/api/web.py','app/api/models.py','app/assessments/learning_views.py','app/assessments/learning.py','app/assessments/learning_urls.py','app/hiring/dashboard.py','app/hiring/forms.py','app/api/urls.py','app/api/core.py','app/api/schema.py','app/api/views.py','app/api/serializers.py',
+            'scripts/http_contracts.py','scripts/http_contract_scenarios.py','scripts/build_http_spec.py','scripts/check_http_contracts.py','doc/api/openapi.json']
         report['source_hashes']={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in source_names}
         report['status']='PASS';report['completed_at']=datetime.datetime.now(datetime.timezone.utc).isoformat()
     except Exception as exc:

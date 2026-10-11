@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#173f37"><link rel="icon" href="data:,"><title>Трудяжки — бот соискателя</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<a class="skip" href="#composer">Перейти к сообщению</a>
+<header class="site-header"><a class="brand" href="#"><span class="brand-icon" aria-hidden="true">т</span>трудяжки<span class="brand-note">помощник соискателя</span></a><span class="demo-badge"><i></i>Демо на моках</span></header>
+<main>
+  <section class="intro" aria-labelledby="intro-title">
+    <p class="eyebrow">ВАШ КАРЬЕРНЫЙ ПОМОЩНИК</p>
+    <h1 id="intro-title">Всё важное.<br> В одном <em>чате.</em></h1>
+    <p class="lead">Приглашения, подтверждённые навыки и следующий шаг — всегда под рукой.</p>
+    <div class="channel-switch" role="group" aria-label="Мессенджер"><button data-channel="telegram" aria-pressed="true"><span aria-hidden="true">↗</span> Telegram</button><button data-channel="max" aria-pressed="false"><span class="max-icon" aria-hidden="true">м</span> MAX</button></div>
+    <div class="journey"><span class="eyebrow">ВАШ ПУТЬ К РАБОТЕ</span><ol><li class="complete"><span>✓</span><div>Профиль готов<small>iOS / Swift</small></div></li><li class="complete"><span>✓</span><div>Навыки подтверждены<small>Junior · демо-тест 6 / 8</small></div></li><li class="current"><span>3</span><div>Выберите приглашение<small id="pending-count">2 ждут вашего решения</small></div></li><li><span>4</span><div>Познакомьтесь с командой<small>Когда подойдут условия</small></div></li></ol></div>
+    <div class="privacy-note"><span aria-hidden="true">◇</span><p>Вы решаете, кому открыть контакты.<br><button data-action="faq:contacts">Как это работает ↗</button></p></div>
+  </section>
+  <section class="messenger" aria-label="Демонстрация переписки">
+    <header class="chat-header"><div class="avatar" aria-hidden="true">т.</div><div><h2>Трудяжки · помощник</h2><p><span id="channel-name">Telegram</span> · моковый бот</p></div><button id="menu-button" class="menu-button" aria-label="Открыть меню бота">☰</button></header>
+    <div class="chat-body" id="chat-body" role="region" aria-label="История сообщений" tabindex="0"><div class="date-divider">ДЕМО-ПЕРЕПИСКА</div><div id="messages"></div></div>
+    <div class="quick-nav" aria-label="Быстрые действия"><button data-action="offers">Приглашения <span id="offer-badge">2</span></button><button data-action="profile">Профиль</button><button data-action="next">Следующий шаг</button></div>
+    <form id="composer" class="composer"><label for="message-input" class="sr-only">Сообщение боту</label><input id="message-input" name="message" autocomplete="off" maxlength="500" placeholder="Например: кто видит мои контакты?"><button type="submit" aria-label="Отправить сообщение">↑</button></form>
+    <p class="composer-note">Ответы по готовым сценариям · без внешнего AI</p>
+  </section>
+  <aside class="demo-panel" aria-label="Проверка демо"><span class="eyebrow">ПОПРОБУЙТЕ СЦЕНАРИЙ</span><h3>Новое предложение?<br>Бот подскажет.</h3><p>Добавьте вымышленное приглашение и посмотрите, как оно появится в чате.</p><button id="event-button">＋ Новое приглашение</button><p class="panel-note">Настройки уведомлений свои у каждого канала. Профиль и решения общие.</p><div class="demo-line"></div><p class="eyebrow">МОКОВЫЙ ПРОФИЛЬ</p><div class="candidate"><div class="mini-avatar">АД</div><div>Алексей Демо<small>iOS / Swift · Junior</small></div></div><button id="reset-button" class="reset-button">↺ Сбросить демо</button></aside>
+</main>
+<footer><span>ФСП · Обратный найм</span><span>Все люди и предложения вымышлены. Telegram и MAX не подключены.</span></footer>
+<div id="status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+<script type="module" src="app.mjs"></script>
+</body></html>
