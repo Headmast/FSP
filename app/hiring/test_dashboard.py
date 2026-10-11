@@ -180,6 +180,7 @@ class OwnerDashboardTests(TestCase):
         fixture=Company.objects.get(user__username='fixture-owner@demo.invalid')
         self.assertEqual(Invitation.objects.filter(company=fixture).count(),30)
         self.assertEqual(Recruiter.objects.filter(company=fixture).count(),3)
+        self.assertEqual(User.objects.filter(username__startswith='fixture-owner-candidate-').count(),20)
         offer.refresh_from_db();self.assertEqual(offer.status,'sent')
         fixture.name='Сохранённое изменение';fixture.save()
         call_command('seed_owner_dashboard',stdout=StringIO())
