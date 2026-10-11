@@ -11,24 +11,21 @@ if not uv.exists():
     subprocess.run([str(shared/'venv-check/bin/python'),'-m','pip','install','uv==0.12.17'],check=True)
 subprocess.run([str(uv),'sync','--locked','--python','/usr/bin/python3'],cwd=release,check=True)
 python=release/'.venv/bin/python'
-tunnelpid=shared/'pids/mvp-ssh-tunnel.pid';tunnellog=shared/'logs/mvp-ssh-tunnel.log'
+tunnelpid=shared/'pids/mvp-pinggy.pid';tunnellog=shared/'logs/mvp-pinggy.log'
 def tunnel_alive():
     try:
         cmd=Path(f'/proc/{int(tunnelpid.read_text())}/cmdline').read_bytes()
-        owned=b'nokey@localhost.run' in cmd and b'80:127.0.0.1:8011' in cmd
-        if owned and b'--inject-http-proxy-headers' not in cmd:
-            os.kill(int(tunnelpid.read_text()),signal.SIGTERM)
-            return False
-        return owned
+        return b'free.pinggy.io' in cmd and b'0:127.0.0.1:8011' in cmd
     except (OSError,ValueError):return False
 if not tunnel_alive():
     with tunnellog.open('w') as log:
-        proc=subprocess.Popen(['ssh','-F','/dev/null','-T','-o','StrictHostKeyChecking=accept-new','-o','IdentityFile=none',
-            '-o','IdentityAgent=none','-o','IdentitiesOnly=yes','-o','ServerAliveInterval=30','-o','ExitOnForwardFailure=yes',
-            '-R','80:127.0.0.1:8011','nokey@localhost.run','--','--output','json','--inject-http-proxy-headers'],stdin=subprocess.DEVNULL,stdout=log,stderr=log,start_new_session=True)
+        proc=subprocess.Popen(['ssh','-F','/dev/null','-T','-p','443','-o','StrictHostKeyChecking=accept-new',
+            '-o','IdentityFile=none','-o','IdentityAgent=none','-o','IdentitiesOnly=yes','-o','ServerAliveInterval=30',
+            '-o','ExitOnForwardFailure=yes','-R','0:127.0.0.1:8011','free.pinggy.io','x:https'],
+            stdin=subprocess.DEVNULL,stdout=log,stderr=log,start_new_session=True)
     tunnelpid.write_text(str(proc.pid))
 for _ in range(60):
-    urls=re.findall(r'https://[a-z0-9-]+\.(?:lhr\.life|localhost\.run)',tunnellog.read_text())
+    urls=re.findall(r'https://[a-z0-9.-]+(?:pinggy-free\.link|pinggy\.link|pinggy\.net)',tunnellog.read_text())
     urls=[u for u in urls if not u.startswith('https://admin.')]
     if urls:break
     time.sleep(.5)
@@ -78,6 +75,6 @@ for _ in range(50):
         break
     except OSError:time.sleep(.2)
 else:raise RuntimeError('Health timeout')
-result={'commit':sha,'url':url,'assistant':'mock'}
+result={'commit':sha,'url':url,'assistant':'mock','tunnel':'pinggy-free'}
 (shared/'release.json').write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps(result,indent=2))
