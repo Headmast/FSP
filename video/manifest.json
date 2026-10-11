@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "description": "Пять иллюстраций концепции и запись мокового прототипа. Видео может отличаться от текущего сайта.",
+  "videos": [
+    {
+      "file": "1.mp4",
+      "title": "Концепция: профиль и подтверждённый уровень",
+      "kind": "concept-illustration",
+      "duration_seconds": 15.1151,
+      "bytes": 21061865,
+      "sha256": "fd0428aeac9b51b31e661a0d7d0d6361cee9c3249df32d9698c9604a57b7ee64",
+      "width": 1280,
+      "height": 720,
+      "video_codec": "h264",
+      "url": "https://github.com/Headmast/FSP/blob/main/video/1.mp4"
+    },
+    {
+      "file": "2.mp4",
+      "title": "Концепция: материалы профиля",
+      "kind": "concept-illustration",
+      "duration_seconds": 15.1151,
+      "bytes": 26559892,
+      "sha256": "791dbe4493e2e68a64963cb31f130ecf5de8df8096a00c2ca309ee3bae3eea56",
+      "width": 1280,
+      "height": 720,
+      "video_codec": "h264",
+      "url": "https://github.com/Headmast/FSP/blob/main/video/2.mp4"
+    },
+    {
+      "file": "3.mp4",
+      "title": "Концепция: проверка навыков",
+      "kind": "concept-illustration",
+      "duration_seconds": 15.1151,
+      "bytes": 23059283,
+      "sha256": "ecf62f7a770e3835bc05832d53993afea51aa0c7048b213b79af5c0be2f3a9ca",
+      "width": 1280,
+      "height": 720,
+      "video_codec": "h264",
+      "url": "https://github.com/Headmast/FSP/blob/main/video/3.mp4"
+    },
+    {
+      "file": "4.mp4",
+      "title": "Концепция: выбор кандидатов работодателем",
+      "kind": "concept-illustration",
+      "duration_seconds": 15.148467,
+      "bytes": 25021277,
+      "sha256": "d8fd3eaf11628c3299bb1e893770d91a48592f0279a20c4a7923eec48a8c3c9b",
+      "width": 1280,
+      "height": 720,
+      "video_codec": "h264",
+      "url": "https://github.com/Headmast/FSP/blob/main/video/4.mp4"
+    },
+    {
+      "file": "5.mp4",
+      "title": "Концепция: достижения и подтверждения",
+      "kind": "concept-illustration",
+      "duration_seconds": 15.081733,
+      "bytes": 23543411,
+      "sha256": "aff97ede3a1f8bee2b00e9660186bd00482d8296a924b31623ceba2b6ac5150d",
+      "width": 1280,
+      "height": 720,
+      "video_codec": "h264",
+      "url": "https://github.com/Headmast/FSP/blob/main/video/5.mp4"
+    },
+    {
+      "file": "6.mp4",
+      "title": "Запись прототипа: профиль, тест и приглашение",
+      "kind": "prototype-recording",
+      "duration_seconds": 69.836433,
+      "bytes": 15176162,
+      "sha256": "9b044ccc0c9da197a90947e53bc1b9236815e89b574755da583f603292361fa2",
+      "width": 1280,
+      "height": 720,
+      "video_codec": "h264",
+      "url": "https://github.com/Headmast/FSP/blob/main/video/6.mp4"
+    }
+  ]
+}
