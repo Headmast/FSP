@@ -1,0 +1,150 @@
+{
+  "checked_at": "2026-10-11T17:27:40.713478+00:00",
+  "commit": "d7434596b0e8e77bac49610825e650c6abf37f62",
+  "isolation": "temporary archive of committed HEAD; no unfinished drafts, production DB or server writes",
+  "checks": [
+    {
+      "id": "static",
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.475,
+      "command": [
+        "app/manage.py",
+        "collectstatic",
+        "--noinput",
+        "--verbosity",
+        "0"
+      ],
+      "output": ""
+    },
+    {
+      "id": "application_tests",
+      "status": "FAIL",
+      "exit_code": 1,
+      "seconds": 13.339,
+      "command": [
+        "app/manage.py",
+        "test",
+        "accounts",
+        "profiles",
+        "assessments",
+        "hiring",
+        "assistant",
+        "--verbosity",
+        "1"
+      ],
+      "output": "Found 70 test(s).\nSystem check identified no issues (0 silenced).\nCreating test database for alias 'default'...\n......fatal: not a git repository (or any of the parent directories): .git\nE...............................................................\n======================================================================\nERROR: test_failed_database_is_503_even_when_version_is_reachable (accounts.tests.RegistrationTests.test_failed_database_is_503_even_when_version_is_reachable)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/private/var/folders/k3/0p_qjkrj77vccpp_xhhqw03r0000gn/T/fsp-scope-recheck-728q763i/app/accounts/tests.py\", line 66, in test_failed_database_is_503_even_when_version_is_reachable\n    self.assertEqual(self.client.get('/version/').status_code,200)\n                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/Users/headmast/Documents/FSP/StaticSite/FSP/.venv/lib/python3.13/site-packages/django/test/client.py\", line 1127, in get\n    response = super().get(\n        path,\n    ...<4 lines>...\n        **extra,\n    )\n  File \"/Users/headmast/Documents/FSP/StaticSite/FSP/.venv/lib/python3.13/site-packages/django/test/client.py\", line 475, in get\n    return self.generic(\n           ~~~~~~~~~~~~^\n        \"GET\",\n        ^^^^^^\n    ...<4 lines>...\n        **extra,\n        ^^^^^^^^\n    )\n    ^\n  File \"/Users/headmast/Documents/FSP/StaticSite/FSP/.venv/lib/python3.13/site-packages/django/test/client.py\", line 671, in generic\n    return self.request(**r)\n           ~~~~~~~~~~~~^^^^^\n  File \"/Users/headmast/Documents/FSP/StaticSite/FSP/.venv/lib/python3.13/site-packages/django/test/client.py\", line 1090, in request\n    self.check_exception(response)\n    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/Users/headmast/Documents/FSP/StaticSite/FSP/.venv/lib/python3.13/site-packages/django/test/client.py\", line 805, in check_exception\n    raise exc_value\n  File \"/Users/headmast/Documents/FSP/StaticSite/FSP/.venv/lib/python3.13/site-packages/django/core/handlers/exception.py\", line 55, in inner\n    response = get_response(request)\n  File \"/Users/headmast/Documents/FSP/StaticSite/FSP/.venv/lib/python3.13/site-packages/django/core/handlers/base.py\", line 197, in _get_response\n    response = wrapped_callback(request, *callback_args, **callback_kwargs)\n  File \"/private/var/folders/k3/0p_qjkrj77vccpp_xhhqw03r0000gn/T/fsp-scope-recheck-728q763i/app/accounts/views.py\", line 104, in version\n    revision = marker.read_text().strip() if marker.is_file() else subprocess.check_output(\n                                                                   ~~~~~~~~~~~~~~~~~~~~~~~^\n        [\"git\", \"rev-parse\", \"HEAD\"], cwd=settings.ROOT, text=True).strip()\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.7/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 472, in check_output\n    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,\n           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n               **kwargs).stdout\n               ^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.7/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py\", line 577, in run\n    raise CalledProcessError(retcode, process.args,\n                             output=stdout, stderr=stderr)\nsubprocess.CalledProcessError: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status 128.\n\n----------------------------------------------------------------------\nRan 70 tests in 12.598s\n\nFAILED (errors=1)\nDestroying test database for alias 'default'...\n"
+    },
+    {
+      "id": "tools_tests",
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 4.92,
+      "command": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests"
+      ],
+      "output": "{\"checked_at\": \"2026-10-11T17:27:56.402720+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.404120+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.405314+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.406440+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\nMaintenance already running; skipped\n{\"checked_at\": \"2026-10-11T17:27:56.416798+00:00\", \"available\": true, \"action\": \"renewed\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.421220+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.430742+00:00\", \"available\": true, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.434723+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.435641+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.437559+00:00\", \"available\": true, \"action\": \"renewed\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.440782+00:00\", \"available\": true, \"action\": \"checked\", \"publication\": \"publish-failed:OSError\"}\n{\"checked_at\": \"2026-10-11T17:27:56.444305+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.445487+00:00\", \"available\": true, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.448852+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.449921+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T17:27:56.451868+00:00\", \"available\": true, \"action\": \"renewed\", \"publication\": \"published\"}\n.......................\n----------------------------------------------------------------------\nRan 23 tests in 4.770s\n\nOK\n"
+    },
+    {
+      "id": "synthetic_validation",
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 1.528,
+      "command": [
+        "scripts/check_validation.py",
+        "--output",
+        "/var/folders/k3/0p_qjkrj77vccpp_xhhqw03r0000gn/T/fsp-scope-recheck-728q763i/validation.json"
+      ],
+      "output": null,
+      "result": {
+        "status": "PASS",
+        "attempts": 320,
+        "fixture_sha256": "f230320b83b6eb6c7449f5c2058a1268e70037194c6ec1624be43b40dbccb904",
+        "metrics": {
+          "anchors": {
+            "subjects": 24,
+            "label_accuracy": 0.9895833333333334,
+            "test_retest_agreement": 0.9791666666666666,
+            "ab_grade_agreement": 0.9791666666666666,
+            "mean_abs_ab_score_gap": 0.75
+          },
+          "holdout": {
+            "subjects": 12,
+            "label_accuracy": 1.0,
+            "test_retest_agreement": 1.0,
+            "ab_grade_agreement": 1.0,
+            "mean_abs_ab_score_gap": 0.7291666666666666
+          },
+          "boundary": {
+            "subjects": 4,
+            "label_accuracy": null,
+            "test_retest_agreement": 0.25,
+            "ab_grade_agreement": 0.75,
+            "mean_abs_ab_score_gap": 1.0
+          }
+        },
+        "violations": []
+      }
+    },
+    {
+      "id": "static_with_release_marker",
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.402,
+      "command": [
+        "app/manage.py",
+        "collectstatic",
+        "--noinput",
+        "--verbosity",
+        "0"
+      ],
+      "output": ""
+    },
+    {
+      "id": "application_tests_with_release_marker",
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 14.118,
+      "command": [
+        "app/manage.py",
+        "test",
+        "accounts",
+        "profiles",
+        "assessments",
+        "hiring",
+        "assistant",
+        "--verbosity",
+        "1"
+      ],
+      "output": "Found 70 test(s).\nSystem check identified no issues (0 silenced).\nCreating test database for alias 'default'...\n......................................................................\n----------------------------------------------------------------------\nRan 70 tests in 13.158s\n\nOK\nDestroying test database for alias 'default'...\n"
+    },
+    {
+      "id": "missing_assistant_journey",
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.667,
+      "command": "isolated Django Client: own employer without Need; GET and POST /assistant/",
+      "output": "{\"employer_without_need\": {\"status\": 400, \"message_present\": true, \"needs_created\": 0}, \"hidden_identifier_none\": true}\nBad Request: /assistant/\n",
+      "interpretation": "Reproduced incomplete feature: desired new-need draft workflow absent; PASS denotes successful audit probe, not feature readiness."
+    }
+  ],
+  "status": "PASS_AFTER_HARNESS_FIX",
+  "initial_failure": "Archive contained no .git and no REVISION. /version/ expected Git or deployed REVISION. Repeated with exact archived SHA in REVISION; application code unchanged.",
+  "completed_at": "2026-10-11T17:28:49.181990+00:00",
+  "documentation": {
+    "task_statuses": {
+      "DONE": 11,
+      "IN_PROGRESS": 1,
+      "TODO": 14,
+      "NOT_RUN": 1
+    },
+    "unique_tasks": 27,
+    "status": "PASS",
+    "check_docs": "PASS: local links and historical gate metadata",
+    "diff_check": "PASS"
+  }
+}
