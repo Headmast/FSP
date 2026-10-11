@@ -21,3 +21,11 @@
 - python3 scripts/check_docs.py — PASS (ссылки и metadata, не backend gates).
 
 Проверки относятся к прототипу. Автоматическое распознавание записи не доказывает дефект серверной регистрации. Публикация фиксируется отдельно после фактической проверки.
+
+## Публикация и проверка HTTPS
+
+Опубликован код fcdc5e41bca1f6ae9b97eef21d85a68eff851cc6 через scripts/deploy_mvp.py. Перед выпуском git diff 5f1f348 HEAD для app/, зависимостей и скриптов deployment пуст: backend остался тем же. Миграции: No migrations to apply; seed сохранил существующие аккаунты. Основная ветка отправлена в origin/main.
+
+Публичный прототип: https://usiai-194-226-126-123.free.pinggy.net/static/prototype/index.html. Постоянный вход: https://llmlove.ru/dreamwork/fsp-demo.html. Оба браузерных скрипта повторены на публичном HTTPS — PASS, browserErrors=[]; /version/ вернул точный опубликованный SHA, /health/ — status=ok. fsp-demo-status.json на постоянном входе подтвердил новый SHA и URL.
+
+Проверка касается исправления прототипа и сохранения его основных сценариев. Полный новый backend gate не запускался, backend относительно живого релиза не изменялся. Стандартные предупреждения check --deploy W005/W021 остались прежними для временного стороннего домена.
