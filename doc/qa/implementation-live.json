@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "commit": "5f1f348d331d961ea462a67dac5134afdb677a7c",
+  "url": "https://jnwdg-194-226-126-123.free.pinggy.net",
+  "checked_at": "2026-10-11T17:04:49.148722+00:00",
+  "checks": [
+    "public version and database readiness",
+    "two HTTPS registrations with CSRF, explicit consent and session-bound demo confirmation",
+    "full profile persistence and distinct publication consent",
+    "own mock FSP binding and achievement",
+    "assessment completion and versioned safe witness over HTTPS",
+    "company profile and concrete paid need",
+    "employer sees explanation and proof while private text and contacts stay hidden",
+    "selected result and company details visible to candidate before acceptance",
+    "acceptance opens HTML and PDF access for invitation sender",
+    "publication withdrawal removes search while preserving documented prior grant"
+  ],
+  "failure_type": null,
+  "synthetic_accounts_removed": true,
+  "scope": "HTTPS journey; no existing account reset; perfect-answer synthetic fixture is not QA-001 validation",
+  "checker_sha256": "abfe88c39558899a0cb7e976bf01e5deeee6978d108ef3d3b5bc3d829fff0954",
+  "main_after_integration": {
+    "tests": 70,
+    "failures": 0,
+    "seconds": 13.185,
+    "commit": "5f1f348d331d961ea462a67dac5134afdb677a7c"
+  }
+}

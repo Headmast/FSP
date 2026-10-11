@@ -1,0 +1,21 @@
+{
+  "app": {
+    "commit": "5f1f348d331d961ea462a67dac5134afdb677a7c",
+    "url": "https://jnwdg-194-226-126-123.free.pinggy.net",
+    "assistant": "mock",
+    "tunnel": "pinggy-free"
+  },
+  "watchdog": {
+    "commit": "5f1f348d331d961ea462a67dac5134afdb677a7c"
+  },
+  "public_status": {
+    "schema_version": 1,
+    "available": true,
+    "url": "https://jnwdg-194-226-126-123.free.pinggy.net",
+    "prototype_url": "https://jnwdg-194-226-126-123.free.pinggy.net/static/prototype/index.html",
+    "commit": "5f1f348d331d961ea462a67dac5134afdb677a7c",
+    "checked_at": "2026-10-11T17:07:02.433748+00:00",
+    "message": "Демо доступно",
+    "assistant": "mock"
+  }
+}
