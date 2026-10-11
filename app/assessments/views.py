@@ -64,12 +64,6 @@ def finish(request, pk):
 def proof(request,pk):
     if not request.user.email_confirmed:raise PermissionDenied
     if not request.user.has_processing_consent:return redirect('consent')
-    obj=get_object_or_404(Attempt,pk=pk,status='finished')
-    if request.user.role=='candidate':
-        if obj.candidate.user_id!=request.user.pk:raise Http404
-    elif request.user.role=='employer':
-        from hiring.views import company_for,visible_profile
-        profile,_=visible_profile(company_for(request.user),obj.candidate_id)
-        if obj.grade!=profile.confirmed_grade:raise Http404
-    else:raise PermissionDenied
+    from hiring.access import accessible_proof
+    obj=accessible_proof(request.user,pk)
     return render(request,'assessments/proof.html',{'proof':witness(obj)})
