@@ -57,6 +57,8 @@ def invite(company,need_id,candidate_id,accepted_ids=(),discussion=''):
         profile=Profile.objects.get(pk=candidate_id,published=True,confirmed_grade=need.grade)
         existing=Invitation.objects.filter(company=company,need=need,candidate=profile).first()
         if existing:return existing
+        if need.recruiter_id and need.recruiter.company_id != company.pk:
+            raise ValidationError('Ответственный HR должен принадлежать компании.')
         ids=set(accepted_ids)
         if len(accepted_ids)>20 or len(discussion)>2000:raise InvalidProof('Слишком много результатов или слишком длинный текст.')
         attempts=list(Attempt.objects.filter(pk__in=ids,candidate=profile,status='finished',grade=need.grade).order_by('pk'))
@@ -70,7 +72,7 @@ def invite(company,need_id,candidate_id,accepted_ids=(),discussion=''):
             'work_format':need.get_work_format_display(),'next_step':need.next_step,
             'accepted_results':[witness(attempt) for attempt in attempts],
             'accepted_at':timezone.now().isoformat(),'discussion':discussion.strip()}
-        invitation,_=Invitation.objects.get_or_create(company=company,need=need,candidate=profile,defaults={'snapshot':snapshot})
+        invitation,_=Invitation.objects.get_or_create(company=company,need=need,candidate=profile,defaults={'snapshot':snapshot,'recruiter':need.recruiter})
         return invitation
 
 def decide(profile,invitation_id,status):

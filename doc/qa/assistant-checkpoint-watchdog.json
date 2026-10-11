@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "available": true,
+  "url": "https://usiai-194-226-126-123.free.pinggy.net",
+  "prototype_url": "https://usiai-194-226-126-123.free.pinggy.net/static/prototype/index.html",
+  "commit": "80091ff6881f7ae460d4f18c16aaaf88ed34b409",
+  "checked_at": "2026-10-11T20:18:03.346072+00:00",
+  "message": "Демо доступно",
+  "assistant": "mock"
+}

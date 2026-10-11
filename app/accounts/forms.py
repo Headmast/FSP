@@ -1,6 +1,12 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .models import User
+
+class AccessibleAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Start at the document so keyboard/screen-reader users can reach the skip link.
+        self.fields['username'].widget.attrs.pop('autofocus', None)
 
 class RegistrationForm(UserCreationForm):
     processing_consent = forms.BooleanField(label='Согласен на обработку данных по правилам processing-v1', required=True)

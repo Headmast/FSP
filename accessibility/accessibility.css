@@ -1,0 +1,80 @@
+/* Focus and navigation are available in every version, including without JS. */
+[hidden] { display: none !important; }
+.sr-only, .skip-link:not(:focus) { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.skip-link:focus { position: fixed; inset: 12px auto auto 12px; z-index: 100; padding: 14px 20px; color: #111; background: #fff; border: 3px solid #111; border-radius: 4px; font: 700 1rem/1.5 system-ui, sans-serif; }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid #0755ad; outline-offset: 4px; }
+:where(a, button, input, select, textarea, summary) { scroll-margin-block: 24px; }
+:where(button, .button, summary) { min-height: 44px; }
+fieldset { min-inline-size: 0; max-width: 100%; }
+textarea { max-width: 100%; }
+/* Keep the original design readable before any optional mode is enabled. */
+.home :where(.eyebrow, .small-note, .hero-stamp, .value-number, .value-card p, .site-footer > span, .back-top) { color: #625565; }
+.home .value-card p { color: #625565; }
+body > footer:not(.site-footer) { color: #53614f; }
+main[tabindex="-1"]:focus { outline: none; }
+.a11y { position: relative; z-index: 4; margin: 0; padding: 12px max(20px, calc((100% - 1180px)/2)); color: #162b22; background: #edf2e9; border-bottom: 1px solid #9aab96; font: 1rem/1.5 system-ui, -apple-system, sans-serif; letter-spacing: normal; text-align: left; overflow-wrap: anywhere; }
+.a11y-bar, .a11y-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.a11y button, .a11y select, .a11y summary { font: inherit; color: #162b22; background: #fff; border: 1px solid #59715c; border-radius: 6px; padding: 10px 14px; min-height: 44px; cursor: pointer; }
+.a11y button[aria-pressed="true"] { color: #fff; background: #162b22; }
+.a11y button:disabled, .a11y select:disabled { opacity: 1; color: #58635d; background: #e7ebe5; cursor: default; }
+.a11y #a11y-settings { max-width: 1180px; padding-block: 14px; }
+.a11y h2 { margin: 8px 0 12px; font: 700 1.5rem/1.3 system-ui, sans-serif; letter-spacing: normal; }
+.a11y p { margin: 10px 0; font-size: 1rem; line-height: 1.6; color: inherit; }
+.a11y-options { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 24px; }
+.a11y fieldset { border: 1px solid #9aab96; border-radius: 6px; padding: 18px; margin: 10px 0; min-width: 0; overflow: clip; }
+.a11y legend { font-size: 1.125rem; font-weight: 700; padding: 0 8px; }
+.a11y label { display: block; font-size: 1rem; font-weight: 600; margin: 14px 0 8px; }
+.a11y select { display: block; width: 100%; max-width: 100%; margin: 0 0 14px; }
+.a11y .a11y-check { display: flex; align-items: start; gap: 10px; font-weight: 400; cursor: pointer; }
+.a11y input[type="checkbox"] { width: 24px; height: 24px; flex: 0 0 24px; margin: 0; accent-color: #162b22; }
+.a11y details { margin: 12px 0 20px; }
+.a11y details summary { width: fit-content; max-width: 100%; }
+.a11y-status:empty { display: none; }
+.a11y .a11y-status { margin-bottom: 0; font-size: 1rem; }
+html[data-a11y-size="125"] { font-size: 125%; }
+html[data-a11y-size="150"] { font-size: 150%; }
+html[data-a11y-size="200"] { font-size: 200%; }
+html[data-a11y-size="100"] { font-size: 100%; }
+html[data-a11y-enhanced] { scroll-behavior: auto; }
+html[data-a11y-enhanced] body { overflow: visible; font: 1rem/1.6 system-ui, -apple-system, sans-serif; }
+html[data-a11y-enhanced] :where(body *, body *::before, body *::after) { animation: none !important; transition: none !important; text-shadow: none !important; }
+html[data-a11y-enhanced] :where(main, header, footer) * { font-family: system-ui, -apple-system, sans-serif !important; font-size: inherit !important; letter-spacing: normal !important; overflow-wrap: anywhere; }
+html[data-a11y-enhanced] :where(main, header, footer) { font-size: 1rem; }
+html[data-a11y-enhanced] main h1 { font-size: 2rem !important; line-height: 1.25; }
+html[data-a11y-enhanced] main h2 { font-size: 1.5rem !important; line-height: 1.35; }
+html[data-a11y-enhanced] main h3 { font-size: 1.25rem !important; line-height: 1.4; }
+html[data-a11y-enhanced] :where(input, select, textarea, button, .button) { font-size: 1rem !important; max-width: 100%; }
+html[data-a11y-enhanced] :where(header, header nav, .main-nav, footer, .site-footer, .filters) { height: auto; flex-wrap: wrap; gap: 16px; }
+html[data-a11y-enhanced] .main-nav > a { display: inline-block; padding: 10px 0; }
+html[data-a11y-enhanced] :where(main, header, footer, .hero, .section) { min-width: 0; }
+html[data-a11y-enhanced] :where(.card, article, .grid, .cards, .hero-copy) { min-width: 0; }
+html[data-a11y-enhanced] :where(.hero-lede, .section-heading > p, .intro-text, .team-card-copy, .lead) { width: auto; max-width: 100%; }
+html[data-a11y-enhanced] :where(.grid, .cards, .values-grid, .home-hero, .team-card, .intro-band, .section-heading) { display: block; }
+html[data-a11y-enhanced] :where(.card, .value-card, .team-card-copy) { padding: 1.25rem; margin-block: 1rem; }
+html[data-a11y-enhanced] .home-hero { min-height: 0; padding-block: 2rem; }
+html[data-a11y-enhanced] :where(.team-section, .values-section) { padding-top: 2.5rem; }
+html[data-a11y-enhanced] :where(.button, button, nav a) { min-height: 44px; white-space: normal; }
+html[data-a11y-enhanced] :where(main p, main li, main label) { line-height: 1.65; }
+html[data-a11y-spacing] body { line-height: 1.9; }
+html[data-a11y-spacing] :where(main, header, footer, .a11y) * { line-height: 1.9 !important; letter-spacing: .05em !important; word-spacing: .12em; }
+html[data-a11y-hide-images] :where([data-decorative], .page-glow, .hero-art, .team-constellation, .hero-stamp, .team-card-spark, .value-icon, .value-number, .eyebrow-dot, .brand-mark) { display: none !important; }
+html[data-a11y-view="simple"] :where(.home-hero, .intro-band, .team-card, .section-heading, .values-grid) { display: block; }
+html[data-a11y-view="simple"] main { display: block; }
+html[data-a11y-view="simple"] aside { margin-bottom: 1.5rem; }
+html[data-a11y-view="simple"] aside nav { display: flex; flex-wrap: wrap; gap: 12px; }
+html[data-a11y-view="simple"] .aside-note { margin-top: 1rem; }
+html[data-a11y-theme="light"] { --a11y-bg: #fff; --a11y-ink: #111; --a11y-link: #0049a8; --a11y-border: #555; }
+html[data-a11y-theme="dark"] { --a11y-bg: #111; --a11y-ink: #fff; --a11y-link: #ffdf70; --a11y-border: #ddd; }
+html[data-a11y-theme="sepia"] { --a11y-bg: #f4ecd8; --a11y-ink: #241b12; --a11y-link: #593100; --a11y-border: #615849; }
+html:is([data-a11y-theme="light"], [data-a11y-theme="dark"], [data-a11y-theme="sepia"]) { color: var(--a11y-ink); background: var(--a11y-bg); }
+html:is([data-a11y-theme="light"], [data-a11y-theme="dark"], [data-a11y-theme="sepia"]) body * { color: var(--a11y-ink) !important; background-color: var(--a11y-bg) !important; background-image: none !important; border-color: var(--a11y-border) !important; box-shadow: none !important; }
+html:is([data-a11y-theme="light"], [data-a11y-theme="dark"], [data-a11y-theme="sepia"]) a { color: var(--a11y-link) !important; text-decoration: underline !important; text-underline-offset: .15em; }
+html:is([data-a11y-theme="light"], [data-a11y-theme="dark"], [data-a11y-theme="sepia"]) :focus-visible { outline-color: var(--a11y-link) !important; }
+html:is([data-a11y-theme="light"], [data-a11y-theme="dark"], [data-a11y-theme="sepia"]) :where(button[aria-pressed="true"], button.active, [aria-current="page"]) { border: 3px solid var(--a11y-ink) !important; font-weight: 700; text-decoration: underline; }
+html:is([data-a11y-theme="light"], [data-a11y-theme="dark"], [data-a11y-theme="sepia"]) :where(input, select, textarea, button, .button, summary) { border: 1px solid var(--a11y-border) !important; }
+html:is([data-a11y-theme="light"], [data-a11y-theme="dark"], [data-a11y-theme="sepia"]) :disabled { border-style: dashed !important; }
+html[data-a11y-enhanced] input:is([type="radio"], [type="checkbox"]) { width: 24px; height: 24px; flex: 0 0 24px; accent-color: currentColor; }
+@media(max-width: 800px) { .a11y-options { grid-template-columns: 1fr; gap: 0; } }
+@media(max-width: 480px) { .a11y { padding-inline: 16px; } .a11y-bar > button { width: 100%; } .a11y fieldset { padding: 12px; } html[data-a11y-enhanced] :where(header, main, footer, .hero, .section) { width: auto; padding-inline: 16px; } }
+@media(prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+@media(forced-colors: active) { :focus-visible { outline-color: Highlight !important; } .a11y button[aria-pressed="true"] { border: 3px solid ButtonText; } }

@@ -11,8 +11,16 @@ class Company(models.Model):
     description=models.TextField(max_length=3000,blank=True)
     industry=models.CharField(max_length=120,blank=True)
 
+class Recruiter(models.Model):
+    company=models.ForeignKey(Company,on_delete=models.CASCADE,related_name='recruiters')
+    name=models.CharField(max_length=120)
+
+    def __str__(self):
+        return self.name
+
 class Need(models.Model):
     company=models.ForeignKey(Company,on_delete=models.CASCADE)
+    recruiter=models.ForeignKey(Recruiter,on_delete=models.SET_NULL,null=True,blank=True)
     title=models.CharField(max_length=120)
     grade=models.CharField(max_length=8,choices=[('Junior','Junior'),('Middle','Middle')])
     skills=models.CharField(max_length=200,blank=True)
@@ -28,6 +36,7 @@ class Invitation(models.Model):
     candidate=models.ForeignKey(Profile,on_delete=models.CASCADE)
     need=models.ForeignKey(Need,on_delete=models.PROTECT)
     company=models.ForeignKey(Company,on_delete=models.PROTECT)
+    recruiter=models.ForeignKey(Recruiter,on_delete=models.PROTECT,null=True,blank=True)
     snapshot=models.JSONField()
     status=models.CharField(max_length=8,default='sent',choices=[('sent','Ожидает решения'),('accepted','Принято'),('declined','Отклонено')])
     created_at=models.DateTimeField(auto_now_add=True)
