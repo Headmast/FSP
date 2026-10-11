@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checked_at": "2026-10-11T20:31:45.839Z",
+  "checked_at": "2026-10-11T20:47:22.619Z",
   "staticUrl": "http://127.0.0.1:8032",
   "appUrl": "http://127.0.0.1:8031",
   "checks": [
@@ -166,6 +166,16 @@
       "incomplete": []
     },
     {
+      "page": "Django /accounts/integrations/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /accounts/integrations/: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
       "page": "Django /company/: original",
       "violations": [],
       "incomplete": []
@@ -204,6 +214,16 @@
       "page": "Django /invitations/: dark",
       "violations": [],
       "incomplete": []
+    },
+    {
+      "page": "Django /accounts/integrations/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /accounts/integrations/: dark",
+      "violations": [],
+      "incomplete": []
     }
   ],
   "browserErrors": [],
@@ -211,24 +231,25 @@
     "Actual VoiceOver/NVDA and audible speech not manually verified; API double tests speech controls only.",
     "axe passing is a bounded automated check, not WCAG certification."
   ],
-  "commit": "c65f80c00786d981cb3c6244bbb5a9a90fc1c379",
+  "commit": "ce709f85e8fe5a5ad63d79b5e71f9a7778eb19f5",
+  "provenance": "Run covered the final accessibility/app/prototype code. Only the PASS message label in the test script was clarified after the run; assertions did not change.",
   "source_sha256": {
     "accessibility/accessibility.css": "89cb75d71ce18cccf38354d83a066f3daac6e20062f94052365982264a041edf",
-    "accessibility/accessibility.js": "8da5331fdd09c9c3d88717897f7b94d27a1b55d5bf741964f610fcc7ca8af596",
+    "accessibility/accessibility.js": "115476fc99f547bc48a73f97339108f0f12cb87178355feacf31c763abbaf464",
     "prototype/index.html": "9fafad2041f4de8e5b1e4dc9a32a6503342d0e8ad8c161141bb04909b8c11869",
     "prototype/app.js": "73bc37baebcc1d66bf6dfda915a561ec38ee47e8c77c56955f0b2d2021bcbe9e",
     "index.html": "7a85b7749eca71d3a363978e017cc5fb7440d8e2160b92a4e85166a34b0536bf",
-    "app/templates/base.html": "9434054a3672d547430ad4789759feb6bf354b368c99b0059fd70a97fcdb4bd9",
+    "app/templates/base.html": "0249a6419335c07689c17504fa7229e0874fb302016a92a77098945b3df990af",
     "app/accounts/forms.py": "8587d99467f8098c31b0c5d75b5ce6345f1b8164ab6d444f019eb34467d1b266",
-    "app/config/urls.py": "842500a26f9ce2cb314849a80e0f4dad6f3e8859a0159711a20db9ce871f3e26",
-    "scripts/check_accessibility.cjs": "34f6c88baeab79bb6075402de42c54281f4542e7fb4de050e86ce345bf93d436"
+    "app/config/urls.py": "debe4a7d3679ed88259a12cc3d282d279eb1d2e71e57b8995dea0bf92b2321c6",
+    "scripts/check_accessibility.cjs": "44054a784760f0c5a5310f061b420530be5e348485b86eccdc0f72139d3fc072"
   },
   "server_tests": {
     "status": "PASS",
-    "count": 90,
-    "seconds": 8.97,
-    "commit": "04f86f5047fa0da46897bb4ac67310065af15ff1",
-    "scope": "Python/template code unchanged from tested merge; final error focus verified by browser."
+    "count": 98,
+    "seconds": 117.548,
+    "commit": "3f53d80179e03616c063855baa0df4928bf733a1",
+    "scope": "All Django tests on merged API V1 and accessibility. app/ unchanged up to accessibility release ce709f8; later OWNER-001 backend has separate evidence."
   },
   "prototype_journey": {
     "status": "PASS",
@@ -244,11 +265,97 @@
       "reset",
       "decline",
       "mobile"
-    ]
+    ],
+    "scope": "Standard and simplified workflows passed; prototype JS and HTML identical through ce709f8."
   },
   "archive": {
     "status": "PASS",
-    "commit": "c65f80c00786d981cb3c6244bbb5a9a90fc1c379",
-    "scope": "Final Git archive extracts both symlink targets; earlier HTTP archive check also PASS on 04f86f5."
+    "commit": "ce709f85e8fe5a5ad63d79b5e71f9a7778eb19f5",
+    "checks": [
+      "standalone Git archive includes CSS/JS symlink targets",
+      "resolved prototype assets equal committed canonical bytes"
+    ],
+    "http_check": {
+      "status": "PASS",
+      "commit": "04f86f5047fa0da46897bb4ac67310065af15ff1",
+      "scope": "Prior local HTTP archive check; packaging behavior unchanged. Latest deployed static CSS/JS checked separately."
+    }
+  },
+  "live_landing": {
+    "status": "PASS",
+    "commit": "ce709f85e8fe5a5ad63d79b5e71f9a7778eb19f5",
+    "url": "https://llmlove.ru/dreamwork/",
+    "checked_at": "2026-10-11T20:54:12.299Z",
+    "checks": [
+      "three public files match committed bytes",
+      "keyboard skip, simplified mode, dark theme and 200%/320px reflow",
+      "live axe scan has zero violations",
+      "reload preserves settings; zero browser errors"
+    ],
+    "assetChecks": [
+      {
+        "file": "index.html",
+        "sha256": "7a85b7749eca71d3a363978e017cc5fb7440d8e2160b92a4e85166a34b0536bf"
+      },
+      {
+        "file": "accessibility/accessibility.js",
+        "sha256": "115476fc99f547bc48a73f97339108f0f12cb87178355feacf31c763abbaf464"
+      },
+      {
+        "file": "accessibility/accessibility.css",
+        "sha256": "89cb75d71ce18cccf38354d83a066f3daac6e20062f94052365982264a041edf"
+      }
+    ]
+  },
+  "live_application": {
+    "status": "PASS",
+    "commit": "bb798f347ccdb33ba445719dedf4b93466eafcc0",
+    "accessibility_source_commit": "ce709f85e8fe5a5ad63d79b5e71f9a7778eb19f5",
+    "url": "https://usiai-194-226-126-123.free.pinggy.net",
+    "checked_at": "2026-10-11T20:54:12.299Z",
+    "checks": [
+      "login/prototype: keyboard skip, simplified mode, dark theme, 200%/320px, axe and reload",
+      "public static assets match committed accessibility bytes",
+      "active release retains accessibility commit; version/health and client download manifest match release",
+      "stable demo portal points to verified application"
+    ],
+    "assetChecks": [
+      {
+        "file": "accessibility/accessibility.js",
+        "sha256": "115476fc99f547bc48a73f97339108f0f12cb87178355feacf31c763abbaf464"
+      },
+      {
+        "file": "accessibility/accessibility.css",
+        "sha256": "89cb75d71ce18cccf38354d83a066f3daac6e20062f94052365982264a041edf"
+      }
+    ],
+    "browserErrors": [],
+    "health": "ok"
+  },
+  "https_journey": {
+    "status": "PASS",
+    "commit": "54f9245bd1c4b7c0c2fd5ddfc6c3c417760e4679",
+    "url": "https://usiai-194-226-126-123.free.pinggy.net",
+    "checked_at": "2026-10-11T20:44:07.809354+00:00",
+    "checks": [
+      "public version and database readiness",
+      "two HTTPS registrations with CSRF, explicit consent and session-bound demo confirmation",
+      "full profile persistence and distinct publication consent",
+      "candidate edits and applies private draft; replay and foreign draft protected",
+      "own mock FSP binding and achievement",
+      "assessment completion and versioned safe witness over HTTPS",
+      "fresh employer reviews draft before company/need exists; one paid need on replay",
+      "company profile and concrete paid need",
+      "employer sees explanation and proof while private text and contacts stay hidden",
+      "safe mock matching and invitation preview do not send automatically",
+      "selected result and company details visible to candidate before acceptance",
+      "candidate conversation uses snapshot and preserves pending decision",
+      "acceptance opens HTML and PDF access for invitation sender",
+      "employer conversation after explicit acceptance",
+      "publication withdrawal removes search while preserving documented prior grant"
+    ],
+    "failure_type": null,
+    "synthetic_accounts_removed": true,
+    "scope": "HTTPS journey; no existing account reset; perfect-answer synthetic fixture is not QA-001 validation"
   }
 }
