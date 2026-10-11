@@ -4,6 +4,14 @@
 
 Весь обсуждённый MVP ещё не завершён. Начните с [списка оставшихся работ](plan/remaining-work.md) и [повторной проверки DOC-004](qa/scope-recheck.md): там отделены пропуски исходного плана, разрешённые моки и развитие.
 
+## Материалы проекта
+
+[Корневое оглавление](../README.md) объединяет документацию, презентацию, демо, прототип и дополнительные материалы.
+
+- [Презентация PPTX](presentation/trudyazhki-fsp.pptx), [HTML](presentation/trudyazhki-fsp.html), [текст выступления](presentation/trudyazhki-fsp.md).
+- [Исходное ТЗ и уточнения](sources/README.md).
+- [Исследование конкурентов](research/competitor-analysis-2026-10-11.md).
+
 ## Начать работу
 
 1. Прочитать [цель](goal.md), [план реализации](plan/implementation.md) и [задачи](plan/backlog.md).
