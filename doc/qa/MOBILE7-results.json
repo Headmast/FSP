@@ -3,7 +3,7 @@
   "status": "PASS",
   "branch": "mobile7",
   "base_commit": "b78a89b20f89103b74a151f47299246d5e33f940",
-  "source_state": "tested working tree; source fingerprints will be verified against the code commit",
+  "source_state": "committed code; all source fingerprints verified against code_commit",
   "checked_at": "2026-10-11T23:22:12.760104+03:00",
   "content_version": "ios-learning-1",
   "lessons": 8,
@@ -22,7 +22,8 @@
     "visual_inspection": "PASS",
     "worktree_isolation": "PASS",
     "documentation_links": "PASS",
-    "git_diff_check": "PASS"
+    "git_diff_check": "PASS",
+    "committed_source_fingerprints": "PASS"
   },
   "source_sha256": {
     "app/assessments/learning.py": "019ee46fc2f8c1964259a9bb8e807a24ed968aa4b8140b5e4472782711a30e0f",
@@ -51,5 +52,6 @@
     "main integration",
     "native Android/Flutter screens",
     "VoiceOver audit"
-  ]
+  ],
+  "code_commit": "f21cb541fde4e658d3576891ab7f38af9774fee1"
 }

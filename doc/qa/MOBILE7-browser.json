@@ -18,5 +18,6 @@
     "logout_login_progress_persisted",
     "works_without_javascript"
   ],
-  "browserErrors": []
+  "browserErrors": [],
+  "code_commit": "f21cb541fde4e658d3576891ab7f38af9774fee1"
 }

@@ -9,5 +9,6 @@
     "parallel_finalization_idempotent",
     "parallel_lesson_completion_unique",
     "profile_grade_unchanged"
-  ]
+  ],
+  "code_commit": "f21cb541fde4e658d3576891ab7f38af9774fee1"
 }
