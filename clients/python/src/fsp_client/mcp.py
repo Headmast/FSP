@@ -17,6 +17,9 @@ class Result(BaseModel):
 
 
 def build_server(api):
+    import logging
+    logging.getLogger('httpx').setLevel(logging.WARNING)
+    logging.getLogger('httpcore').setLevel(logging.WARNING)
     actor=api.get('me')['data']
     if actor['token_kind']!='mcp':
         raise ClientError('Для MCP требуется отдельный токен назначения mcp.',3)
@@ -88,6 +91,40 @@ def build_server(api):
             return get(f'candidates/{id}/proofs',limit=limit,offset=offset)
     else:
         raise ClientError('Роль не поддерживается.',3)
+    if 'drafts' in api.get('catalog')['data'].get('features',[]):
+        from uuid import UUID
+        @server.tool(annotations=read)
+        def fsp_list_drafts(limit:Limit=20,offset:Offset=0)->Result:
+            """Свои черновики, безопасные preview без контактов и свободного текста."""
+            return get('drafts',limit=limit,offset=offset)
+        @server.tool(annotations=read)
+        def fsp_get_draft(id:UUID)->Result:
+            """Статус своего черновика и путь подтверждения в веб."""
+            return get(f'drafts/{id}')
+        if actor['role']+'.draft' in actor['scopes']:
+            from .draft_types import ProfileChanges
+            write=ToolAnnotations(read_only_hint=False,destructive_hint=False,idempotent_hint=False,open_world_hint=False)
+            def prepare(kind,payload=None,target=None):
+                try:return Result.model_validate(api.request('POST','drafts',data={'kind':kind,'target_id':target,'payload':payload or {}}))
+                except ClientError as exc:raise ValueError(str(exc)) from None
+            @server.tool(annotations=ToolAnnotations(read_only_hint=False,destructive_hint=False,idempotent_hint=True,open_world_hint=False))
+            def fsp_cancel_draft(id:UUID)->Result:
+                """Отменить свой черновик; не изменяет профиль или приглашение."""
+                try:return Result.model_validate(api.request('POST',f'drafts/{id}/cancel',data={}))
+                except ClientError as exc:raise ValueError(str(exc)) from None
+            if actor['role']=='candidate':
+                @server.tool(annotations=write)
+                def fsp_prepare_profile(changes:ProfileChanges)->Result:
+                    """Подготовить изменения профиля без контактов. Применение только после подтверждения в веб."""
+                    return prepare('profile.update',changes.model_dump(exclude_none=True))
+                @server.tool(annotations=write)
+                def fsp_prepare_publication(published:bool)->Result:
+                    """Подготовить публикацию/снятие публикации; согласие и применение в браузере."""
+                    return prepare('profile.publish' if published else 'profile.unpublish')
+                @server.tool(annotations=write)
+                def fsp_prepare_invitation_response(id:ID,decision:Literal['accept','decline'])->Result:
+                    """Подготовить ответ на своё предложение. Контакты пока не открываются."""
+                    return prepare('invitation.'+decision,target=id)
     return server
 
 

@@ -2,6 +2,8 @@ import argparse
 import getpass
 import json
 import sys
+from uuid import UUID
+import webbrowser
 from pathlib import Path
 from .config import Connections
 from .http import FspClient,ClientError,server_url
@@ -51,6 +53,18 @@ def parser():
     command(candidates,'proofs','candidates/{id}/proofs',id=True,list=True)
     command(candidates,'private','candidates/{id}/private',id=True)
     command(candidates,'resume','candidates/{id}/resume.pdf',id=True,pdf=True)
+    drafts=group('drafts')
+    command(drafts,'list','drafts',list=True)
+    for action,path in [('show','drafts/{id}'),('cancel','drafts/{id}/cancel'),('open','drafts/{id}')]:
+        item=command(drafts,action,path);item.add_argument('id',type=UUID)
+    prepare=command(drafts,'prepare');prepare.add_argument('--kind',required=True)
+    prepare.add_argument('--target-id',type=identifier);prepare.add_argument('--file')
+    prepare.set_defaults(draft_kind='generic')
+    draft=command(profile,'draft');draft.add_argument('--file',required=True);draft.set_defaults(draft_kind='profile.update')
+    for action in ['publish','unpublish']:
+        command(profile,action).set_defaults(draft_kind='profile.'+action)
+    for action in ['accept','decline']:
+        command(invitations,action,id=True).set_defaults(draft_kind='invitation.'+action)
     command(group('mcp'),'serve')
     return p
 
@@ -90,7 +104,32 @@ def run(args):
         if args.group=='auth':
             output(api.get('me'),args.json)
             return
+        if hasattr(args,'draft_kind'):
+            payload={}
+            if getattr(args,'file',None):
+                try:
+                    text=Path(args.file).read_text()
+                    if len(text.encode())>65536:raise ValueError
+                    payload=json.loads(text)
+                    if not isinstance(payload,dict):raise ValueError
+                except (OSError,ValueError):
+                    raise ClientError('Файл должен содержать JSON объект до 64 KiB.',2) from None
+            kind=args.kind if args.draft_kind=='generic' else args.draft_kind
+            target=getattr(args,'target_id',None) or (getattr(args,'id',None) if kind.startswith('invitation.') else None)
+            result=api.request('POST','drafts',data={'kind':kind,'target_id':target,'payload':payload})
+            output(result,args.json)
+            print('Подтвердите в браузере: '+api.server+result['data']['approval_path'],file=sys.stderr)
+            return
         path=args.path.format(id=getattr(args,'id',None))
+        if args.group=='drafts' and args.action=='cancel':
+            output(api.request('POST',path,data={}),args.json)
+            return
+        if args.group=='drafts' and args.action=='open':
+            result=api.get(path)
+            expected='/drafts/'+str(args.id)+'/'
+            if result['data']['approval_path']!=expected:raise ClientError('Неверный путь подтверждения.')
+            if not webbrowser.open(api.server+expected):raise ClientError('Не удалось открыть браузер. Откройте '+api.server+expected,5)
+            return
         params={name:getattr(args,name,None) for name in ['limit','offset','grade','skill','fsp_status','need_id']}
         if getattr(args,'output',None):
             data=api.request('GET',path,params={'with_contacts':str(args.with_contacts).lower()},pdf=True)
