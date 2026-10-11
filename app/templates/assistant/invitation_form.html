@@ -1,0 +1,11 @@
+<form method="post" action="{% url 'invitation-send' %}" class="card" data-testid="assistant-invitation">{% csrf_token %}
+<h2>Проверить и отправить предложение</h2>
+<p>{{ selected_need.title }} · {{ selected_need.grade }} · {{ selected_need.salary_min }}–{{ selected_need.salary_max }} ₽ до налогов / месяц · {{ selected_need.get_work_format_display }}</p>
+<p>{{ selected_need.tasks|linebreaksbr }} · Следующий шаг: {{ selected_need.next_step }}</p>
+<input type="hidden" name="need" value="{{ selected_need.pk }}"><input type="hidden" name="candidate" value="{{ selected_candidate.pk }}">
+<label>Черновик приглашения для обсуждения<textarea name="discussion" maxlength="2000" required>{{ text }}</textarea></label>
+<p>Источник текста: мок. Проверьте условия и отдельно выберите результаты для зачёта.</p>
+{% for proof in proofs %}<label><input type="checkbox" name="accepted_attempts" value="{{ proof.attempt_id }}"> Зачесть результат {{ proof.finished_at }} · {{ proof.correct_count }}/{{ proof.total }}</label>{% include 'assessments/proof_details.html' %}{% empty %}<p>Результатов этой категории для зачёта нет.</p>{% endfor %}
+<p>Контакты кандидата откроются этой компании после принятия. Генерация текста сама не отправляет предложение.</p>
+<button class="primary">Проверил текст и условия — отправить предложение</button>
+</form>

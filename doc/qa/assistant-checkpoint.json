@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-10-11T20:19:24.782956+00:00",
+  "commit": "80091ff6881f7ae460d4f18c16aaaf88ed34b409",
+  "task_commits": {
+    "MVP-013": "691c488",
+    "AI-001": "c783511"
+  },
+  "parallel_change_preserved": {
+    "FIX-003": "fcdc5e4",
+    "merge": "80091ff",
+    "conflict_resolution": "both append sections preserved in doc/plan/backlog.md"
+  },
+  "integration_tests": {
+    "command": "FSP_ENV_FILE=/dev/null DEBUG=1 python app/manage.py test accounts profiles assessments hiring assistant --verbosity 1",
+    "count": 90,
+    "seconds": 22.397,
+    "status": "PASS"
+  },
+  "docs": {
+    "markdown_documents": 83,
+    "status": "PASS"
+  },
+  "live": {
+    "checks": 15,
+    "status": "PASS",
+    "evidence": "assistant-checkpoint-live.json"
+  },
+  "prototype_regressions": {
+    "check_profile_identity": "PASS on deployed HTTPS, browserErrors=[]",
+    "check_prototype": "PASS on deployed HTTPS, browserErrors=[]",
+    "initial_failure": "file:// preparation: both waits for #profile timed out; repeated on actual HTTPS and passed"
+  },
+  "watchdog": {
+    "available": true,
+    "commit": "80091ff6881f7ae460d4f18c16aaaf88ed34b409",
+    "evidence": "assistant-checkpoint-watchdog.json",
+    "schedule": "every minute",
+    "existing_jobs_preserved": true
+  },
+  "deployment": {
+    "migration": "assistant.0002_draft applied",
+    "database_backup": "deploy script backup before migrate",
+    "existing_accounts": "seed preserves existing; live check creates and removes only its two synthetic accounts",
+    "warnings": [
+      "W005/W021 unchanged for temporary third-party hostname"
+    ]
+  },
+  "gates": {
+    "C1": "PASS, existing profiles/consent regressions plus current HTTPS",
+    "C2": "PASS, current HTTPS + local editor browser/90 regression tests",
+    "C3": "PASS synthetic QA-001 with boundary limitations; not human validation",
+    "C4": "NOT_RUN",
+    "C5": "NOT_RUN for full operational scope; reboot/stable endpoint outstanding",
+    "C6": "NOT_RUN, real integrations outstanding"
+  },
+  "remaining_open_tasks": 14,
+  "final_documentation": {
+    "markdown_documents": 84,
+    "links_and_metadata": "PASS",
+    "diff_check": "PASS"
+  }
+}

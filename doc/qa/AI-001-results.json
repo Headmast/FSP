@@ -1,0 +1,67 @@
+{
+  "task": "AI-001",
+  "status": "PASS",
+  "checked_at": "2026-10-11T20:09:55.973382+00:00",
+  "base_commit": "691c48879f680e671124e10144f92d3e06d22be6",
+  "checked_sources": {
+    "app/assistant/forms.py": "fb71605a3a57368da4aad9c3d4e17669e3ecdb1dc5356800ca69be77e045dcfd",
+    "app/assistant/provider.py": "88547d340c6de0189fa479ce6b9202b0d10afa8e27ac702281580579f19a9559",
+    "app/assistant/tests.py": "decae7b94deb0bcbf38665a0dd9ee2377cfc6ef4ba293fc5943fcfe8205d94fe",
+    "app/assistant/views.py": "3273011cadfaa2f38b82c439c8ac609af78bec786d66de4c5ea0a51c2ed42d35",
+    "app/templates/assistant/helper.html": "612d4752a9538ffb2cdd2899ff7ee7946eff2c6f2c346ad78a0745918fa6dc63",
+    "app/templates/hiring/candidate.html": "f6c93670918655534739a0b8636aed35c509d13455fa0140b65e6d8a2d3b907c",
+    "app/templates/hiring/invitations.html": "01128dda120d6bcb5c681d5f931297f71c394305727be2a7d79362c6a739ea85",
+    "app/assistant/contexts.py": "d1addab1311c59314ce7c217bead3b9ed146ce423336978fc473254388fd45fc",
+    "app/templates/assistant/invitation_form.html": "3549d47184a00424e465a7c069ebf7cb9518fda44d2afec811db1cc947e95f03",
+    "scripts/check_assistant_stages.cjs": "d94c32f89bb572a10e0ff9568d493e32cf0b97dd2282cee4e3b3f9a4aa5da831",
+    "scripts/prepare_assistant_browser_fixture.py": "88b2e4c021475f576390ee59007c1c3402726dfdb05fe9ed9483ccb42550645d"
+  },
+  "tests": {
+    "command": "FSP_ENV_FILE=/dev/null DEBUG=1 python app/manage.py test accounts profiles assessments hiring assistant --verbosity 1",
+    "count": 90,
+    "seconds": 8.751,
+    "failures": 0
+  },
+  "browser": {
+    "status": "PASS",
+    "url": "http://127.0.0.1:8041",
+    "scenarios": [
+      "card_matching_link",
+      "named_matching_and_gap",
+      "editable_mock_invitation",
+      "manual_proof_selection",
+      "explicit_send",
+      "candidate_conversation_before_decision",
+      "manual_accept",
+      "employer_conversation_after_accept",
+      "mobile_no_overflow"
+    ],
+    "browserErrors": [],
+    "gradingValidation": false
+  },
+  "checks": [
+    "owned need/profile/invitation on GET and POST",
+    "contact and free-text exclusion from provider allowlist",
+    "finished evidence only, no questions or answer keys",
+    "declared gaps and matches named",
+    "editable invitation and manual proof choice",
+    "no invitation or grade mutation on generation",
+    "snapshot conditions for conversations of both roles",
+    "manual accept and decline preserved",
+    "shared rate limit and active assessment exclusion",
+    "failure leaves manual candidate/invitation paths usable"
+  ],
+  "initial_failures": [
+    "Test block inserted into wrong fixture class; restored class boundaries.",
+    "Snapshot test tried invalid salary 999..200; changed current need to valid 999..1200.",
+    "Syntax error in conditional concatenation fixed before successful tests."
+  ],
+  "visual_review": "PASS: 390px invitation editor, explicit send button and proof readable; no horizontal overflow",
+  "deployment": "NOT_RUN: local stage; full C2 awaits integrated live journey",
+  "documentation_checks": {
+    "markdown_documents": 80,
+    "links_and_gate_metadata": "PASS",
+    "backlog": "PASS: 13 DONE, 14 open of 27",
+    "diff_check": "PASS"
+  }
+}

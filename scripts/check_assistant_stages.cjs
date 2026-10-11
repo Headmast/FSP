@@ -1,0 +1,37 @@
+// Local functional fixture only. Preparation script refuses production databases.
+const {chromium}=require('playwright');const assert=require('node:assert/strict');const fs=require('node:fs');
+(async()=>{
+ const url=process.argv[2]||'http://127.0.0.1:8041';assert.match(new URL(url).hostname,/^(localhost|127\.0\.0\.1)$/);
+ const fixture=JSON.parse(fs.readFileSync('.runtime/qa/AI-001-fixture.json','utf8'));
+ const browser=await chromium.launch({headless:true});const errors=[];
+ const login=async role=>{const page=await browser.newPage();page.on('pageerror',e=>errors.push(e.message));await page.goto(url+'/accounts/login/');await page.locator('[name=username]').fill(fixture[role]);await page.locator('[name=password]').fill(fixture.password);await page.getByRole('button',{name:'Войти',exact:true}).click();return page;};
+ const employer=await login('employer');
+ await employer.goto(url+`/candidates/${fixture.profile}/?need=${fixture.need}`);
+ await employer.getByRole('link',{name:'Помочь разобраться в подборе · мок'}).click();
+ await employer.getByRole('button',{name:'Получить моковый черновик'}).click();
+ await employer.getByText(/Совпадения самоописания: Swift/, {exact:false}).waitFor();
+ assert.match(await employer.locator('[data-testid=assistant-result]').innerText(),/Пробелы самоописания: SwiftUI/);
+ await employer.goto(url+`/candidates/${fixture.profile}/?need=${fixture.need}`);
+ await employer.getByRole('link',{name:'Подготовить приглашение · мок'}).click();
+ await employer.getByRole('button',{name:'Получить моковый черновик'}).click();
+ const editor=employer.locator('[data-testid=assistant-invitation]');
+ await editor.locator('[name=discussion]').fill('Проверенное приглашение: обсудим SwiftUI и задачи команды.');
+ await editor.locator(`[name=accepted_attempts][value="${fixture.attempt}"]`).check();
+ await employer.setViewportSize({width:390,height:844});assert.equal(await employer.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+ await employer.screenshot({path:'.runtime/qa/AI-001-invitation-mobile.png',fullPage:true});
+ await editor.getByRole('button',{name:'Проверил текст и условия — отправить предложение'}).click();
+ await employer.getByText('Предложение отправлено. Повторная отправка не создаёт дубликат.',{exact:true}).waitFor();
+ const candidate=await login('candidate');await candidate.goto(url+'/invitations/');
+ await candidate.getByRole('link',{name:'Подготовиться к разговору · мок'}).click();
+ await candidate.getByRole('button',{name:'Получить моковый черновик'}).click();
+ assert.match(await candidate.locator('[data-testid=assistant-result]').innerText(),/Работодатель зачёл результатов: 1/);
+ assert.match(await candidate.locator('[data-testid=assistant-result]').innerText(),/примите или отклоните предложение самостоятельно/);
+ await candidate.getByRole('link',{name:'Вернуться к предложению и принять решение'}).click();
+ await candidate.getByRole('button',{name:'Принять предложение'}).click();
+ await employer.goto(url+'/invitations/');await employer.getByRole('link',{name:'Подготовиться к разговору · мок'}).click();
+ await employer.getByRole('button',{name:'Получить моковый черновик'}).click();
+ assert.match(await employer.locator('[data-testid=assistant-result]').innerText(),/Согласуйте время встречи/);
+ assert.deepEqual(errors,[]);
+ const result={status:'PASS',url,scenarios:['card_matching_link','named_matching_and_gap','editable_mock_invitation','manual_proof_selection','explicit_send','candidate_conversation_before_decision','manual_accept','employer_conversation_after_accept','mobile_no_overflow'],browserErrors:errors,gradingValidation:false};
+ fs.writeFileSync('.runtime/qa/AI-001-browser.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});
