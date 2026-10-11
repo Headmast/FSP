@@ -137,3 +137,14 @@ class HiringTests(TestCase):
         self.assertEqual(self.need.skills,'CoreData')
         self.assertEqual(self.profile.contact_email,'private@demo.invalid')
         self.assertEqual(self.profile.confirmed_grade,'Junior')
+
+    def test_free_text_experience_is_hidden_until_grant_in_employer_html(self):
+        from profiles.models import Experience
+        self.profile.description='Описание private@demo.invalid';self.profile.save()
+        Experience.objects.create(profile=self.profile,organization='private@demo.invalid',role='Разработчик',months=6,description='+70000000000')
+        url=f'/candidates/{self.profile.pk}/'
+        self.assertNotContains(self.client.get(url),'private@demo.invalid')
+        obj=invite(self.company,self.need.pk,self.profile.pk);decide(self.profile,obj.pk,'accepted')
+        self.assertContains(self.client.get(url),'Описание private@demo.invalid')
+        self.client.force_login(self.other)
+        self.assertNotContains(self.client.get(url),'private@demo.invalid')

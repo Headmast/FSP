@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "own_pdf_pages": 1,
+  "public_pdf_pages": 1,
+  "private_text_excluded": true,
+  "cyrillic_extraction": true
+}

@@ -1,0 +1,36 @@
+{
+  "task": "MVP-006",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:39:47.181451+00:00",
+  "base_commit": "94f3e14f0be2669bf3cccbaa69ae85ee872d350d",
+  "checked_sources": {
+    "app/profiles/models.py": "aeb890e013be7fa525766c810fcaff4f4ec7745d124daf95f144010b1535cc11",
+    "app/profiles/skills.py": "3f99a0f26bdb5811bac252d1bee2d50cb8ea9062dda8494fbac7cf5e62910336",
+    "app/profiles/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "app/profiles/forms.py": "e82bd223a3bbd10067e45d62a336ec541723bebe55a6185d0d3a115712dd7b1b",
+    "app/profiles/tests.py": "5ef84916054b85073d550d08ec0bbdef799d8a0171fd6745b308b17a8a80216f",
+    "app/profiles/views.py": "ab497725107419056d694f9b88d28e8aeac084d41c58f506911e67dd214d5fac",
+    "app/profiles/migrations/0002_canonical_skills.py": "c2952654fa9489e069dd9aab2d077ac3209f6a5eb02bcfc5bd30b87ccf0e8bad",
+    "app/profiles/migrations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "app/profiles/migrations/0003_profile_description_profile_experience_months_and_more.py": "2adc68a6ca21bf6cf4d6d350f87a19fcc619b6a3478480d6842b7170372feee8",
+    "app/profiles/migrations/0001_initial.py": "1ff83be0a8e51bc4756c06ef91a193b1485328b50dfe678399ec69868c87ae38",
+    "app/templates/profiles/profile.html": "e251ec4680a0a9490abdbf73d9ffecce6c2facd6f3bb630cb274879d5332891f",
+    "app/templates/hiring/candidate.html": "8655d35cdc965bebd6917b91d31b2e4a174acf2c3c92ae0e66b38ce774b37d26",
+    "app/hiring/tests.py": "776838586fcbc966a9986775016c3a4c2fdc168eb27b5db226cc1dec71c6a838"
+  },
+  "tests": {
+    "command": "python app/manage.py test profiles hiring --verbosity 0",
+    "count": 24,
+    "failures": 0,
+    "seconds": 4.06
+  },
+  "pdf": "Own and public single-page synthetic samples extracted with pypdf and visually inspected after pdftoppm; no clipping; private text excluded from public PDF",
+  "checks": [
+    "PROFILE-04 fields persist",
+    "PROFILE-05 iOS/Swift + grade",
+    "PROFILE-06 private arbitrary text gated",
+    "PROFILE-07 ownership and atomic validation"
+  ],
+  "deployment": "NOT_RUN: local feature, later release",
+  "isolation": "temporary SQLite only"
+}

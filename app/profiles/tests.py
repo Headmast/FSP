@@ -1,6 +1,6 @@
 from django.test import TestCase
 from accounts.models import User
-from .models import Profile
+from .models import Profile, Experience
 from .views import build_pdf
 from .skills import normalized,validate_skills
 from django.core.exceptions import ValidationError
@@ -52,3 +52,37 @@ class ProfileTests(TestCase):
             'skills':'Core Data, CoreData','desired_grade':'Junior'}).status_code,302)
         self.profile.refresh_from_db();self.assertEqual(self.profile.skills,'CoreData')
         with self.assertRaises(ValidationError):validate_skills('Unknown skill')
+
+    def full_data(self):
+        return {'name':'Алексей', 'city':'Москва', 'skills':'Swift', 'desired_grade':'Junior',
+            'specialization':'ios_swift', 'experience_months':'24', 'roles':['developer','reviewer'],
+            'soft_skills':['teamwork'], 'description':'Черновик private@demo.invalid',
+            'experience-TOTAL_FORMS':'1', 'experience-INITIAL_FORMS':'0',
+            'experience-0-organization':'Проект Демо', 'experience-0-role':'Разработчик',
+            'experience-0-months':'12', 'experience-0-description':'Разработка SwiftUI'}
+
+    def test_complete_profile_and_experience_persist_and_reload(self):
+        self.assertEqual(self.client.post('/profile/',self.full_data()).status_code,302)
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.experience_months,24)
+        self.assertEqual(self.profile.roles,['developer','reviewer'])
+        self.assertEqual(self.profile.soft_skills,['teamwork'])
+        self.assertEqual(self.profile.experiences.get().description,'Разработка SwiftUI')
+        self.assertContains(self.client.get('/profile/'),'Черновик private@demo.invalid')
+        self.assertContains(self.client.get('/profile/'),'Проект Демо')
+
+    def test_invalid_public_fields_and_experience_are_atomic(self):
+        for field,value in [('experience_months','601'),('roles',['private@demo.invalid']),
+                            ('soft_skills',['private@demo.invalid']),('experience-0-months','-1')]:
+            with self.subTest(field=field):
+                data=self.full_data();data[field]=value
+                self.assertEqual(self.client.post('/profile/',data).status_code,200)
+                self.profile.refresh_from_db();self.assertEqual(self.profile.experience_months,0)
+                self.assertEqual(Experience.objects.count(),0)
+
+    def test_foreign_experience_id_cannot_be_modified(self):
+        other=Experience.objects.create(profile=self.other_profile,organization='Другой',role='Разработчик',months=6)
+        data=self.full_data();data.update({'experience-INITIAL_FORMS':'1','experience-0-id':str(other.pk)})
+        self.assertEqual(self.client.post('/profile/',data).status_code,200)
+        other.refresh_from_db();self.assertEqual(other.organization,'Другой')
+        self.assertEqual(self.profile.experiences.count(),0)
