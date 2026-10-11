@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from accounts import views as accounts
+from accounts.forms import AccessibleAuthenticationForm
 from profiles import views as profiles
 from assessments import views as assessments
 from hiring import views as hiring
@@ -25,7 +26,7 @@ urlpatterns = [path("company/", hiring.company_profile, name="company-profile"),
     path("accounts/register/", accounts.register, name="register"),
     path("accounts/consent/", accounts.consent, name="consent"),
     path("accounts/privacy/", accounts.privacy, name="privacy"),
-    path("accounts/login/", LoginView.as_view(template_name="accounts/login.html"), name="login"),
+    path("accounts/login/", LoginView.as_view(template_name="accounts/login.html", authentication_form=AccessibleAuthenticationForm), name="login"),
     path("accounts/logout/", LogoutView.as_view(), name="logout"),
     path("accounts/confirm/", accounts.confirm, name="confirm"),
     path("profile/", profiles.profile, name="profile"),

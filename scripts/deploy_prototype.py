@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--ref', default='HEAD', help='Committed ref to publish; uncommitted changes are excluded')
 args = parser.parse_args()
 sha = subprocess.check_output(['git', 'rev-parse', '--verify', args.ref + '^{commit}'], cwd=ROOT, text=True).strip()
-archive = subprocess.check_output(['git', 'archive', sha, 'prototype'], cwd=ROOT)
+archive = subprocess.check_output(['git', 'archive', sha, 'prototype', 'accessibility'], cwd=ROOT)
 subprocess.run(['ssh', '-o', 'BatchMode=yes', 'digitarium',
                 f'mkdir -p ~/fsp-mvp/releases/{sha} && tar --warning=no-timestamp -xf - -C ~/fsp-mvp/releases/{sha}'], input=archive, check=True)
 remote = r'''
