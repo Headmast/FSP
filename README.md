@@ -20,7 +20,7 @@
 
 Реализовано отдельное приложение для iOS разработчиков: профиль, тест, категория, предложение работодателя и контакты после согласия. Первый этап — опубликованный прототип полностью на моках; затем выполнен полный Django сценарий.
 
-Начните с [документации](doc/README.md), [цели](doc/goal.md) и [плана](doc/plan/implementation.md). [MVP](https://vqahd-194-226-126-123.run.pinggy-free.link) и [прототип](https://vqahd-194-226-126-123.run.pinggy-free.link/static/prototype/index.html) доступны по временному HTTPS. [Отчёт выпуска, SHA и ограничения](doc/delivery/mvp-release.md). Помощник, email и ФСП — моки. [Локальный запуск](doc/development/local-run.md).
+Начните с [документации](doc/README.md), [цели](doc/goal.md) и [плана](doc/plan/implementation.md). [Постоянная страница открытия MVP и прототипа](https://llmlove.ru/dreamwork/fsp-demo.html) автоматически показывает актуальный HTTPS адрес. [Отчёт выпуска, SHA и ограничения](doc/delivery/mvp-release.md). Помощник, email и ФСП — моки. [Локальный запуск](doc/development/local-run.md).
 
 Документация и инструменты исключены из стандартной Jekyll сборки через _config.yml. При публикации без Jekyll нужен отдельный артефакт только с файлами сайта; фактический режим Pages ещё не проверен.
 

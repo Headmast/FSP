@@ -21,7 +21,7 @@
 - [Результаты подготовки документации и worktree](qa/preparation-results.md)
 - [Результаты аккаунтов и профиля](qa/accounts-results.md)
 - [Результаты оценивания](qa/assessment-results.md)
-- [Cron и постоянная страница демо](deployment/watchdog.md)
+- [Cron и постоянная страница демо](deployment/watchdog.md), [результаты](qa/watchdog-results.md)
 - [Публикация и откат](deployment/runbook.md)
 - [Отчёт о выпуске](delivery/mvp-release.md)
 - [Рабочие промпты](prompts/README.md) и [ответы](responses/README.md)

@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "controlled_expiration": true,
+  "renewed_by_cron": true,
+  "current_url": "https://ybrmt-194-226-126-123.free.pinggy.net",
+  "page": "https://llmlove.ru/dreamwork/fsp-demo.html",
+  "same_application_commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
+  "database_state_unchanged": true,
+  "cron_log": [
+    {
+      "checked_at": "2026-10-11T13:50:02.480397+00:00",
+      "available": true,
+      "action": "checked",
+      "publication": "published"
+    },
+    {
+      "checked_at": "2026-10-11T13:51:05.670803+00:00",
+      "available": true,
+      "action": "renewed",
+      "publication": "published"
+    }
+  ]
+}

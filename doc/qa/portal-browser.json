@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "page": "https://llmlove.ru/dreamwork/fsp-demo.html",
+  "current_url": "https://ybrmt-194-226-126-123.free.pinggy.net",
+  "checks": [
+    "fresh status and links",
+    "public version",
+    "390px no overflow",
+    "stale status disables links",
+    "offline status disables links",
+    "unsafe URL rejected"
+  ],
+  "browserErrors": []
+}
