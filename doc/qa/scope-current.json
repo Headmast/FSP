@@ -1,0 +1,510 @@
+{
+  "audit_id": "DOC-006",
+  "checked_at": "2026-10-11T20:37:14.955048+00:00",
+  "commit": "2375618d49f7298cb3fc045234aef71bb45a7ac0",
+  "scope": "committed main after parallel integration, unfinished DOC-003 excluded",
+  "checks": [
+    {
+      "id": "static",
+      "status": "PASS",
+      "command": [
+        "app/manage.py",
+        "collectstatic",
+        "--noinput",
+        "--verbosity",
+        "0"
+      ],
+      "exit_code": 0,
+      "seconds": 0.388,
+      "output": ""
+    },
+    {
+      "id": "application_regression",
+      "status": "PASS",
+      "command": [
+        "app/manage.py",
+        "test",
+        "accounts",
+        "profiles",
+        "assessments",
+        "hiring",
+        "assistant",
+        "--verbosity",
+        "1"
+      ],
+      "exit_code": 0,
+      "seconds": 9.869,
+      "output": "Found 90 test(s).\nSystem check identified no issues (0 silenced).\nCreating test database for alias 'default'...\n..........................................................................................\n----------------------------------------------------------------------\nRan 90 tests in 9.150s\n\nOK\nDestroying test database for alias 'default'...\n"
+    },
+    {
+      "id": "tool_regression",
+      "status": "PASS",
+      "command": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 4.532,
+      "output": "cked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.229531+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\nMaintenance already running; skipped\n{\"checked_at\": \"2026-10-11T20:37:27.237063+00:00\", \"available\": true, \"action\": \"renewed\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.240296+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.247907+00:00\", \"available\": true, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.250838+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.251546+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.252858+00:00\", \"available\": true, \"action\": \"renewed\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.255520+00:00\", \"available\": true, \"action\": \"checked\", \"publication\": \"publish-failed:OSError\"}\n{\"checked_at\": \"2026-10-11T20:37:27.259897+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.261271+00:00\", \"available\": true, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.264179+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.264797+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:37:27.266328+00:00\", \"available\": true, \"action\": \"renewed\", \"publication\": \"published\"}\ntest_broken_render_is_unavailable_even_with_healthy_database (test_watchdog.ReadinessHTTPTests.test_broken_render_is_unavailable_even_with_healthy_database) ... ok\ntest_healthy_version_database_and_html_are_required (test_watchdog.ReadinessHTTPTests.test_healthy_version_database_and_html_are_required) ... ok\ntest_healthy_version_with_failed_health_is_not_available (test_watchdog.ReadinessHTTPTests.test_healthy_version_with_failed_health_is_not_available) ... ok\ntest_cron_install_is_idempotent_and_preserves_other_jobs (test_watchdog.WatchdogTests.test_cron_install_is_idempotent_and_preserves_other_jobs) ... ok\ntest_database_failure_is_unavailable_without_restart_or_tunnel_rotation (test_watchdog.WatchdogTests.test_database_failure_is_unavailable_without_restart_or_tunnel_rotation) ... ok\ntest_deployment_lock_skips_tick_without_running_recovery (test_watchdog.WatchdogTests.test_deployment_lock_skips_tick_without_running_recovery) ... ok\ntest_expired_tunnel_updates_origin_preserves_secret_and_release (test_watchdog.WatchdogTests.test_expired_tunnel_updates_origin_preserves_secret_and_release) ... ok\ntest_failed_app_restart_marks_public_status_unavailable (test_watchdog.WatchdogTests.test_failed_app_restart_marks_public_status_unavailable) ... ok\ntest_foreign_pid_is_not_killed (test_watchdog.WatchdogTests.test_foreign_pid_is_not_killed) ... ok\ntest_global_cron_environment_does_not_override_shared_config (test_watchdog.WatchdogTests.test_global_cron_environment_does_not_override_shared_config) ... ok\ntest_healthy_run_does_not_restart_or_expose_secrets (test_watchdog.WatchdogTests.test_healthy_run_does_not_restart_or_expose_secrets) ... ok\ntest_public_health_failure_requires_three_ticks_when_local_is_healthy (test_watchdog.WatchdogTests.test_public_health_failure_requires_three_ticks_when_local_is_healthy) ... ok\ntest_publisher_failure_retries_without_restarting_healthy_services (test_watchdog.WatchdogTests.test_publisher_failure_retries_without_restarting_healthy_services) ... ok\ntest_readiness_recovers_after_database_returns (test_watchdog.WatchdogTests.test_readiness_recovers_after_database_returns) ... ok\ntest_three_failed_checks_before_renewing_live_tunnel (test_watchdog.WatchdogTests.test_three_failed_checks_before_renewing_live_tunnel) ... ok\ntest_urls_reject_credentials_ports_and_foreign_destinations (test_watchdog.WatchdogTests.test_urls_reject_credentials_ports_and_foreign_destinations) ... ok\ntest_duplicate_port_rejected_before_branch_creation (test_worktree.WorktreeTests.test_duplicate_port_rejected_before_branch_creation) ... ok\ntest_invalid_names_and_ports_rejected (test_worktree.WorktreeTests.test_invalid_names_and_ports_rejected) ... ok\ntest_listening_port_rejected (test_worktree.WorktreeTests.test_listening_port_rejected) ... ok\ntest_reconfigure_does_not_overwrite_settings (test_worktree.WorktreeTests.test_reconfigure_does_not_overwrite_settings) ... ok\ntest_runtime_tampering_detected (test_worktree.WorktreeTests.test_runtime_tampering_detected) ... ok\ntest_two_checkout_paths_and_runtime_are_isolated (test_worktree.WorktreeTests.test_two_checkout_paths_and_runtime_are_isolated) ... ok\ntest_uncommitted_changes_not_copied (test_worktree.WorktreeTests.test_uncommitted_changes_not_copied) ... ok\n\n----------------------------------------------------------------------\nRan 23 tests in 4.405s\n\nOK\n"
+    },
+    {
+      "id": "public_version_",
+      "status": "PASS",
+      "http_status": 200,
+      "body": {
+        "commit": "60e4fe3c752df961726a0d866f43862971b0ace3",
+        "assistant_mode": "mock"
+      }
+    },
+    {
+      "id": "public_health_",
+      "status": "PASS",
+      "http_status": 200,
+      "body": {
+        "status": "ok"
+      }
+    }
+  ],
+  "initial_snapshot": {
+    "audit_id": "DOC-006",
+    "checked_at": "2026-10-11T20:32:24.475053+00:00",
+    "commit": "3bf528725458a3f7d3313422f4b21107e8399a10",
+    "scope": "committed code, requirement docs and linked chat snapshots; unfinished DOC-003 excluded",
+    "checks": [
+      {
+        "id": "static",
+        "status": "PASS",
+        "command": [
+          "app/manage.py",
+          "collectstatic",
+          "--noinput",
+          "--verbosity",
+          "0"
+        ],
+        "exit_code": 0,
+        "seconds": 0.463,
+        "output": ""
+      },
+      {
+        "id": "application_regression",
+        "status": "PASS",
+        "command": [
+          "app/manage.py",
+          "test",
+          "accounts",
+          "profiles",
+          "assessments",
+          "hiring",
+          "assistant",
+          "--verbosity",
+          "1"
+        ],
+        "exit_code": 0,
+        "seconds": 9.84,
+        "output": "Found 90 test(s).\nSystem check identified no issues (0 silenced).\nCreating test database for alias 'default'...\n..........................................................................................\n----------------------------------------------------------------------\nRan 90 tests in 9.205s\n\nOK\nDestroying test database for alias 'default'...\n"
+      },
+      {
+        "id": "tool_regression",
+        "status": "PASS",
+        "command": [
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "scripts/tests",
+          "-v"
+        ],
+        "exit_code": 0,
+        "seconds": 3.949,
+        "output": "cked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.630436+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\nMaintenance already running; skipped\n{\"checked_at\": \"2026-10-11T20:32:36.642397+00:00\", \"available\": true, \"action\": \"renewed\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.647284+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.658774+00:00\", \"available\": true, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.662437+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.663313+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.665121+00:00\", \"available\": true, \"action\": \"renewed\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.668796+00:00\", \"available\": true, \"action\": \"checked\", \"publication\": \"publish-failed:OSError\"}\n{\"checked_at\": \"2026-10-11T20:32:36.672292+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.673695+00:00\", \"available\": true, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.676793+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.677606+00:00\", \"available\": false, \"action\": \"checked\", \"publication\": \"published\"}\n{\"checked_at\": \"2026-10-11T20:32:36.679283+00:00\", \"available\": true, \"action\": \"renewed\", \"publication\": \"published\"}\ntest_broken_render_is_unavailable_even_with_healthy_database (test_watchdog.ReadinessHTTPTests.test_broken_render_is_unavailable_even_with_healthy_database) ... ok\ntest_healthy_version_database_and_html_are_required (test_watchdog.ReadinessHTTPTests.test_healthy_version_database_and_html_are_required) ... ok\ntest_healthy_version_with_failed_health_is_not_available (test_watchdog.ReadinessHTTPTests.test_healthy_version_with_failed_health_is_not_available) ... ok\ntest_cron_install_is_idempotent_and_preserves_other_jobs (test_watchdog.WatchdogTests.test_cron_install_is_idempotent_and_preserves_other_jobs) ... ok\ntest_database_failure_is_unavailable_without_restart_or_tunnel_rotation (test_watchdog.WatchdogTests.test_database_failure_is_unavailable_without_restart_or_tunnel_rotation) ... ok\ntest_deployment_lock_skips_tick_without_running_recovery (test_watchdog.WatchdogTests.test_deployment_lock_skips_tick_without_running_recovery) ... ok\ntest_expired_tunnel_updates_origin_preserves_secret_and_release (test_watchdog.WatchdogTests.test_expired_tunnel_updates_origin_preserves_secret_and_release) ... ok\ntest_failed_app_restart_marks_public_status_unavailable (test_watchdog.WatchdogTests.test_failed_app_restart_marks_public_status_unavailable) ... ok\ntest_foreign_pid_is_not_killed (test_watchdog.WatchdogTests.test_foreign_pid_is_not_killed) ... ok\ntest_global_cron_environment_does_not_override_shared_config (test_watchdog.WatchdogTests.test_global_cron_environment_does_not_override_shared_config) ... ok\ntest_healthy_run_does_not_restart_or_expose_secrets (test_watchdog.WatchdogTests.test_healthy_run_does_not_restart_or_expose_secrets) ... ok\ntest_public_health_failure_requires_three_ticks_when_local_is_healthy (test_watchdog.WatchdogTests.test_public_health_failure_requires_three_ticks_when_local_is_healthy) ... ok\ntest_publisher_failure_retries_without_restarting_healthy_services (test_watchdog.WatchdogTests.test_publisher_failure_retries_without_restarting_healthy_services) ... ok\ntest_readiness_recovers_after_database_returns (test_watchdog.WatchdogTests.test_readiness_recovers_after_database_returns) ... ok\ntest_three_failed_checks_before_renewing_live_tunnel (test_watchdog.WatchdogTests.test_three_failed_checks_before_renewing_live_tunnel) ... ok\ntest_urls_reject_credentials_ports_and_foreign_destinations (test_watchdog.WatchdogTests.test_urls_reject_credentials_ports_and_foreign_destinations) ... ok\ntest_duplicate_port_rejected_before_branch_creation (test_worktree.WorktreeTests.test_duplicate_port_rejected_before_branch_creation) ... ok\ntest_invalid_names_and_ports_rejected (test_worktree.WorktreeTests.test_invalid_names_and_ports_rejected) ... ok\ntest_listening_port_rejected (test_worktree.WorktreeTests.test_listening_port_rejected) ... ok\ntest_reconfigure_does_not_overwrite_settings (test_worktree.WorktreeTests.test_reconfigure_does_not_overwrite_settings) ... ok\ntest_runtime_tampering_detected (test_worktree.WorktreeTests.test_runtime_tampering_detected) ... ok\ntest_two_checkout_paths_and_runtime_are_isolated (test_worktree.WorktreeTests.test_two_checkout_paths_and_runtime_are_isolated) ... ok\ntest_uncommitted_changes_not_copied (test_worktree.WorktreeTests.test_uncommitted_changes_not_copied) ... ok\n\n----------------------------------------------------------------------\nRan 23 tests in 3.816s\n\nOK\n"
+      },
+      {
+        "id": "public_version_",
+        "status": "PASS",
+        "http_status": 200,
+        "body": {
+          "commit": "80091ff6881f7ae460d4f18c16aaaf88ed34b409",
+          "assistant_mode": "mock"
+        }
+      },
+      {
+        "id": "public_health_",
+        "status": "PASS",
+        "http_status": 200,
+        "body": {
+          "status": "ok"
+        }
+      }
+    ],
+    "artifact_inventory": {
+      "openapi_files": [],
+      "delivery_exports": [],
+      "http_routes_declared": 30,
+      "mock_ai_only": true,
+      "demo_email_only": true
+    },
+    "source_hashes": {
+      "doc/sources/original-mvp-plan.md": "4f35f50a5baa4c6da73f85d178e3c06cd1b1f3c560f82e14694947d4d20963d4",
+      "doc/sources/requirements-map.md": "95c9e61becef459f97bc10033388535eef581d705879df6d178fac1e6635cd60",
+      "doc/sources/discussion-map.md": "9a6cd1d1a3f13cf1ab13d89880f06951ff5fd4ba842d2df3cf33c5f51d918623",
+      "doc/plan/remaining-work.md": "64ea5e256f8af74754c8b26aaa3272cab81b1973ea3c44cf495f09a5b0834e28",
+      "app/config/urls.py": "f10ca18f6d5cdaca1f514a2a31b1377342c0be35f85692b4cb397482a9cc4bb1",
+      "app/profiles/models.py": "95bc5e41a911581f50b9eb533bd759a92b561d45e039fce44113e74a37999da9",
+      "app/hiring/models.py": "4fc6ef342d2a0fcdcb1caedf4226a93379eb348f810089ae2b839c3e638dea8b",
+      "app/accounts/forms.py": "30face5e7a5dcccfd18f41d1de75c21d81348addca17585c4c9de69dd87f5595",
+      "app/assistant/provider.py": "88547d340c6de0189fa479ce6b9202b0d10afa8e27ac702281580579f19a9559"
+    },
+    "public_status": {
+      "status": "PASS",
+      "source": "https://llmlove.ru/dreamwork/fsp-demo-status.json",
+      "data": {
+        "schema_version": 1,
+        "available": true,
+        "url": "https://usiai-194-226-126-123.free.pinggy.net",
+        "prototype_url": "https://usiai-194-226-126-123.free.pinggy.net/static/prototype/index.html",
+        "commit": "80091ff6881f7ae460d4f18c16aaaf88ed34b409",
+        "checked_at": "2026-10-11T20:31:03.783531+00:00",
+        "message": "Демо доступно",
+        "assistant": "mock"
+      }
+    },
+    "status": "PASS",
+    "meaning": "PASS confirms this audit and specified regressions only; does not close unfinished implementation or human validation.",
+    "tasks": [
+      {
+        "id": "FIX-001",
+        "status": "DONE"
+      },
+      {
+        "id": "FIX-002",
+        "status": "DONE"
+      },
+      {
+        "id": "MVP-006",
+        "status": "DONE"
+      },
+      {
+        "id": "MVP-007",
+        "status": "DONE"
+      },
+      {
+        "id": "MVP-008",
+        "status": "DONE"
+      },
+      {
+        "id": "MVP-009",
+        "status": "DONE"
+      },
+      {
+        "id": "MVP-010",
+        "status": "DONE"
+      },
+      {
+        "id": "MVP-011",
+        "status": "DONE"
+      },
+      {
+        "id": "MVP-012",
+        "status": "DONE"
+      },
+      {
+        "id": "QA-001",
+        "status": "DONE"
+      },
+      {
+        "id": "MVP-013",
+        "status": "DONE"
+      },
+      {
+        "id": "AI-001",
+        "status": "DONE"
+      },
+      {
+        "id": "DOC-003",
+        "status": "IN_PROGRESS"
+      },
+      {
+        "id": "DEL-001",
+        "status": "TODO"
+      },
+      {
+        "id": "OPS-002",
+        "status": "DONE"
+      },
+      {
+        "id": "OPS-003",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "INT-001",
+        "status": "TODO"
+      },
+      {
+        "id": "INT-002",
+        "status": "TODO"
+      },
+      {
+        "id": "INT-003",
+        "status": "TODO"
+      },
+      {
+        "id": "OPS-004",
+        "status": "TODO"
+      },
+      {
+        "id": "PROD-001",
+        "status": "TODO"
+      },
+      {
+        "id": "PROD-002",
+        "status": "TODO"
+      },
+      {
+        "id": "PROD-003",
+        "status": "TODO"
+      },
+      {
+        "id": "PROD-004",
+        "status": "TODO"
+      },
+      {
+        "id": "PROD-005",
+        "status": "TODO"
+      },
+      {
+        "id": "QA-002",
+        "status": "TODO"
+      },
+      {
+        "id": "FUT-001",
+        "status": "TODO"
+      }
+    ],
+    "counts": {
+      "total": 27,
+      "done": 13,
+      "open": 14,
+      "statuses": {
+        "DONE": 13,
+        "IN_PROGRESS": 1,
+        "TODO": 12,
+        "NOT_RUN": 1
+      }
+    },
+    "unfinished_excluded": [
+      "app/accounts/views.py",
+      "app/assessments/views.py",
+      "app/hiring/views.py",
+      "app/profiles/views.py",
+      "pyproject.toml",
+      "uv.lock"
+    ],
+    "parallel_snapshots": {
+      "mvp/mcp-cli": "4221262",
+      "mvp/accessibility": "c65f80c",
+      "mobile7": "9e2c7cc",
+      "mvp/readme-index": "3bf5287"
+    },
+    "documentation": {
+      "status": "PASS",
+      "markdown_documents": 87,
+      "local_links": "PASS",
+      "gate_metadata": "PASS",
+      "task_status_consistency": "PASS: 27 unique IDs, 13 DONE and 14 open",
+      "diff_check": "PASS"
+    },
+    "completed_at": "2026-10-11T20:36:06.716970+00:00"
+  },
+  "artifact_inventory": {
+    "openapi_files": [],
+    "delivery_exports": [
+      "doc/presentation/trudyazhki-fsp.pptx",
+      "doc/sources/materials/fsp-specification.pdf"
+    ],
+    "http_routes_declared": 30,
+    "mock_ai_only": true,
+    "demo_email_only": true
+  },
+  "source_hashes": {
+    "doc/sources/original-mvp-plan.md": "4f35f50a5baa4c6da73f85d178e3c06cd1b1f3c560f82e14694947d4d20963d4",
+    "doc/sources/requirements-map.md": "95c9e61becef459f97bc10033388535eef581d705879df6d178fac1e6635cd60",
+    "doc/sources/discussion-map.md": "9a6cd1d1a3f13cf1ab13d89880f06951ff5fd4ba842d2df3cf33c5f51d918623",
+    "doc/plan/remaining-work.md": "64ea5e256f8af74754c8b26aaa3272cab81b1973ea3c44cf495f09a5b0834e28",
+    "doc/presentation/trudyazhki-fsp.md": "c69aefc62b35e4d8e0369eb87b357d4b20d0618147efe994bb93146343adab38",
+    "app/config/urls.py": "842500a26f9ce2cb314849a80e0f4dad6f3e8859a0159711a20db9ce871f3e26",
+    "app/profiles/models.py": "95bc5e41a911581f50b9eb533bd759a92b561d45e039fce44113e74a37999da9",
+    "app/hiring/models.py": "4fc6ef342d2a0fcdcb1caedf4226a93379eb348f810089ae2b839c3e638dea8b",
+    "app/accounts/forms.py": "8587d99467f8098c31b0c5d75b5ce6345f1b8164ab6d444f019eb34467d1b266",
+    "app/assistant/provider.py": "88547d340c6de0189fa479ce6b9202b0d10afa8e27ac702281580579f19a9559"
+  },
+  "public_status": {
+    "status": "PASS",
+    "source": "https://llmlove.ru/dreamwork/fsp-demo-status.json",
+    "data": {
+      "schema_version": 1,
+      "available": true,
+      "url": "https://usiai-194-226-126-123.free.pinggy.net",
+      "prototype_url": "https://usiai-194-226-126-123.free.pinggy.net/static/prototype/index.html",
+      "commit": "60e4fe3c752df961726a0d866f43862971b0ace3",
+      "checked_at": "2026-10-11T20:36:03.672495+00:00",
+      "message": "Демо доступно",
+      "assistant": "mock"
+    }
+  },
+  "status": "PASS",
+  "meaning": "Audit and specified regressions only, not unfinished implementation.",
+  "tasks": [
+    {
+      "id": "FIX-001",
+      "status": "DONE"
+    },
+    {
+      "id": "FIX-002",
+      "status": "DONE"
+    },
+    {
+      "id": "MVP-006",
+      "status": "DONE"
+    },
+    {
+      "id": "MVP-007",
+      "status": "DONE"
+    },
+    {
+      "id": "MVP-008",
+      "status": "DONE"
+    },
+    {
+      "id": "MVP-009",
+      "status": "DONE"
+    },
+    {
+      "id": "MVP-010",
+      "status": "DONE"
+    },
+    {
+      "id": "MVP-011",
+      "status": "DONE"
+    },
+    {
+      "id": "MVP-012",
+      "status": "DONE"
+    },
+    {
+      "id": "QA-001",
+      "status": "DONE"
+    },
+    {
+      "id": "MVP-013",
+      "status": "DONE"
+    },
+    {
+      "id": "AI-001",
+      "status": "DONE"
+    },
+    {
+      "id": "DOC-003",
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": "DEL-001",
+      "status": "TODO"
+    },
+    {
+      "id": "OPS-002",
+      "status": "DONE"
+    },
+    {
+      "id": "OPS-003",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "INT-001",
+      "status": "TODO"
+    },
+    {
+      "id": "INT-002",
+      "status": "TODO"
+    },
+    {
+      "id": "INT-003",
+      "status": "TODO"
+    },
+    {
+      "id": "OPS-004",
+      "status": "TODO"
+    },
+    {
+      "id": "PROD-001",
+      "status": "TODO"
+    },
+    {
+      "id": "PROD-002",
+      "status": "TODO"
+    },
+    {
+      "id": "PROD-003",
+      "status": "TODO"
+    },
+    {
+      "id": "PROD-004",
+      "status": "TODO"
+    },
+    {
+      "id": "PROD-005",
+      "status": "TODO"
+    },
+    {
+      "id": "QA-002",
+      "status": "TODO"
+    },
+    {
+      "id": "FUT-001",
+      "status": "TODO"
+    }
+  ],
+  "counts": {
+    "total": 27,
+    "done": 13,
+    "open": 14,
+    "statuses": {
+      "DONE": 13,
+      "IN_PROGRESS": 1,
+      "TODO": 12,
+      "NOT_RUN": 1
+    }
+  },
+  "unfinished_excluded": [
+    "app/accounts/views.py",
+    "app/assessments/views.py",
+    "app/hiring/views.py",
+    "app/profiles/views.py",
+    "pyproject.toml",
+    "uv.lock"
+  ],
+  "parallel_snapshots": {
+    "mvp/mcp-cli": "4221262",
+    "mvp/accessibility": "c65f80c",
+    "mobile7": "9e2c7cc",
+    "mvp/readme-index": "3bf5287"
+  },
+  "completed_at": "2026-10-11T20:37:32.085978+00:00",
+  "documentation": {
+    "status": "PASS",
+    "markdown_documents_before_integration": 87,
+    "local_links": "PASS",
+    "gate_metadata": "PASS",
+    "task_status_consistency": "PASS: 27 unique IDs, 13 DONE and 14 open",
+    "diff_check": "PASS"
+  },
+  "concurrent_updates": {
+    "main_materials": "2375618",
+    "accessibility_integrated": true,
+    "published_live_sha": "60e4fe3c752df961726a0d866f43862971b0ace3",
+    "id_collision_resolved": "README task used DOC-005; this audit renamed DOC-006 before commit"
+  }
+}
