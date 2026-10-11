@@ -23,3 +23,16 @@
 Начните с [документации](doc/README.md), [цели](doc/goal.md) и [плана](doc/plan/implementation.md). Приложение и прототип пока не реализованы.
 
 Документация и инструменты исключены из стандартной Jekyll сборки через _config.yml. При публикации без Jekyll нужен отдельный артефакт только с файлами сайта; фактический режим Pages ещё не проверен.
+
+## Параллельная разработка
+
+Прочитайте [AGENTS.md](AGENTS.md) и [инструкцию worktree](doc/development/worktrees.md).
+
+```sh
+python3 scripts/worktree.py create assessment --base main --port 8021
+python3 scripts/worktree.py list
+python3 scripts/check_docs.py
+python3 -m unittest discover -s scripts/tests -v
+```
+
+Команда создаст отдельную ветку mvp/assessment и checkout рядом с репозиторием. В новый чат передайте полученный абсолютный путь. Каждый успешно проверенный этап заканчивается отдельным коммитом.
