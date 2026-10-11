@@ -142,10 +142,10 @@ class LearningTests(TestCase):
         first = complete_lesson(self.profile, 'Junior', 'swift')
         self.assertEqual(complete_lesson(self.profile, 'Junior', 'swift').pk, first.pk)
         complete_lesson(self.profile, 'Middle', 'swift')
-        with patch('assessments.learning.VERSION', 'ios-learning-2'):
+        with patch('assessments.learning_content.VERSION', 'ios-learning-2'):
             complete_lesson(self.profile, 'Junior', 'swift')
         self.assertEqual(LessonProgress.objects.count(), 3)
-        self.assertContains(self.client.get('/learning/?grade=Junior'), '1 из 4 тем изучено')
+        self.assertContains(self.client.get('/learning/?track=ios&grade=Junior'), '1 из 4 тем изучено')
         self.assertContains(self.client.get('/learning/?grade=Middle'), '1 из 4 тем изучено')
 
     def test_lesson_post_requires_explicit_read_checkbox(self):
@@ -248,7 +248,7 @@ class LearningTests(TestCase):
     def test_existing_snapshot_does_not_change_when_bank_changes(self):
         obj = start_practice(self.profile, 'Junior')
         original = copy.deepcopy(obj.tasks)
-        with patch('assessments.learning.PRACTICE_BANK', []):
+        with patch('assessments.learning_content.PRACTICE_BANK', []):
             self.assertEqual(start_practice(self.profile, 'Junior').tasks, original)
         obj.refresh_from_db()
         self.assertEqual(obj.tasks, original)
@@ -258,7 +258,7 @@ class LearningTests(TestCase):
         task = obj.tasks[0]
         response = self.client.post(f'/learning/sessions/{obj.pk}/answer/',
                                     {f'q_{task["id"]}': str(task['correct']), 'action': 'pause'})
-        self.assertEqual(response.url, '/learning/?grade=Junior')
+        self.assertEqual(response.url, '/learning/?track=ios&grade=Junior')
         obj.refresh_from_db()
         self.assertEqual(obj.answers, {task['id']: task['correct']})
         self.assertEqual(obj.status, 'active')
@@ -267,7 +267,7 @@ class LearningTests(TestCase):
         obj = self.finish(start_practice(self.profile, 'Junior'), wrong=(0,))
         for _ in range(21):
             self.finish(start_practice(self.profile, 'Junior', source_id=obj.pk))
-        response = self.client.get('/learning/?grade=Junior')
+        response = self.client.get('/learning/?track=ios&grade=Junior')
         self.assertContains(response, 'стоит повторить', count=1)
         self.assertEqual(response.context['latest'].pk, obj.pk)
         self.assertEqual(len(response.context['history']), 20)

@@ -3,7 +3,7 @@ import copy
 import secrets
 from django.db import transaction
 from django.utils import timezone
-from .learning_content import LESSONS, PRACTICE_BANK, TOPICS, VERSION
+from .learning_tracks import get_track
 from .models import Attempt, LessonProgress, PracticeSession
 
 
@@ -20,8 +20,8 @@ def require_learning(profile):
         raise LearningLocked('Обучение и самопроверка доступны после завершения активного теста категории.')
 
 
-def validate_selection(grade, topic):
-    if grade not in {'Junior', 'Middle'} or topic not in {'all', *TOPICS}:
+def validate_selection(grade, topic, material):
+    if grade not in {'Junior', 'Middle'} or topic not in {'all', *material.TOPICS}:
         raise ValueError('Выберите существующие уровень и тему.')
 
 
@@ -44,30 +44,33 @@ def next_question(session):
 
 
 @transaction.atomic
-def start_practice(profile, grade, topic='all', source_id=None):
+def start_practice(profile, grade, topic='all', source_id=None, *, track='ios'):
     require_learning(profile)
-    validate_selection(grade, topic)
-    active = PracticeSession.objects.filter(candidate=profile, status='active').first()
-    if active:
-        return active
+    source = None
     if source_id is not None:
         source = PracticeSession.objects.get(pk=source_id, candidate=profile, status='finished')
+        track, grade, topic = source.track, source.grade, source.topic
+    material = get_track(track)['material']
+    validate_selection(grade, topic, material)
+    active = PracticeSession.objects.filter(candidate=profile, track=track, status='active').first()
+    if active:
+        return active
+    if source is not None:
         tasks = [copy.deepcopy(task) for task in source.tasks if source.answers.get(task['id']) != task['correct']]
         if not tasks:
             raise ValueError('Ошибок в этой самопроверке нет. Начните новую проверку.')
-        grade, topic, kind = source.grade, source.topic, 'review'
-        version = source.content_version
+        kind, version = 'review', source.content_version
     else:
-        kind, version, tasks = 'check', VERSION, []
-        for slug in TOPICS if topic == 'all' else [topic]:
-            pool = [item for item in PRACTICE_BANK if item['grade'] == grade and item['topic'] == slug]
+        kind, version, tasks = 'check', material.VERSION, []
+        for slug in material.TOPICS if topic == 'all' else [topic]:
+            pool = [item for item in material.PRACTICE_BANK if item['grade'] == grade and item['topic'] == slug]
             tasks.extend(copy.deepcopy(secrets.SystemRandom().sample(pool, 2 if topic == 'all' else 4)))
     for task in tasks:
         order = list(range(len(task['options'])))
         secrets.SystemRandom().shuffle(order)
         task['options'] = [task['options'][index] for index in order]
         task['correct'] = order.index(task['correct'])
-    return PracticeSession.objects.create(candidate=profile, grade=grade, topic=topic, kind=kind,
+    return PracticeSession.objects.create(candidate=profile, track=track, grade=grade, topic=topic, kind=kind,
                                           content_version=version, tasks=tasks)
 
 
@@ -101,9 +104,10 @@ def save_practice(profile, session_id, submitted, finish=False):
 
 
 @transaction.atomic
-def complete_lesson(profile, grade, topic):
+def complete_lesson(profile, grade, topic, *, track='ios'):
     require_learning(profile)
-    if (grade, topic) not in LESSONS:
+    material = get_track(track)['material']
+    if (grade, topic) not in material.LESSONS:
         raise ValueError('Урок не найден.')
-    return LessonProgress.objects.get_or_create(candidate=profile, grade=grade, topic=topic,
-                                                content_version=VERSION)[0]
+    return LessonProgress.objects.get_or_create(candidate=profile, track=track, grade=grade, topic=topic,
+                                                content_version=material.VERSION)[0]

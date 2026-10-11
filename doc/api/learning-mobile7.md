@@ -1,18 +1,31 @@
-# HTTP контракты обучения · MOBILE7-001
+# HTTP контракты обучения · MOBILE7-001 / MOBILE7-002
 
 Все маршруты требуют аутентифицированного кандидата, подтверждённого demo email и processing consent. Неавторизованный запрос перенаправляется на login (302); чужая роль или неподтверждённый email получает 403; отсутствие согласия — redirect на consent. Ответы — HTML, формы POST, CSRF обязателен. Это интерфейс веб-модуля; отдельный JSON API для native приложений не добавлен.
 
 | Метод и маршрут | Вход | Поведение |
 |---|---|---|
-| GET /learning/ | grade=Junior или Middle, необязательно | Маршрут, прогресс четырёх тем, активная практика, слабые области и 20 последних результатов. Неверный grade переключает на Junior. |
-| GET /learning/lessons/{grade}/{topic}/ | topic: swift, arc, async, ui-data | Урок, пример, checklist, отметка, форма практики. Неизвестные значения — 404. |
+| GET /learning/ | track=ios/android/flutter/aurora; grade=Junior/Middle, необязательно | Неизвестный track — 404; без track используется выбранный в Django session либо ios. Маршрут, прогресс четырёх тем, активная практика, слабые области и 20 последних результатов выбранного трека. Неверный grade переключает на Junior. |
+| GET /learning/lessons/{grade}/{topic}/ | topic: swift, arc, async, ui-data | Совместимый старый маршрут iOS: урок, пример, checklist, отметка, форма практики. Неизвестные значения — 404. |
 | POST /learning/lessons/{grade}/{topic}/complete/ | read=on, csrfmiddlewaretoken | Идемпотентная отметка изучения текущей версии; 302 к уроку. Без подтверждения — сообщение и redirect без записи. |
-| POST /learning/start/ | grade; topic=all или slug; source=ID необязательно | Возобновляет активную попытку либо создаёт 8 вопросов для all или 4 для темы; source выбирает ошибки своего завершённого результата. 302 к первому вопросу без ответа. Неверные grade/topic — redirect с ошибкой; чужой/неверный source — 404. |
+| GET /learning/tracks/{track}/lessons/{grade}/{topic}/ | track и topic из каталога ниже | Урок выбранной платформы; неизвестный трек, уровень или тема — 404. |
+| POST /learning/tracks/{track}/lessons/{grade}/{topic}/complete/ | read=on, csrfmiddlewaretoken | Идемпотентная отметка внутри трека, уровня и версии; 302 к уроку. Без read нет записи. |
+| POST /learning/start/ | track, необязательно (default ios); grade; topic=all или slug; source=ID необязательно | Возобновляет активную попытку выбранного трека либо создаёт 8 вопросов для all или 4 для темы; source выбирает ошибки своего завершённого результата; трек, уровень и версия всегда берутся из источника, даже если клиент прислал другие значения. 302 к первому вопросу без ответа. Неверные track/grade/topic — redirect с ошибкой; чужой/неверный source — 404. |
 | GET /learning/sessions/{id}/ | question=индекс от 0, необязательно | Активный вопрос без решений; для завершённой попытки — полный разбор. По умолчанию первый неотвеченный либо последний. Неверный индекс/ID — 404. |
-| POST /learning/sessions/{id}/answer/ | q_{question_id}=индекс варианта; action=save/pause/finish | Слияние валидных ответов. save — redirect к первому неотвеченному; pause — redirect к маршруту с сохранением; finish — серверный расчёт и redirect к результату. Повтор завершения возвращает неизменный результат. |
+| POST /learning/sessions/{id}/answer/ | q_{question_id}=индекс варианта; action=save/pause/finish | Слияние валидных ответов. save — redirect к первому неотвеченному; pause — redirect к маршруту ?track={track}&grade={grade} с сохранением; finish — серверный расчёт и redirect к результату. Повтор завершения возвращает неизменный результат. |
+
+Slug тем (одинаковые для Junior и Middle):
+
+| track | topic |
+|---|---|
+| ios | swift, arc, async, ui-data |
+| android | kotlin, compose, coroutines, data-testing |
+| flutter | dart, widgets, state-async, testing-arch |
+| aurora | cpp-qt, qml, models-async, sdk-packaging |
+
+У кандидата одна активная практика в каждом треке. Сессия и её ответы определяются серверной записью по id; поля track/grade при сохранении ответов не меняют принадлежность попытки.
 
 В POST можно передать несколько ответов принадлежащих попытке. Любой неверный ключ или вариант отклоняет всю запись; сохранённые ответы остаются прежними. Баллы, правильные ответы, категория и timestamps клиента не используются.
 
 На время действующего активного экзамена /learning/ показывает экран возврата к экзамену (200), остальные учебные страницы и записи возвращают тот же экран с 423 без изменения данных. Проверка блокировки повторяется в транзакции сервисов записи. Мутации через GET возвращают 405; POST без CSRF — 403. Доступ к чужой попытке или завершённому источнику — 404.
 
-[Архитектура и сценарий](../architecture/learning-mobile7.md), [QA](../qa/learning-mobile7.md).
+[Архитектура и сценарий](../architecture/learning-mobile7.md), [QA треков](../qa/learning-tracks-mobile7.md), [исходная QA](../qa/learning-mobile7.md).

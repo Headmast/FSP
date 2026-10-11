@@ -55,12 +55,29 @@ def main():
             lessons = list(pool.map(lambda _: isolated(lambda p: complete_lesson(p, 'Junior', 'arc').pk), range(4)))
         assert len(set(lessons)) == 1, lessons
         assert LessonProgress.objects.count() == 1
+        from assessments.learning_tracks import TRACKS
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            starts = list(pool.map(lambda track: (track, isolated(lambda p: start_practice(p, 'Middle', track=track).pk)), list(TRACKS) * 2))
+        for track in TRACKS:
+            assert len({pk for slug, pk in starts if slug == track}) == 1, starts
+        assert PracticeSession.objects.filter(status='active').count() == 4
+        sessions = list(PracticeSession.objects.filter(status='active'))
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            results = list(pool.map(lambda obj: isolated(lambda p: save_practice(p, obj.pk,
+                {t['id']: str(t['correct']) for t in obj.tasks}, finish=True).correct_count), sessions))
+        assert results == [8] * 4, results
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            progress = list(pool.map(lambda track: isolated(lambda p: complete_lesson(p, 'Junior',
+                next(iter(TRACKS[track]['material'].TOPICS)), track=track).pk), TRACKS))
+        assert len(set(progress)) == 4
+        assert LessonProgress.objects.count() == 5
         profile.refresh_from_db()
         assert profile.confirmed_grade == '' and profile.test_score == 0
         result = {'status': 'PASS', 'checked_at': timezone.now().isoformat(), 'database': 'temporary SQLite; deleted after check',
                   'workers': 4, 'scenarios': ['one_active_session_on_parallel_start', 'parallel_answers_no_lost_update',
-                  'parallel_finalization_idempotent', 'parallel_lesson_completion_unique', 'profile_grade_unchanged']}
-        (QA / 'MOBILE7-concurrency.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+                  'parallel_finalization_idempotent', 'parallel_lesson_completion_unique', 'profile_grade_unchanged', 'parallel_starts_one_active_per_track',
+                  'parallel_track_scoring_independent', 'parallel_track_lesson_progress_independent']}
+        (QA / 'MOBILE7-002-concurrency.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
         print(json.dumps(result, ensure_ascii=False, indent=2))
         connections.close_all()
 
