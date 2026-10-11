@@ -44,7 +44,7 @@ def parser():
     command(group('achievements'),'show','me/achievements')
     invitations=group('invitations');command(invitations,'list','invitations',list=True)
     command(invitations,'show','invitations/{id}',id=True);command(invitations,'contacts','invitations/{id}/contacts',id=True)
-    command(group('company'),'show','me/company')
+    company=group('company');command(company,'show','me/company')
     needs=group('needs');command(needs,'list','needs',list=True);command(needs,'show','needs/{id}',id=True)
     candidates=group('candidates');search=command(candidates,'search','candidates',list=True)
     for name in ['grade','skill','fsp-status']:search.add_argument('--'+name)
@@ -65,6 +65,14 @@ def parser():
         command(profile,action).set_defaults(draft_kind='profile.'+action)
     for action in ['accept','decline']:
         command(invitations,action,id=True).set_defaults(draft_kind='invitation.'+action)
+    item=command(company,'draft');item.add_argument('--file',required=True);item.set_defaults(draft_kind='company.update')
+    for action in ['create','update']:
+        item=command(needs,action,id=action=='update');item.add_argument('--file',required=True)
+        item.set_defaults(draft_kind='need.'+action)
+    item=command(invitations,'send');item.add_argument('--need-id',type=identifier,required=True)
+    item.add_argument('--candidate-id',type=identifier,required=True)
+    item.add_argument('--accepted-attempts',type=identifier,nargs='*',default=[])
+    item.add_argument('--discussion',default='');item.set_defaults(draft_kind='invitation.send')
     command(group('mcp'),'serve')
     return p
 
@@ -116,6 +124,10 @@ def run(args):
                     raise ClientError('Файл должен содержать JSON объект до 64 KiB.',2) from None
             kind=args.kind if args.draft_kind=='generic' else args.draft_kind
             target=getattr(args,'target_id',None) or (getattr(args,'id',None) if kind.startswith('invitation.') else None)
+            if kind=='need.update' and args.group=='needs':target=args.id
+            if kind=='invitation.send' and args.group=='invitations':
+                target=args.need_id
+                payload={'candidate_id':args.candidate_id,'accepted_attempts':args.accepted_attempts,'discussion':args.discussion}
             result=api.request('POST','drafts',data={'kind':kind,'target_id':target,'payload':payload})
             output(result,args.json)
             print('Подтвердите в браузере: '+api.server+result['data']['approval_path'],file=sys.stderr)

@@ -102,7 +102,7 @@ def build_server(api):
             """Статус своего черновика и путь подтверждения в веб."""
             return get(f'drafts/{id}')
         if actor['role']+'.draft' in actor['scopes']:
-            from .draft_types import ProfileChanges
+            from .draft_types import ProfileChanges,CompanyChanges,NeedChanges,NewNeed
             write=ToolAnnotations(read_only_hint=False,destructive_hint=False,idempotent_hint=False,open_world_hint=False)
             def prepare(kind,payload=None,target=None):
                 try:return Result.model_validate(api.request('POST','drafts',data={'kind':kind,'target_id':target,'payload':payload or {}}))
@@ -125,6 +125,26 @@ def build_server(api):
                 def fsp_prepare_invitation_response(id:ID,decision:Literal['accept','decline'])->Result:
                     """Подготовить ответ на своё предложение. Контакты пока не открываются."""
                     return prepare('invitation.'+decision,target=id)
+            else:
+                @server.tool(annotations=write)
+                def fsp_prepare_company(changes:CompanyChanges)->Result:
+                    """Подготовить создание/изменение своей компании без контактов; подтверждение в веб."""
+                    return prepare('company.update',changes.model_dump(exclude_none=True))
+                @server.tool(annotations=write)
+                def fsp_prepare_need_create(need:NewNeed)->Result:
+                    """Подготовить новую потребность; компания уже должна существовать."""
+                    return prepare('need.create',need.model_dump())
+                @server.tool(annotations=write)
+                def fsp_prepare_need_update(id:ID,changes:NeedChanges)->Result:
+                    """Подготовить изменения своей потребности; подтверждение в веб."""
+                    return prepare('need.update',changes.model_dump(exclude_none=True),id)
+                @server.tool(annotations=write)
+                def fsp_prepare_invitation(need_id:ID,candidate_id:ID,
+                    accepted_attempts:Annotated[list[ID],Field(max_length=20)]|None=None,
+                    discussion:Annotated[str,Field(max_length=2000)]='')->Result:
+                    """Подготовить предложение с выбранными свидетельствами. Отправляет владелец в веб."""
+                    return prepare('invitation.send',{'candidate_id':candidate_id,
+                        'accepted_attempts':accepted_attempts or [],'discussion':discussion},need_id)
     return server
 
 

@@ -75,3 +75,22 @@ class DraftMcpTests(unittest.IsolatedAsyncioTestCase):
         async with Client(build_server(DraftApi(draft=False))) as client:
             names=[t.name for t in (await client.list_tools()).tools]
             self.assertIn('fsp_get_draft',names);self.assertNotIn('fsp_prepare_profile',names)
+
+    async def test_employer_typed_preparation_and_role_isolation(self):
+        api=DraftApi('employer')
+        async with Client(build_server(api)) as client:
+            names=[t.name for t in (await client.list_tools()).tools]
+            self.assertIn('fsp_prepare_company',names);self.assertNotIn('fsp_prepare_profile',names)
+            result=await client.call_tool('fsp_prepare_company',{'changes':{'name':'Команда'}})
+            self.assertFalse(result.is_error)
+            result=await client.call_tool('fsp_prepare_need_create',{'need':{'title':'Разработчик','grade':'Junior',
+                'tasks':'Разработка','salary_min':100000,'salary_max':150000,'work_format':'remote'}})
+            self.assertFalse(result.is_error)
+            self.assertEqual(api.calls[-1][1]['kind'],'need.create')
+            result=await client.call_tool('fsp_prepare_invitation',{'need_id':1,'candidate_id':2,'accepted_attempts':[3]})
+            self.assertFalse(result.is_error)
+            self.assertEqual(api.calls[-1][1]['target_id'],1)
+            self.assertEqual(api.calls[-1][1]['payload']['accepted_attempts'],[3])
+            before=len(api.calls)
+            result=await client.call_tool('fsp_prepare_company',{'changes':{'contact_email':'hidden@example.invalid'}})
+            self.assertTrue(result.is_error);self.assertEqual(len(api.calls),before)
