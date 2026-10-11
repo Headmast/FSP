@@ -53,6 +53,33 @@ def get_version(url, local=False):
         return json.load(response)['commit']
 
 
+def check_readiness(url, local=False):
+    """Read schema health and render the entry form without changing app data."""
+    headers = {'X-Forwarded-Proto': 'https'} if local else {}
+    try:
+        request = urllib.request.Request(url.rstrip('/') + '/health/', headers=headers)
+        with urllib.request.urlopen(request, timeout=8) as response:
+            if json.load(response).get('status') != 'ok':
+                return False
+        request = urllib.request.Request(url.rstrip('/') + '/accounts/login/', headers=headers)
+        with urllib.request.urlopen(request, timeout=8) as response:
+            return (response.headers.get_content_type() == 'text/html'
+                    and b'data-testid="login-form"' in response.read(262144))
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
+def version_matches(url, commit, local=False):
+    try:
+        return get_version(url, local=local) == commit
+    except (OSError, ValueError, KeyError):
+        return False
+
+
+def app_ready(url, commit, local=False):
+    return version_matches(url, commit, local) and check_readiness(url, local)
+
+
 def owned_pid(root, name):
     file = root / 'shared/pids' / (name + '.pid')
     if not file.exists():
@@ -199,13 +226,21 @@ def maintain(root):
     action = 'checked'
     try:
         renewed = owned_pid(root, 'mvp-pinggy') is None or not valid_url(url)
+        local_url = 'http://127.0.0.1:8011'
+        local_ready = public_ready = False
         if not renewed:
-            try:
-                available = get_version(url) == commit
-            except (OSError, ValueError, KeyError):
-                pass
-            state['failures'] = 0 if available else state.get('failures', 0) + 1
-            renewed = state['failures'] >= 3
+            if not version_matches(local_url, commit, local=True):
+                start_server(root)
+                action = 'application-restarted'
+            local_ready = app_ready(local_url, commit, local=True)
+            if local_ready:
+                public_ready = app_ready(url, commit)
+                state['failures'] = 0 if public_ready else state.get('failures', 0) + 1
+                renewed = state['failures'] >= 3
+            else:
+                # A reachable application with a broken DB/template is not a
+                # broken tunnel. Expose the outage instead of restarting it.
+                state['failures'] = 0
         if renewed:
             url = start_tunnel(root)
             configure_origin(root, url)
@@ -214,16 +249,12 @@ def maintain(root):
             start_server(root)
             state['failures'] = 0
             action = 'renewed'
-        else:
-            try:
-                local_ok = get_version('http://127.0.0.1:8011', local=True) == commit
-            except (OSError, ValueError, KeyError):
-                local_ok = False
-            if not local_ok:
-                start_server(root)
-                action = 'application-restarted'
-        available = get_version(url) == commit and get_version('http://127.0.0.1:8011', local=True) == commit
-        message = 'Демо доступно' if available else 'Проверяем соединение; повтор через минуту'
+            local_ready = app_ready(local_url, commit, local=True)
+            public_ready = local_ready and app_ready(url, commit)
+        available = local_ready and public_ready
+        message = ('Демо доступно' if available else
+                   'Приложение недоступно; повтор через минуту' if not local_ready else
+                   'Проверяем соединение; повтор через минуту')
     except Exception as error:
         available = False
         message = 'Восстановление не завершено; повтор через минуту'

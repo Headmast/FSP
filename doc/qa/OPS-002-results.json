@@ -1,0 +1,29 @@
+{
+  "task": "OPS-002",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:29:31.124970+00:00",
+  "base_commit": "0982d51d5ed53b71bfff972b7d1acde2b3116652",
+  "checked_sources": {
+    "scripts/maintain_demo.py": "c9a2999637dd6534062c629ad552f65c7e4e2c1119524ab295786b977bc6d185",
+    "scripts/tests/test_watchdog.py": "efc21a54868be42272c5ffa2a7f67a7d20c7866384f16c7137ef169b01fd8318",
+    "app/accounts/views.py": "86b156255c313bebf3da6eb1b36a2d86299d3691999d9470ce76bfdc714fa954",
+    "app/accounts/tests.py": "255bb50c3d145699e29afe7d0afae0a35e010ef0b4cafa01ae17f109bf86b513",
+    "app/templates/accounts/login.html": "7266e6339e0b3ab3e23a74a2d8be00a46f04084a566809eda703f2ff9be3549f"
+  },
+  "tests": [
+    {
+      "command": "python3 -m unittest discover -s scripts/tests -v",
+      "count": 23,
+      "failures": 0,
+      "seconds": 4.967
+    },
+    {
+      "command": "python app/manage.py test accounts --verbosity 0",
+      "count": 8,
+      "failures": 0,
+      "seconds": 1.326
+    }
+  ],
+  "empty_database_evidence": "OPS-002-empty-database.json",
+  "publication": "pending checkpoint deployment"
+}

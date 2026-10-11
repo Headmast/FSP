@@ -1,6 +1,8 @@
 from datetime import timedelta
 from django.test import TestCase, Client
 from django.utils import timezone
+from django.db import OperationalError
+from unittest.mock import patch
 from .models import User, DemoConfirmation
 
 class RegistrationTests(TestCase):
@@ -48,3 +50,17 @@ class RegistrationTests(TestCase):
         client=Client()
         client.post('/accounts/login/',{'username':'candidate@demo.invalid','password':'Synthetic-password-2026!'})
         self.assertNotIn('_auth_user_id',client.session)
+
+    def test_health_checks_schema_without_mutating_user_data(self):
+        before=list(User.objects.values())
+        self.assertEqual(self.client.get('/health/').json(),{'status':'ok'})
+        self.assertEqual(list(User.objects.values()),before)
+        self.assertContains(self.client.get('/accounts/login/'),'data-testid="login-form"')
+
+    def test_failed_database_is_503_even_when_version_is_reachable(self):
+        with patch('accounts.models.User.objects.exists',side_effect=OperationalError('private database location')):
+            response=self.client.get('/health/')
+            self.assertEqual(response.status_code,503)
+            self.assertEqual(response.json(),{'status':'unavailable'})
+            self.assertNotContains(response,'private database location',status_code=503)
+            self.assertEqual(self.client.get('/version/').status_code,200)

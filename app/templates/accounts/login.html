@@ -1,1 +1,1 @@
-{% extends 'base.html' %}{% block content %}<h1>Вход</h1><p class="lead">В поле имени пользователя укажите demo email.</p><form class="card" method="post">{% csrf_token %}{{ form.as_p }}<button class="primary">Войти</button></form>{% endblock %}
+{% extends 'base.html' %}{% block content %}<h1>Вход</h1><p class="lead">В поле имени пользователя укажите demo email.</p><form data-testid="login-form" class="card" method="post">{% csrf_token %}{{ form.as_p }}<button class="primary">Войти</button></form>{% endblock %}

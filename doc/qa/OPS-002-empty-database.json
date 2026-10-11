@@ -1,0 +1,8 @@
+{
+  "health_status": 503,
+  "health_body": {
+    "status": "unavailable"
+  },
+  "version_status": 200,
+  "database": "isolated empty SQLite without tables"
+}

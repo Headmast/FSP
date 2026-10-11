@@ -68,9 +68,16 @@ def confirm(request):
 
 
 def health(request):
-    from django.db import connection
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT 1")
+    from django.db import DatabaseError
+    from .models import User
+    from profiles.models import Profile
+    from assessments.models import Attempt
+    from hiring.models import Company, Need, Invitation
+    try:
+        for model in (User, Profile, Attempt, Company, Need, Invitation):
+            model.objects.exists()
+    except DatabaseError:
+        return JsonResponse({"status": "unavailable"}, status=503)
     return JsonResponse({"status": "ok"})
 
 
