@@ -100,3 +100,11 @@ DOC-006 зарезервирована интегратором в mvp/implement
 Актуальная сверка [DOC-006](../qa/scope-current.md): 13/27 DONE, 14 открыты (12 TODO, DOC-003 IN_PROGRESS, OPS-003 NOT_RUN). Дополнительные поручения параллельных чатов учтены отдельно, без увеличения исходного счётчика. DOC-003: интегратор, mvp/implementation, база 3bf5287, порт 8041; область app/*/views.py, app/config/urls.py по необходимости, scripts проверки контрактов, pyproject.toml/uv.lock и doc/api/ с evidence. Начатый код ещё не прошёл приёмку.
 
 DOC-006 — DONE: [аудит](../qa/scope-current.md), [evidence](../qa/scope-current.json), [результат](../responses/DOC-006-coverage.md). Проверки среза и документов выполнены; оставшиеся функции не переведены в DONE.
+
+## Видеоматериалы — DOC-007
+
+| ID | Работа | Владелец и область | Приёмка | Статус |
+|---|---|---|---|---|
+| DOC-007 | Шесть MP4, каталог, ссылки в презентациях и документации | Чат видео; mvp/video-links; video/, doc/presentation/, оглавления и материалы сдачи | Хеши оригиналов, MP4, гиперссылки PPTX/HTML/MD, docs и diff | DONE |
+
+[Результат и проверки](../delivery/video-links.md). Этот этап не закрывает полную приёмку DEL-001.
