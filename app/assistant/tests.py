@@ -4,7 +4,9 @@ from django.test import TestCase,Client
 from django.utils import timezone
 from accounts.models import User
 from profiles.models import Profile
-from hiring.models import Company,Need
+from hiring.models import Company,Need,Invitation
+from hiring.services import invite,decide
+from assessments.models import Attempt
 from assessments.services import start_attempt,save_answers
 from .models import Usage,Draft
 
@@ -232,3 +234,127 @@ class DraftTests(TestCase):
         need.company=other;need.save()
         self.assertEqual(self.client.post(f'/assistant/drafts/{draft.pk}/',self.values).status_code,409)
         self.assertEqual(Need.objects.count(),1)
+
+
+class StageHelperTests(TestCase):
+    def setUp(self):
+        self.candidate=User.objects.create_user(username='stages-candidate@demo.invalid',role='candidate',email_confirmed=True,
+            processing_consented_at=timezone.now(),processing_consent_version='processing-v1')
+        self.profile=Profile.objects.create(user=self.candidate,published=True,skills='Swift, UIKit',
+            contact_email='PRIVATE_CONTACT_SENTINEL@demo.invalid',description='PRIVATE_DESCRIPTION_SENTINEL')
+        self.result=start_attempt(self.profile,'Junior')
+        save_answers(self.profile,self.result.pk,{q['id']:q['correct'] for q in self.result.tasks},finish=True)
+        self.profile.refresh_from_db()
+        self.employer=User.objects.create_user(username='stages-employer@demo.invalid',role='employer',email_confirmed=True,
+            processing_consented_at=timezone.now(),processing_consent_version='processing-v1')
+        self.company=Company.objects.create(user=self.employer,contact_email='PRIVATE_COMPANY_SENTINEL@demo.invalid',description='PRIVATE_COMPANY_DESCRIPTION')
+        self.need=Need.objects.create(company=self.company,title='PRIVATE_TITLE_SENTINEL',grade='Junior',skills='Swift, SwiftUI',
+            tasks='PRIVATE_TASKS_SENTINEL',salary_min=100,salary_max=200,work_format='remote',next_step='PRIVATE_NEXT_STEP')
+        self.client.force_login(self.employer)
+
+    def query(self,mode):return {'mode':mode,'need':self.need.pk,'candidate':self.profile.pk}
+
+    def assert_safe(self,context):
+        import json
+        text=json.dumps(context)
+        for value in ('PRIVATE_','contact_email','description','"tasks"','"answers"','"correct"','attempt_id'):
+            self.assertNotIn(value,text)
+
+    def test_matching_names_gaps_and_safe_evidence_without_mutation(self):
+        with patch('assistant.provider.generate',return_value='Мок') as generate:
+            response=self.client.post('/assistant/',self.query('matching'));self.assertEqual(response.status_code,200)
+            mode,context=generate.call_args.args;self.assertEqual(mode,'matching');self.assert_safe(context)
+            self.assertEqual(context['declared_matches'],['Swift']);self.assertEqual(context['declared_gaps'],['SwiftUI'])
+            self.assertEqual(context['confirmation']['correct_count'],8)
+        response=self.client.post('/assistant/',self.query('matching'))
+        for value in ('Мок помощника','Совпадения самоописания: Swift','Пробелы самоописания: SwiftUI','не подтверждает каждый'):
+            self.assertContains(response,value)
+        self.assertFalse(Invitation.objects.exists());self.assertFalse(Draft.objects.exists())
+        self.profile.refresh_from_db();self.assertEqual(self.profile.confirmed_grade,'Junior')
+
+    def test_invitation_preview_edit_and_explicit_send_choose_proof(self):
+        response=self.client.post('/assistant/',self.query('invitation'))
+        self.assertContains(response,'Проверил текст и условия — отправить предложение')
+        self.assertFalse(Invitation.objects.exists())
+        self.assertNotContains(response,'value="'+str(self.result.pk)+'" checked')
+        with patch('assistant.provider.generate',return_value='Мок') as generate:
+            self.client.post('/assistant/',self.query('invitation'));self.assert_safe(generate.call_args.args[1])
+            self.assertEqual(len(generate.call_args.args[1]['available_results']),1)
+        response=self.client.post('/invitations/send/',{'need':self.need.pk,'candidate':self.profile.pk,
+            'discussion':'Проверенный человеком текст','accepted_attempts':[self.result.pk]})
+        self.assertRedirects(response,'/invitations/')
+        invitation=Invitation.objects.get();self.assertEqual(invitation.snapshot['discussion'],'Проверенный человеком текст')
+        self.assertEqual(invitation.snapshot['accepted_results'][0]['attempt_id'],self.result.pk)
+        self.assertEqual(invitation.status,'sent')
+
+    def test_conversation_is_owned_for_both_roles_uses_snapshot_and_no_send(self):
+        invitation=invite(self.company,self.need.pk,self.profile.pk,[self.result.pk])
+        self.need.salary_min=999;self.need.salary_max=1200;self.need.save()
+        for user in (self.candidate,self.employer):
+            self.client.force_login(user)
+            with patch('assistant.provider.generate',return_value='Мок') as generate:
+                response=self.client.post('/assistant/',{'mode':'conversation','invitation':invitation.pk})
+                self.assertEqual(response.status_code,200);context=generate.call_args.args[1];self.assert_safe(context)
+                self.assertEqual(context['salary_min'],100);self.assertEqual(len(context['accepted_results']),1)
+            response=self.client.post('/assistant/',{'mode':'conversation','invitation':invitation.pk})
+            self.assertContains(response,'кто и когда сообщит следующий шаг')
+        invitation.refresh_from_db();self.assertEqual(invitation.status,'sent');self.assertEqual(Invitation.objects.count(),1)
+        self.assertIsNone(invitation.responded_at)
+
+    def test_foreign_and_hidden_context_and_bad_ids_never_call_provider(self):
+        other=User.objects.create_user(username='foreign-stage@demo.invalid',role='employer',email_confirmed=True,
+            processing_consented_at=timezone.now(),processing_consent_version='processing-v1')
+        foreign=Company.objects.create(user=other,contact_email='foreign@demo.invalid')
+        need=Need.objects.create(company=foreign,title='Чужая',grade='Junior',tasks='Задачи',salary_min=1,salary_max=2,work_format='remote')
+        invitation=invite(foreign,need.pk,self.profile.pk)
+        self.profile.published=False;self.profile.save()
+        with patch('assistant.provider.generate') as generate:
+            for method in (self.client.get,self.client.post):
+                for values in ({**self.query('matching'),'need':need.pk},self.query('invitation'),self.query('matching'),{'mode':'conversation','invitation':invitation.pk}):
+                    self.assertEqual(method('/assistant/',values).status_code,404)
+                for value in ('²','0','9'*198,str(2**63),'-1'):
+                    self.assertEqual(method('/assistant/',{**self.query('matching'),'candidate':value}).status_code,404)
+            generate.assert_not_called()
+        self.client.force_login(self.candidate)
+        self.assertEqual(self.client.post('/assistant/',self.query('matching')).status_code,403)
+
+    def test_granted_unpublished_matching_and_grade_conflict_invitation(self):
+        invitation=invite(self.company,self.need.pk,self.profile.pk);decide(self.profile,invitation.pk,'accepted')
+        self.profile.published=False;self.profile.save()
+        self.assertEqual(self.client.post('/assistant/',self.query('matching')).status_code,200)
+        self.assertEqual(self.client.post('/assistant/',self.query('invitation')).status_code,404)
+        self.profile.published=True;self.profile.save();self.need.grade='Middle';self.need.save()
+        self.assertContains(self.client.post('/assistant/',self.query('matching')),'Категории не совпадают')
+        self.assertEqual(self.client.post('/assistant/',self.query('invitation')).status_code,404)
+
+    def test_active_exam_limit_failure_and_no_automatic_actions(self):
+        invitation=invite(self.company,self.need.pk,self.profile.pk)
+        with patch('assistant.provider.generate',side_effect=RuntimeError('private error')):
+            response=self.client.post('/assistant/',self.query('invitation'))
+            self.assertEqual(response.status_code,503);self.assertNotContains(response,'private error',status_code=503)
+        self.assertEqual(Invitation.objects.count(),1)
+        self.assertEqual(self.client.get(f'/candidates/{self.profile.pk}/').status_code,200)
+        usage=Usage.objects.get(user=self.employer);usage.count=10;usage.save()
+        self.assertEqual(self.client.post('/assistant/',self.query('matching')).status_code,429)
+        self.client.force_login(self.candidate)
+        Attempt.objects.create(candidate=self.profile,grade='Junior',variant='A',tasks=[],started_at=timezone.now(),expires_at=timezone.now()+timedelta(minutes=15))
+        with patch('assistant.provider.generate') as generate:
+            self.assertEqual(self.client.post('/assistant/',{'mode':'conversation','invitation':invitation.pk}).status_code,409)
+            generate.assert_not_called()
+
+    def test_conversation_after_decline_and_accept_respects_decision(self):
+        invitation=invite(self.company,self.need.pk,self.profile.pk);decide(self.profile,invitation.pk,'declined')
+        self.assertContains(self.client.post('/assistant/',{'mode':'conversation','invitation':invitation.pk}),'Предложение отклонено')
+        invitation.refresh_from_db();self.assertEqual(invitation.status,'declined')
+        invitation.status='accepted';invitation.save()
+        self.assertContains(self.client.post('/assistant/',{'mode':'conversation','invitation':invitation.pk}),'Согласуйте время встречи')
+        invitation.refresh_from_db();self.assertEqual(invitation.status,'accepted')
+
+    def test_context_selectors_links_and_missing_selection(self):
+        self.assertContains(self.client.get('/assistant/',{'mode':'matching'}),'Кандидат из доступных профилей')
+        self.assertEqual(self.client.post('/assistant/',{'mode':'matching'}).status_code,400)
+        self.assertEqual(self.client.post('/assistant/',{'mode':'conversation'}).status_code,400)
+        page=self.client.get(f'/candidates/{self.profile.pk}/',{'need':self.need.pk})
+        self.assertContains(page,'Подготовить приглашение · мок');self.assertContains(page,'Помочь разобраться в подборе · мок')
+        invite(self.company,self.need.pk,self.profile.pk)
+        self.assertContains(self.client.get('/invitations/'),'Подготовиться к разговору · мок')

@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:8041",
+  "scenarios": [
+    "card_matching_link",
+    "named_matching_and_gap",
+    "editable_mock_invitation",
+    "manual_proof_selection",
+    "explicit_send",
+    "candidate_conversation_before_decision",
+    "manual_accept",
+    "employer_conversation_after_accept",
+    "mobile_no_overflow"
+  ],
+  "browserErrors": [],
+  "gradingValidation": false
+}

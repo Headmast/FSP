@@ -3,18 +3,25 @@
 <p class="lead">Внешний AI не вызывается. Проверьте и отредактируйте черновик перед сохранением. Категория и права доступа не меняются.</p>
 {% if error %}<div class="notice">{{ error }}</div>{% endif %}
 <form method="post" class="card">{% csrf_token %}
-<label>Режим<select name="mode">{% if user.role == 'candidate' %}
+<label>Режим<select name="mode" onchange="window.location.href='/assistant/?mode='+encodeURIComponent(this.value)">{% if user.role == 'candidate' %}
 <option value="profile" {% if mode == 'profile' %}selected{% endif %}>Описание профиля</option>
 <option value="result" {% if mode == 'result' %}selected{% endif %}>Объяснение завершённого теста</option>
-{% else %}<option value="need">Описание потребности</option>{% endif %}</select></label>
+{% else %}<option value="need" {% if mode == 'need' %}selected{% endif %}>Описание потребности</option>
+<option value="matching" {% if mode == 'matching' %}selected{% endif %}>Объяснить подбор</option>
+<option value="invitation" {% if mode == 'invitation' %}selected{% endif %}>Подготовить приглашение</option>{% endif %}
+<option value="conversation" {% if mode == 'conversation' %}selected{% endif %}>Подготовиться к разговору</option></select></label>
 <input type="hidden" name="identifier" value="{{ identifier|default_if_none:'' }}">
-{% if user.role == 'employer' and not identifier %}
+{% if context_form %}{{ context_form.as_p }}
+{% elif user.role == 'employer' and not identifier %}
 <label><input type="checkbox" name="new_need" checked> Начать новую потребность с чистого черновика</label>
 {{ prompt_form.as_p }}
 {% elif user.role == 'employer' %}<p>Черновик основан на вашей потребности. Применение создаст новую потребность; исходная сохранится.</p>{% endif %}
 <button class="primary">Получить моковый черновик</button></form>
 {% if draft %}{% include 'assistant/draft_form.html' %}
 {% elif text %}<section class="card"><h2>Мок ответа</h2><p style="white-space:pre-wrap" data-testid="assistant-result">{{ text }}</p></section>{% endif %}
+{% if text and mode == 'invitation' %}{% include 'assistant/invitation_form.html' %}{% endif %}
+{% if selected_candidate %}<p><a href="{% url 'candidate' selected_candidate.pk %}?need={{ selected_need.pk }}">Вернуться к карточке и проверить свидетельства</a></p>{% endif %}
+{% if selected_invitation %}<p><a href="{% url 'invitations' %}">Вернуться к предложению и принять решение</a></p>{% endif %}
 {% if user.role == 'candidate' %}<p><a href="{% url 'profile' %}">Заполнить профиль вручную</a></p>
 {% else %}<p><a href="{% url 'needs' %}">Заполнить потребность вручную</a></p>{% endif %}
 {% if drafts %}<section class="card"><h2>Ваши последние черновики</h2>

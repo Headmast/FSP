@@ -11,7 +11,8 @@ from accounts.identifiers import parse_identifier
 from profiles.models import Profile
 from hiring.models import Need
 from .models import Usage, Draft
-from .forms import NeedPromptForm
+from .forms import NeedPromptForm,MatchingContextForm,ConversationContextForm
+from . import contexts
 from .drafts import create_draft, form_for, apply_draft, StaleDraft, ExpiredDraft, ActiveAssessment
 from . import provider
 
@@ -21,12 +22,27 @@ def assistant(request):
     if not request.user.email_confirmed:raise PermissionDenied
     if not request.user.has_processing_consent:return redirect('consent')
     mode=request.POST.get('mode',request.GET.get('mode','profile' if request.user.role=='candidate' else 'need'))
-    if mode not in ({'profile','result'} if request.user.role=='candidate' else {'need'}):raise PermissionDenied
+    if mode not in ({'profile','result','conversation'} if request.user.role=='candidate' else {'need','matching','invitation','conversation'}):raise PermissionDenied
     identifier=request.POST.get('identifier',request.GET.get('attempt',request.GET.get('need','')))
     identifier=parse_identifier(identifier,required=False)
     data={'mode':mode,'identifier':identifier,'text':None,'error':None,
         'prompt_form':NeedPromptForm(initial={'grade':'Junior','skills':'Swift'}),'draft':None,
         'drafts':Draft.objects.filter(user=request.user).order_by('-created_at','-pk')[:10]}
+    stage_context=None
+    source=request.POST if request.method=='POST' else request.GET
+    if mode in {'matching','invitation','conversation'}:
+        keys=['invitation'] if mode=='conversation' else ['need','candidate']
+        ids={key:parse_identifier(source.get(key,''),required=False) for key in keys}
+        form_class=ConversationContextForm if mode=='conversation' else MatchingContextForm
+        data['context_form']=form_class(request.POST if request.method=='POST' else None,user=request.user,initial=ids)
+        if all(ids.values()):
+            stage_context,objects=(contexts.conversation(request.user,ids['invitation']) if mode=='conversation' else
+                contexts.matching(request.user,mode,ids['need'],ids['candidate']))
+            data.update(objects)
+        elif request.method=='POST':
+            data['context_form'].is_valid()
+            data['error']='Выберите контекст из ваших доступных данных.'
+            return render(request,'assistant/helper.html',data,status=400)
     if request.method=='GET':
         if identifier and mode=='need':
             obj=get_object_or_404(Need,company__user=request.user,pk=identifier)
@@ -38,7 +54,8 @@ def assistant(request):
         data['error']='Помощник недоступен во время активного теста. Сначала завершите попытку.'
         return render(request,'assistant/helper.html',data,status=409)
     source_need=None
-    if mode=='profile' and request.user.role=='candidate':
+    if stage_context is not None:context=stage_context
+    elif mode=='profile' and request.user.role=='candidate':
         profile=get_object_or_404(Profile,user=request.user);context={'skills':profile.skills}
     elif mode=='need' and request.user.role=='employer':
         needs=Need.objects.filter(company__user=request.user)
