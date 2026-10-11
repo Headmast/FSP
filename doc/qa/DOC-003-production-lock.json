@@ -1,0 +1,10 @@
+{
+  "task": "DOC-003",
+  "check": "production --no-dev lock installation",
+  "checked_at": "2026-10-11T20:56:12.886007+00:00",
+  "install_exit_code": 0,
+  "install_output": "Using CPython 3.13.7 interpreter at: /opt/homebrew/opt/python@3.13/bin/python3.13\nCreating virtual environment at: /var/folders/k3/0p_qjkrj77vccpp_xhhqw03r0000gn/T/fsp-production-lock-2fvn7snv/venv\nResolved 31 packages in 47ms\nInstalled 9 packages in 140ms\n + asgiref==3.12.1\n + charset-normalizer==3.5.2\n + django==5.2.18\n + gunicorn==23.0.0\n + packaging==26.3\n + pillow==12.3.0\n + reportlab==4.5.1\n + sqlparse==0.6.0\n + whitenoise==6.12.0\n",
+  "verify_exit_code": 0,
+  "verify_output": "{\"django\": \"5.2.18\", \"dev_validator_installed\": false, \"runtime_imports\": \"PASS\"}\n",
+  "status": "PASS"
+}

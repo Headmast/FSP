@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST,require_safe
 from django.utils import timezone
 from accounts.access import role_required
 from profiles.models import Profile
@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
 @role_required('candidate')
+@require_safe
 def dashboard(request):
     profile = Profile.objects.get(user=request.user)
     return render(request, 'assessments/dashboard.html', {'profile':profile,
@@ -29,6 +30,7 @@ def start(request):
     return redirect('attempt', pk=obj.pk)
 
 @role_required('candidate')
+@require_safe
 def attempt(request, pk):
     obj = get_object_or_404(Attempt, pk=pk, candidate__user=request.user)
     if obj.status == 'finished':
@@ -61,6 +63,7 @@ def finish(request, pk):
 
 
 @login_required
+@require_safe
 def proof(request,pk):
     if not request.user.email_confirmed:raise PermissionDenied
     if not request.user.has_processing_consent:return redirect('consent')

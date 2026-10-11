@@ -7,3 +7,8 @@ dependencies = ["Django>=5.2,<5.3", "gunicorn>=23,<24", "reportlab>=4,<5", "whit
 
 [tool.uv]
 package = false
+
+[dependency-groups]
+dev = [
+    "openapi-spec-validator==0.9.0",
+]

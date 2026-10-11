@@ -108,3 +108,7 @@ DOC-006 — DONE: [аудит](../qa/scope-current.md), [evidence](../qa/scope-c
 | OWNER-001 | Показатели работы HR, фильтры, воронка, назначения и неизменная история | Текущий чат, mvp/owner-dashboard, hiring + шаблон/стили/навигация | [Проверки](../qa/owner-dashboard.md), [результат и ограничения](../responses/OWNER-001.md) | DONE |
 
 Отдельное поручение вне исходного списка 27 задач. [Постановка](../prompts/OWNER-001.md).
+
+## DOC-003 — проверенный первый этап, задача продолжается
+
+[Результат](../responses/DOC-003-contracts.md): браузерные маршруты, token V1 и owner dashboard на b82b455 — 56 paths / 84 operations, 352 HTTP проверки, 109 тестов приложения и 23 теста инструментов PASS. OpenAPI валидна, dev validator исключён из production. Более новый main добавил learning/token V2/UUID approvals: требуется интеграция и расширение покрытия до DONE. Исходные 27: по-прежнему 13 DONE / 14 открытых; C4 не закрыта. Область DOC-003 дополнена app/api/views.py (download method guard), scripts/http_contracts.py, build_http_spec.py, check_http_contracts.py и doc/api/; чужие изменения не переписываются.

@@ -11,7 +11,7 @@ from django.db import transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods,require_safe
 from .forms import RegistrationForm, ConsentForm
 from .consents import record_processing
 from .models import DemoConfirmation
@@ -21,6 +21,7 @@ def digest(value):
     return hashlib.sha256(value.encode()).hexdigest()
 
 
+@require_safe
 def home(request):
     if request.user.is_authenticated:
         if not request.user.has_processing_consent:return redirect('consent')
@@ -58,6 +59,7 @@ def consent(request):
     return render(request,'accounts/consent.html',{'form':form})
 
 
+@require_safe
 def privacy(request):
     return render(request,'accounts/privacy.html')
 
@@ -85,6 +87,7 @@ def confirm(request):
     return render(request, "accounts/confirm.html", {"pending": pending})
 
 
+@require_safe
 def health(request):
     from django.db import DatabaseError
     from .models import User, ConsentEvent
@@ -99,6 +102,7 @@ def health(request):
     return JsonResponse({"status": "ok"})
 
 
+@require_safe
 def version(request):
     marker = settings.ROOT / "REVISION"
     revision = marker.read_text().strip() if marker.is_file() else subprocess.check_output(

@@ -11,7 +11,7 @@ uv=shared/'venv-check/bin/uv'
 if not uv.exists():
     subprocess.run(['python3','-m','venv',str(shared/'venv-check')],check=True)
     subprocess.run([str(shared/'venv-check/bin/python'),'-m','pip','install','uv==0.12.17'],check=True)
-subprocess.run([str(uv),'sync','--locked','--python','/usr/bin/python3'],cwd=release,check=True)
+subprocess.run([str(uv),'sync','--locked','--no-dev','--python','/usr/bin/python3'],cwd=release,check=True)
 python=release/'.venv/bin/python'
 tunnelpid=shared/'pids/mvp-pinggy.pid';tunnellog=shared/'logs/mvp-pinggy.log'
 def tunnel_alive():

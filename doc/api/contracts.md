@@ -1,88 +1,1694 @@
-# HTTP интерфейсы MVP
+# HTTP контракты FSP MVP
 
-Аудит DOC-002: это краткий исторический перечень, полный контракт остаётся [DOC-003](../plan/remaining-work.md). В текущих HTML обработчиках конфликты повторного решения/запуска могут возвращать redirect 302 с сообщением; общий 409 ниже не является фактическим поведением каждого endpoint. Форматы, поля и ошибки нужно описать по маршрутам.
+Проверенный первый срез DOC-003: b82b455 + source hashes этапа. Задача IN_PROGRESS: новые learning/token V2/UUID approvals более позднего main ещё требуют включения. [Статус и границы](../responses/DOC-003-contracts.md).
 
-Контракты Django без DRF. Реализованы аккаунты, профиль, assessments, найм и мок помощника. HTML формы используют серверные сервисы; запись требует аутентификации, проверки владельца и CSRF. Структуру ответа закреплять в документации и проверках одновременно с реализацией.
+Все маршруты текущего Django-приложения описаны в [OpenAPI 3.1.1](openapi.json). Здесь закреплены поля, роли, ответы, повторы и границы моков. HTML формы используют session/CSRF; три прежних JSON маршрута чтения и PDF — те же browser permissions. Интегрированный JSON API /api/v1 использует Bearer: [его отдельный контракт](mcp-cli.md). Схемы API включены в общую спецификацию с префиксом Api, не смешивающим их с формами.
 
-| Метод и маршрут | Поведение и доступ |
-|---|---|
-| GET /assessments/ | Собственная история попыток и выбор категории |
-| GET/POST /accounts/register/ | Создание кандидата или работодателя, demo email |
-| GET/POST /accounts/login/ | Вход через Django session |
-| POST /accounts/logout/ | Завершение сессии |
-| POST /accounts/confirm/ | Одноразовый токен и исходная pending session |
-| GET/POST /profile/ | Только собственный профиль кандидата |
-| GET /profile/resume.pdf | PDF собственного профиля |
-| GET /profile/fsp/ | Собственная история мок адаптера |
-| POST /assessments/start/ | Создать либо вернуть активную попытку |
-| GET /assessments/<id>/ | Продолжить свою попытку, без правильных ответов |
-| POST /assessments/<id>/answer/ | Проверить срок, принадлежность вопроса, сохранить ответ |
-| POST /assessments/<id>/finish/ | Идемпотентный серверный результат |
-| GET/POST /company/needs/ | Собственные потребности работодателя |
-| GET /candidates/ | Фильтры и ранжирование для работодателя |
-| GET /candidates/<id>/ | Публичный профиль, контакты только по разрешению |
-| GET /candidates/<id>/resume.pdf | PDF с тем же разрешением на контакты |
-| GET /invitations/ | Собственные предложения по роли |
-| POST /invitations/send/ | Предложение от своей компании, проверка вилки |
-| POST /invitations/<id>/accept/ | Только адресат, sent → accepted |
-| POST /invitations/<id>/decline/ | Только адресат, sent → declined |
-| GET/POST /assistant/ | Разрешённый режим, лимит, проверка контекста |
-| GET/POST /assistant/drafts/<id>/ | Свой черновик, просмотр либо проверенное применение |
-| GET /health/ | Минимальный статус без секретов |
-| GET /version/ | SHA развёрнутого кода без конфигурации |
+## Авторизация, сериализация и ошибки
 
-Ошибки форм показывать возле полей. Неавторизованный HTML запрос направляется на вход, запрещённое действие — 403, отсутствующий или недоступный чужой объект — 404, конфликт состояния — 409, ограничение запросов — 429. Ошибки AI показываются как недоступность функции без ложного успешного ответа.
+- Cookie sessionid задаёт пользователя. candidate/employer/both требуют подтверждённый email и processing-v1. Неверная роль/email — 403; без сессии — 302 на login с next; без обработки — 302 consent после проверки роли/email. authenticated у consent требует только входа. pending-session у confirm — исходная сессия регистрации, ещё без входа.
+- Любой POST, включая register/login/confirm/logout, требует csrftoken cookie плюс csrfmiddlewaretoken из формы **или** X-CSRFToken. После входа сессия/CSRF обновляются. Отсутствие/несовпадение — 403 ещё до вызова view. GET не вызывает эту проверку.
+- Поддерживаемые тела: application/x-www-form-urlencoded и multipart/form-data без загрузки файлов. JSON не разбирается в request.POST: поля игнорируются, итог зависит от формы/значений по умолчанию; 415 не обещается. Для изменений используйте формы. Приватные поля не передавать в URL.
+- Массивы — повтор одного имени: roles=developer&roles=reviewer и accepted_attempts=1&accepted_attempts=2. Суффикс [] не входит в имя поля. Checkbox принимает on/true, false выключает; отсутствие необязательного флажка означает false. Необязательные числовые поля могут быть пустыми в HTML; описание задаёт нормализацию.
+- pk — положительный ID до 2^63−1. Query/form ID — 1..19 ASCII цифр в тех же границах, ведущие нули допустимы. Пробелы, Unicode цифры, отрицательное/слишком длинное значение или недоступный объект — 404. Пустой обязательный — 404; необязательный выбирает описанный default. Путь, не совпавший с URL converter, даёт 404 маршрутизатора.
+- Обычные ошибки форм возвращают HTML 200. Для помощника/черновика 400/409/410/429/503 определены отдельно. Конфликты тестов и решения приглашения возвращают 302 с Django message. 302 содержит Location; клиент должен следовать ему и читать сообщение, а не считать каждый redirect успехом записи.
+- Страницы чтения допускают GET/HEAD; HEAD возвращает заголовки без тела. Формы с явным GET/POST не принимают HEAD. Login также допускает HEAD/OPTIONS, logout POST/OPTIONS. Остальные методы — 405 с Allow для пользователя, прошедшего внешние guard; auth/CSRF middleware может отвергнуть запрос раньше. Разрешённые методы перечислены ниже и проверяются по коду.
+- Неизвестные обычные поля формы игнорируются; q_* проверяются по snapshot попытки, а experience-* — по formset. Параметры owner/score/confirmed_grade из браузера не выбирают владельца или результат. Нет обещания произвольного 500 в спецификации: такой ответ блокирует проверку.
 
-## Внешние идентификаторы после FIX-001
+GET/HEAD invitations фиксирует viewed_at; некоторые страницы работодателя создают собственную Company при первом чтении. Это явные побочные эффекты существующего веб-интерфейса. Нельзя переиспользовать их как обещание чистого чтения нового MCP API.
 
-Query/form ID принимают только положительное ASCII число 1..2^63−1, максимум 19 цифр. Некорректный явно заданный ID — 404; пустой обязательный — 404. Необязательный пустой need/identifier сохраняет выбор собственной потребности/последней попытки. Чужая потребность недоступна (404). [Проверка](../qa/FIX-001-results.json).
+## Как получить воспроизводимый пример
 
-## Полный профиль после MVP-006
+Из собственного worktree: `uv sync --locked`, `uv run python scripts/build_client_release.py`, затем `uv run python scripts/build_http_spec.py --check` и `uv run python scripts/check_http_contracts.py --output .runtime/qa/http-contracts.json`. Проверка сама создаёт временную SQLite и синтетические аккаунты, выполняет примеры с реальными cookie/CSRF/Bearer и удаляет БД; production не используется. Архивы CLI читаются из собственных .runtime/downloads. [Подробные примеры](examples.md).
 
-POST /profile/: specialization=ios_swift, experience_months=0..600, roles[] и soft_skills[] из словарей, description до 3000. Необязательные поля дополняют прежний контракт. Inline experience-* использует management form, максимум 20 записей; поля organization/role/months/description и DELETE. Чужой ID — ошибка формы (200), весь профиль не сохраняется. Успех 302. Свободные описания/опыт доступны в HTML/PDF только владельцу либо компании с принятым приглашением.
+OpenAPI request examples показывают допустимую форму тела. ID=1 и токен-заглушку нужно заменить объектом и CSRF своей сессии; это не действующие доступы. JSON response examples синтетические. Источник семантики и генератор — scripts/http_contracts.py и scripts/build_http_spec.py; менять их вместе с кодом. --check сравнивает оба сохранённых результата, а checker отдельно сверяет методы и выполняет HTTP.
 
-## Компания после MVP-007
+## Маршруты
 
-GET/POST /company/ — employer с подтверждённым email. Поля name (120), industry (120), description (3000), contact_email. Редактируется собственная компания; лишний id игнорируется. Невалидная форма — 200, успех — 302. POST /invitations/send/ требует валидный email компании для нового предложения; при отсутствии возвращает 302 /company/ с сообщением. Старый снимок приглашения неизменяемый.
+### /accounts/integrations/ — Персональные подключения CLI/MCP
 
-## Согласия после MVP-008
+Методы: **GET / POST**. Роль: **both**.
 
-POST /accounts/register/ требует processing_consent=on. Ошибка — 200 без создания пользователя; явное согласие записывает processing-v1 и дату. GET/POST /accounts/consent/ — аутентифицированный пользователь; отсутствие согласия — 200, успешный POST — 302 /. GET /accounts/privacy/ публичный. Основные маршруты без processing-v1 перенаправляются на consent (после проверки роли/email). Публикация — отдельный флажок в /profile/; grant/withdraw сохраняется в журнале. Предыдущие принятые приглашения сохраняют грант.
+Own tokens only. Processing consent is checked before confirmed/active account here. Create action validates name/kind/contact/draft scopes, stores digest, shows secret once in no-store/no-referrer HTML. MCP contacts rejected. Revoke requires own positive id. No automatic web action from token.
 
-## Демо FSP ID после MVP-009
+Повтор: Create issues another token; revoke remains revoked on repeat.
 
-Связь, события, состояния и HTTP поля описаны в [контракте адаптера](fsp-adapter.md). Наш контракт не является официальной схемой ФСП.
+POST schema: **TokenAction**; поля см. ниже.
 
-## Свидетельство и зачёт после MVP-010
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET list or successful create with one-time secret |
+| GET | 302 | Revoke: /accounts/integrations/ |
+| GET | 404 | Malformed/foreign token id |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | GET list or successful create with one-time secret |
+| POST | 400 | Invalid create form/action |
+| POST | 302 | Revoke: /accounts/integrations/ |
+| POST | 404 | Malformed/foreign token id |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
-GET /assessments/{id}/proof/ отдаёт безопасное HTML свидетельство завершённой попытки: кандидат — собственное; employer — видимый профиль, текущая категория. Невыданное право/активная попытка — 404, неверная роль/email — 403, нет processing-v1 — 302 consent.
+### /company/dashboard/ — Дашборд владельца
 
-POST /invitations/send/ дополнен accepted_attempts[] (до 20 положительных ID) и discussion (до 2000). Некорректный ID — 404; чужая/активная/иная категория или длинный текст — 302 обратно к кандидату с ошибкой без создания записи. Успех — 302 /invitations/. accepted_results[] и accepted_at/discussion входят в неизменяемый snapshot; повтор сохраняет исходный выбор. Свидетельство не содержит keys/tasks/answers.
+Методы: **GET**. Роль: **employer**.
 
-## Объяснения после MVP-011
+Owned cohorts by send date; accepted conversion is current outcomes of same cohort. Period=7/30/90/all, hr=own positive ID or unassigned, need=own positive ID. Read does not create Company. No contact data. Seven-day overdue is reporting, not automatic expiry.
 
-Поиск и карточка используют explanation: declared_matches[], declared_gaps[], confirmation (безопасное свидетельство или null), unknown[]. Совпадение относится к самоописанию, отдельной проверкой инструмента не считается. query фильтров сохраняется при возврате; need карточки должен принадлежать текущей компании (чужой/некорректный — 404). fsp=no_history выбирает только явный no_history.
+Повтор: Чтение текущего состояния.
 
-## Черновики после MVP-013
+Query (все необязательные):
 
-GET /assistant/: последние 10 собственных Draft, новое описание либо продолжение по ссылке. POST mode=profile создаёт приватный черновик description из безопасного контекста skills. POST mode=need: identifier своей Need использует её grade/skills и заполняет известные условия редактора; без identifier и с new_need=on создаётся чистый черновик по grade (Junior/Middle; пустой → Junior), skills (канонический словарь; пустой допустим). Для совместимости без new_need выбирается последняя собственная Need, если она есть; при отсутствии Need также можно начать. Компания/контакты не входят в provider context. GET явно заданного need/attempt проверяет принадлежность; result требует завершённую попытку.
+| Поле | Тип / границы | Правила |
+| --- | --- | --- |
+| period | string; enum=7, 30, 90, all | См. поведение маршрута. |
+| hr | integer; minimum=1; maximum=9223372036854775807 / '' / 'unassigned' | См. поведение маршрута. |
+| need | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
 
-Генерация не изменяет Profile, Company или Need, сохраняется только Draft. Успех — 200 с редактором; невалидный prompt — 400, неверный режим/роль — 403, ID — 404, активный тест — 409, лимит — 429, ошибка провайдера — 503 без Draft. Зарплата чистого черновика не заполнена: её обязан указать работодатель.
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Dashboard HTML |
+| GET | 404 | Invalid period/foreign or malformed filter |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
-GET /assistant/drafts/{id}/ — собственный Draft (candidate/profile либо employer/need), редактор/состояние. POST туда использует CSRF и поля проверенной формы: profile — description, 1..3000; need — title/grade/skills/tasks/salary_min/salary_max/work_format/next_step/company_name/company_email по NeedForm. owner/mode/source_need/applied_need/grade профиля/согласия из POST не принимаются. Только успешная явная отправка редактируемой формы сохраняет данные. Успех — 302 /profile/ либо /company/needs/; неверные поля — 400 без частичного сохранения, срок 24 часа истёк — 410, описание изменилось вручную или источник сменил владельца — 409. Отсутствие обработки данных — 302 consent; неподтверждённый email/неверная роль — 403; чужой Draft — 404.
+### /company/team/ — Команда и ответственный HR
 
-Применение профиля обновляет лишь приватное description (его видимость соответствует существующим HTML/PDF правам). Применение need создаёт новую Need собственной компании, обновляя явно проверенные company_name/email; прежняя Need сохраняется. Если исходная Need удалена, source_need=null, сохранённый черновик можно проверить и применить как новую Need. При применённом Draft повтор возвращает 302 без повторной записи даже с пустыми полями/после срока; во время активного теста кандидатский POST по-прежнему 409. При генерации тратится запрос лимита, при применении — нет. Применённый Draft остаётся доступным только владельцу; автоматическое удаление по expiry не выполняется.
+Методы: **POST**. Роль: **employer**.
 
-## Помощь на остальных этапах после AI-001
+action=add creates own Recruiter from name. action=assign updates recruiter on own Need only; empty recruiter clears assignment. Existing invitation recruiter attribution is unchanged. Invalid fields show message and redirect, unknown action is 404.
 
-GET/POST /assistant/ mode=matching или invitation: employer, need/candidate — положительные ID. Need принадлежит текущему пользователю; Profile опубликован и имеет категорию либо уже доступен этой компании по принятому приглашению. Invitation дополнительно требует published и совпадения категории с Need. Mode=conversation: обе роли, invitation принадлежит кандидату либо компании по роли. GET без ID показывает разрешённые списки; явно заданные недоступные ID — 404. POST без полного выбора — 400. Новые режимы используют тот же session/consent/CSRF и лимит/отказ/active guard. GET не вызывает провайдер.
+Повтор: Add creates another Recruiter; assign repeats safely.
 
-Успешный POST — 200 с явно моковым ответом. Контекст matching содержит grade_requirement/candidate_grade, declared_matches/gaps/unknown, безопасную confirmation, salary_min/max/work_format. Invitation добавляет available_results только завершённых результатов выбранной категории. Conversation использует role/status и условия/accepted_results из snapshot; актуальная изменённая Need не подменяет условия предложения. Safe proof передаёт grade/finished_at/bank_version/rules_version/areas/correct_count/total/passed/expired/limitations; исключает attempt_id/tasks/answers/correct keys. Произвольные свободные тексты и контакты не передаются провайдеру.
+Побочные эффекты чтения: POST can create own Company if absent.
 
-Matching/conversation только помогают анализу, не сохраняют решение или Draft. Invitation показывает редактор discussion (до 2000) с need/candidate и отдельно выбираемыми accepted_attempts[]. Его кнопка явно отправляет POST /invitations/send/ с существующими правами/валидацией/идемпотентностью; генерация такого POST не выполняет. Preview не выдаёт зачёт автоматически. Отправка, принятие/отказ и раскрытие контактов подчиняются прежним серверным правилам.
+POST schema: **TeamAction**; поля см. ниже.
 
-## Дашборд владельца (OWNER-001)
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| POST | 302 | Success/form error: /company/dashboard/ |
+| POST | 404 | Unknown action |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
-- `GET /company/dashboard/`: только подтверждённый employer с актуальным согласием, данные принадлежащей ему компании. Query: `period=7|30|90|all` (по умолчанию 30), `hr=<id>|unassigned|` и `need=<id>|`. Чужие/некорректные ID и неизвестный period → 404; POST → 405. GET не создаёт компанию и не отмечает просмотр.
-- `POST /company/team/`: CSRF и те же права; `action=add`, `name` (1–120 символов) или `action=assign`, `need`, optional `recruiter`. Назначаются только объекты своей компании; неверная форма показывает сообщение и перенаправляет на дашборд. GET → 405, неизвестный action → 404.
-- Форма `/company/needs/` и черновик потребности поддерживают optional `recruiter` своей компании. Invitation.recruiter фиксируется сервисом invite при создании; повтор/переназначение старую запись не меняет. API-назначения команды этим этапом не добавляются.
+### /downloads/{filename} — Артефакты CLI
+
+Методы: **GET / HEAD**. Роль: **public**.
+
+Only manifest.json, current-version fsp_client-<version>-py3-none-any.whl and fsp_client-<version>.tar.gz from owned .runtime/downloads. Missing/unknown artifact 404. No database or authentication; no arbitrary path reads.
+
+Повтор: Чтение текущего состояния.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Versioned artifact attachment; manifest application/json, wheel octet-stream, tar.gz application/gzip |
+| GET | 404 | Missing/unknown artifact |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Versioned artifact attachment; manifest application/json, wheel octet-stream, tar.gz application/gzip |
+| HEAD | 404 | Missing/unknown artifact |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### / — Главная / кабинет
+
+Методы: **GET / HEAD**. Роль: **public**.
+
+Anonymous sees welcome. Candidate redirects /profile/; employer sees cabinet. Authenticated without processing-v1 redirects /accounts/consent/.
+
+Повтор: Same route choice; no business write.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Welcome/employer cabinet |
+| GET | 302 | Own profile or consent |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Welcome/employer cabinet |
+| HEAD | 302 | Own profile or consent |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /accounts/privacy/ — Правила обработки
+
+Методы: **GET / HEAD**. Роль: **public**.
+
+Public processing-v1 and publication rules.
+
+Повтор: Чтение текущего состояния.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Privacy HTML |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Privacy HTML |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /accounts/register/ — Демонстрационная регистрация
+
+Методы: **GET / POST**. Роль: **public**.
+
+Only demo.invalid; explicit processing consent. Creates inactive user, candidate Profile if applicable, pending registration in this session and 30-minute one-use demo confirmation.
+
+Повтор: Duplicate email: 200 form error. Not an idempotent creation endpoint.
+
+POST schema: **Registration**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET form or invalid POST, no user created on error |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | GET form or invalid POST, no user created on error |
+| POST | 302 | Valid POST: /accounts/confirm/ |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 403 | Missing/mismatched csrf cookie + header/form token. |
+
+### /accounts/confirm/ — Подтверждение demo email
+
+Методы: **GET / POST**. Роль: **pending-session**.
+
+GET requires pending session. POST requires same pending user + nonce and unexpired unused token. Successful confirmation activates/login user and clears pending state. Does not prove real mailbox ownership.
+
+Повтор: After success pending session is cleared; repeat is 404.
+
+POST schema: **Confirmation**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET demo token/form |
+| GET | 404 | No pending session |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 302 | Valid POST: / |
+| POST | 400 | Wrong/expired token with pending session |
+| POST | 404 | No pending session |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 403 | Missing/mismatched csrf cookie + header/form token. |
+
+### /accounts/login/ — Вход
+
+Методы: **GET / POST / HEAD / OPTIONS**. Роль: **public**.
+
+Django authentication, including active-account check. next is limited to allowed same host. GET/HEAD form; POST errors stay 200. OPTIONS empty response with Allow. PUT explicitly rejected.
+
+Повтор: Already authenticated GET shows form (redirect_authenticated_user=False); POST rotates session/CSRF.
+
+Query (все необязательные):
+
+| Поле | Тип / границы | Правила |
+| --- | --- | --- |
+| next | string | См. поведение маршрута. |
+
+POST schema: **Login**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Form/error or empty OPTIONS |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | Form/error or empty OPTIONS |
+| POST | 302 | Valid login to safe next or / |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 403 | Missing/mismatched csrf cookie + header/form token. |
+| HEAD | 200 | Form/error or empty OPTIONS |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| OPTIONS | 200 | Form/error or empty OPTIONS |
+| OPTIONS | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /accounts/logout/ — Выход
+
+Методы: **POST / OPTIONS**. Роль: **public**.
+
+POST with CSRF clears browser session; anonymous valid POST also redirects. OPTIONS returns empty Allow response.
+
+Повтор: Valid repeated POST redirects / without restoring session.
+
+POST schema: **CsrfOnly**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| POST | 302 | POST: / |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 403 | Missing/mismatched csrf cookie + header/form token. |
+| OPTIONS | 200 | OPTIONS empty |
+| OPTIONS | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /accounts/consent/ — Согласие processing-v1
+
+Методы: **GET / POST**. Роль: **authenticated**.
+
+Authenticated user. Email confirmation is not a separate guard here. Explicit checked boolean is required; processing consent event recorded by service.
+
+Повтор: Reconfirming current consent does not duplicate identical event.
+
+POST schema: **Consent**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET/form error |
+| GET | 302 | POST success: / |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | GET/form error |
+| POST | 302 | POST success: / |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 403 | Missing/mismatched csrf cookie + header/form token. |
+
+### /profile/ — Собственный профиль
+
+Методы: **GET / POST**. Роль: **candidate**.
+
+Confirmed candidate with processing consent. Only own Profile. Skills canonicalized; name/city exclude contact syntax. A publication transition records a separate consent event. Free text/experience/contact are private until the receiving company has an accepted invitation.
+
+Повтор: Replaces current fields; omitted checkbox false. Same publication state does not duplicate consent.
+
+POST schema: **Profile**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET or any form/formset validation error |
+| GET | 302 | Valid save: /profile/ |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | GET or any form/formset validation error |
+| POST | 302 | Valid save: /profile/ |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /profile/resume.pdf — Собственный PDF
+
+Методы: **GET / HEAD**. Роль: **candidate**.
+
+Own candidate PDF with private descriptions, experience and contacts. Cyrillic font embedded. HEAD has headers only.
+
+Повтор: Чтение текущего состояния.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | application/pdf attachment |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | application/pdf attachment |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /profile/fsp/ — Своя demo история ФСП
+
+Методы: **GET / HEAD**. Роль: **candidate**.
+
+JSON only for owner; changes_grade=false for all states; dates ISO YYYY-MM-DD. Mock identity is not a registry verification.
+
+Повтор: Чтение текущего состояния.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | FspHistory JSON |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | FspHistory JSON |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /profile/fsp/link/ — Привязка / отзыв demo FSP ID
+
+Методы: **GET / POST**. Роль: **candidate**.
+
+DEMO-001..999 history, DEMO-EMPTY none, DEMO-DOWN unavailable. Explicit consent; unique external ID. action=unlink bypasses connect fields and removes own achievements/bonus, preserving grade.
+
+Повтор: Connect refreshes without duplicate events; unlink already disconnected is safe.
+
+POST schema: **FspAction**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET/form error, invalid or occupied external ID |
+| GET | 302 | Connect/unlink success: /profile/fsp/link/ |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | GET/form error, invalid or occupied external ID |
+| POST | 302 | Connect/unlink success: /profile/fsp/link/ |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /company/ — Профиль компании
+
+Методы: **GET / POST**. Роль: **employer**.
+
+Only own Company. Email may remain empty here, but new invitation requires a valid email. Editing Company never rewrites old invitation snapshots.
+
+Повтор: Same POST updates own Company.
+
+Побочные эффекты чтения: GET may lazily create own Company if absent.
+
+POST schema: **Company**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET/form error |
+| GET | 302 | Save: /company/ |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | GET/form error |
+| POST | 302 | Save: /company/ |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /company/needs/ — Потребности компании
+
+Методы: **GET / POST**. Роль: **employer**.
+
+Lists own Needs. Valid POST creates one new Need and updates own Company name/email; salary max >= min required.
+
+Повтор: Repeated valid POST creates another Need; no idempotency token.
+
+Побочные эффекты чтения: GET may lazily create own Company if absent.
+
+POST schema: **Need**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET/form error |
+| GET | 302 | Creation: /candidates/ |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | GET/form error |
+| POST | 302 | Creation: /candidates/ |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /candidates/ — Фильтры и рейтинг
+
+Методы: **GET / HEAD**. Роль: **employer**.
+
+Owned need defaults to first own Need; grade defaults to selected need grade else Junior. grade must match chosen Need. Invalid grade/skill/fsp/mismatch displays 200 empty result with form error. Current specialisation is iOS/Swift. Declared match and test witness separated.
+
+Повтор: Чтение текущего состояния.
+
+Побочные эффекты чтения: GET may lazily create own Company if absent.
+
+Query (все необязательные):
+
+| Поле | Тип / границы | Правила |
+| --- | --- | --- |
+| need | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+| grade | string; enum=(empty), Junior, Middle | См. поведение маршрута. |
+| skill | string | Comma-separated Swift, SwiftUI, UIKit, Combine, CoreData, Git, XCTest, URLSession; case/spacing aliases canonicalized; unknown skill is a form error. |
+| fsp | string; enum=(empty), no_history, demo_history | См. поведение маршрута. |
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Search HTML, including invalid filter form |
+| GET | 404 | Malformed/foreign selected need |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Search HTML, including invalid filter form |
+| HEAD | 404 | Malformed/foreign selected need |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /candidates/{pk}/ — Доступная карточка кандидата
+
+Методы: **GET / HEAD**. Роль: **employer**.
+
+Visible when published + confirmed category OR this Company has an accepted invitation. Private texts/contacts only under that Company grant. Optional need must be own; absent selects first own matching-grade need. Safe finished witnesses of current grade.
+
+Повтор: Чтение текущего состояния.
+
+Побочные эффекты чтения: May lazily create own Company.
+
+Query (все необязательные):
+
+| Поле | Тип / границы | Правила |
+| --- | --- | --- |
+| need | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Candidate HTML with grant-aware fields |
+| GET | 404 | Invisible/missing candidate or malformed/foreign need |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Candidate HTML with grant-aware fields |
+| HEAD | 404 | Invisible/missing candidate or malformed/foreign need |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /candidates/{pk}/resume.pdf — PDF доступного кандидата
+
+Методы: **GET / HEAD**. Роль: **employer**.
+
+Same visibility and contact grant as HTML, including old grant after unpublishing. No contact leak in PDF without acceptance.
+
+Повтор: Чтение текущего состояния.
+
+Побочные эффекты чтения: May lazily create own Company.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | application/pdf attachment |
+| GET | 404 | Invisible/missing candidate |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | application/pdf attachment |
+| HEAD | 404 | Invisible/missing candidate |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /invitations/ — Свои предложения
+
+Методы: **GET / HEAD**. Роль: **both**.
+
+Candidate sees own invitations; employer sees own Company invitations. No cross-candidate data. Immutable conditions snapshot.
+
+Повтор: Чтение текущего состояния.
+
+Побочные эффекты чтения: Candidate GET/HEAD sets viewed_at for unseen items. Employer read may lazily create own Company.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Invitation list |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Invitation list |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /invitations/send/ — Явная отправка предложения
+
+Методы: **POST**. Роль: **employer**.
+
+Need must be owned, candidate published and same category. New invitation requires Company email. Proof IDs belong to this candidate and are finished of the same grade (failed proof may be explicitly selected). Snapshot includes conditions/contact company/selected witnesses/discussion. No contacts of candidate opened yet.
+
+Повтор: Unique (candidate,need). Duplicate preserves initial snapshot; route still requires candidate published/same current grade, and parses IDs before service duplicate check.
+
+POST schema: **Invitation**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| POST | 302 | Success/duplicate: /invitations/; missing company email: /company/; invalid proof/discussion: /candidates/{id}/ with message |
+| POST | 404 | Malformed/foreign need/candidate/proof ID or >20 proof IDs |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /invitations/{pk}/accept/ — Принять своё предложение
+
+Методы: **POST**. Роль: **candidate**.
+
+Only own invitation. sent -> accepted opens contact grant for sender Company only. Opposite terminal decision leaves state and displays message.
+
+Повтор: Same terminal decision safe; opposite rejected by message + 302.
+
+POST schema: **CsrfOnly**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| POST | 302 | All owned decisions: /invitations/ |
+| POST | 404 | Missing/foreign invitation |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /invitations/{pk}/decline/ — Отклонить своё предложение
+
+Методы: **POST**. Роль: **candidate**.
+
+Only own invitation. sent -> declined keeps contacts closed. Opposite terminal decision leaves state and displays message.
+
+Повтор: Same terminal decision safe; opposite rejected by message + 302.
+
+POST schema: **CsrfOnly**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| POST | 302 | All owned decisions: /invitations/ |
+| POST | 404 | Missing/foreign invitation |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /assessments/ — История и выбор теста
+
+Методы: **GET / HEAD**. Роль: **candidate**.
+
+Only own attempts and profile category. No answer keys exposed.
+
+Повтор: Чтение текущего состояния.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Dashboard HTML |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Dashboard HTML |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /assessments/start/ — Начать / продолжить попытку
+
+Методы: **POST**. Роль: **candidate**.
+
+8 questions, four areas, 15 minutes. A/B first distribution and later rotation; shuffled options. Invalid grade, 7-day repeat, 30-day category change and downgrade from Middle yield message + redirect. Expired active attempt is finalized before next eligibility check.
+
+Повтор: Active unexpired attempt reused (even if another valid grade requested); otherwise cooldown/rules apply.
+
+POST schema: **StartAttempt**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| POST | 302 | Attempt URL on success/active reuse; /assessments/ on refused start |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /assessments/{pk}/ — Своя попытка / результат
+
+Методы: **GET / HEAD**. Роль: **candidate**.
+
+Owned attempt only. Active HTML shows id/area/prompt/options/selected, never correct keys. Finished HTML shows persisted result.
+
+Повтор: Чтение текущего состояния.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Active/result HTML |
+| GET | 404 | Missing/foreign attempt |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Active/result HTML |
+| HEAD | 404 | Missing/foreign attempt |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /assessments/{pk}/answer/ — Сохранить ответы
+
+Методы: **POST**. Роль: **candidate**.
+
+Valid own snapshot questions q_ID, options 0..3. No scoring/grade accepted from browser. Unknown question/invalid answer rejects entire write. Expired save rejected. Repeated finished attempt returns existing result.
+
+Повтор: Replaces submitted answers within active deadline; finished safe no-op.
+
+POST schema: **Answers**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| POST | 302 | Own attempt URL with success/error message |
+| POST | 404 | Missing/foreign attempt |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /assessments/{pk}/finish/ — Завершить попытку
+
+Методы: **POST**. Роль: **candidate**.
+
+Server scores >=6/8 and >=1 per area. Failed result does not demote. Expired finish ignores late submitted answers and uses already saved answers. Invalid current answers give message and keep active. Snapshot bank/rules immutable.
+
+Повтор: Finished attempt is idempotent; ignores repeated body, score/category not rewritten.
+
+POST schema: **Answers**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| POST | 302 | Own attempt URL with result/error |
+| POST | 404 | Missing/foreign attempt |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /assessments/{pk}/proof/ — Безопасное свидетельство
+
+Методы: **GET / HEAD**. Роль: **both**.
+
+Finished own candidate attempt; employer requires visible profile and current grade. Witness fields: attempt_id/specialization/grade/finished_at/bank_version/rules_version/variant/areas/correct_count/total/passed/expired/criteria/limitations. No tasks/answers/keys.
+
+Повтор: Чтение текущего состояния.
+
+Побочные эффекты чтения: Employer may lazily create own Company.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | HTML witness |
+| GET | 404 | Foreign/invisible/active/wrong-grade attempt |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | HTML witness |
+| HEAD | 404 | Foreign/invisible/active/wrong-grade attempt |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /assistant/ — Мок помощника и черновики
+
+Методы: **GET / POST**. Роль: **both**.
+
+GET displays mode/selection and last ten own drafts, no provider call. POST profile/need creates private 24-hour Draft only; result/matching/conversation read allowed context. invitation preview has a separate explicit send form. Contacts/free private text/question keys excluded from provider. Usage 10/hour; failed provider calls count; active candidate test blocks POST.
+
+Повтор: POST generation consumes usage and may create another Draft; never sends invitation/changes category.
+
+Query (все необязательные):
+
+| Поле | Тип / границы | Правила |
+| --- | --- | --- |
+| mode | string; enum=profile, need, result, matching, invitation, conversation | См. поведение маршрута. |
+| need | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+| attempt | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+| candidate | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+| invitation | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+
+POST schema: **Assistant**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Mode form/editor/mock result |
+| GET | 404 | Malformed/foreign/invisible explicit ID |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | Mode form/editor/mock result |
+| POST | 400 | Invalid prompt or missing result/stage context |
+| POST | 404 | Malformed/foreign/invisible explicit ID |
+| POST | 409 | Candidate active assessment |
+| POST | 429 | 10/hour generation limit |
+| POST | 503 | Provider failure; manual forms remain available |
+| POST | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /assistant/drafts/{pk}/ — Проверить / применить свой черновик
+
+Методы: **GET / POST**. Роль: **both**.
+
+Own Draft + mode matches role. GET editor/status even after expiry. POST checked description or NeedForm, explicit browser action. Source Need deletion allowed; source reassignment/profile description conflict denied. No user-selected mode/owner/source/applied ID. Applying does not consume generation usage.
+
+Повтор: Applied Draft POST redirects without second write or validation, even after expiry; candidate active test guard still 409.
+
+POST schema: **DraftApply**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET editor/status |
+| GET | 302 | Authentication or consent redirect only; editor never applies on GET. |
+| GET | 404 | Foreign/missing Draft |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 302 | Applied profile: /profile/; need: /company/needs/ |
+| POST | 400 | Invalid editable fields, no partial write |
+| POST | 404 | Foreign/missing Draft |
+| POST | 409 | Stale source/description or active candidate test |
+| POST | 410 | Expired unapplied Draft |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /health/ — Готовность БД
+
+Методы: **GET / HEAD**. Роль: **public**.
+
+Read queries required tables. DatabaseError -> 503 without secrets. Not a full user journey or liveness/reboot proof.
+
+Повтор: Чтение текущего состояния.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | HealthOk JSON |
+| GET | 503 | HealthUnavailable JSON |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | HealthOk JSON |
+| HEAD | 503 | HealthUnavailable JSON |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /version/ — Версия выпуска
+
+Методы: **GET / HEAD**. Роль: **public**.
+
+40-character Git SHA from deployed REVISION or local Git HEAD; mock mode. No configuration/tokens returned.
+
+Повтор: Чтение текущего состояния.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Version JSON |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Version JSON |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+## Token API /api/v1
+
+API не использует browser session и CSRF. Каждая операция требует активный Bearer token своей роли/скоупа, подтверждённый аккаунт и processing consent. 60 запросов/минуту, срок 30 дней; revoke/expiry → 401, scope/role/consent → 403. Данные/ошибки JSON без HTML redirect. Cache-Control=no-store, X-Request-ID; 429 также Retry-After=60, 401 WWW-Authenticate=Bearer. На GET меняется только учёт использования токена, бизнес-данные не меняются. MCP не получает контакты/свободные приватные тексты/PDF; CLI private требует contacts.read и действующий grant. Все DTO приведены в схемах Api ниже.
+
+### GET /api/v1/me
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read OR employer.read
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/catalog
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read OR employer.read
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/me/profile
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/me/profile/private
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read; contacts.read; kind=cli
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/me/assessments
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| limit | query | integer; minimum=1; maximum=100 |
+| offset | query | integer; minimum=0; maximum=2147483647 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/me/assessments/{pk}/result
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| pk | path | integer; minimum=1; maximum=9223372036854775807 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/me/achievements
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/me/company
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. employer.read
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/needs
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. employer.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| limit | query | integer; minimum=1; maximum=100 |
+| offset | query | integer; minimum=0; maximum=2147483647 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/needs/{pk}
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. employer.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| pk | path | integer; minimum=1; maximum=9223372036854775807 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/candidates
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. employer.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| limit | query | integer; minimum=1; maximum=100 |
+| offset | query | integer; minimum=0; maximum=2147483647 |
+| need_id | query | integer; minimum=1 |
+| grade | query | object; enum=Junior, Middle |
+| skill | query | string |
+| fsp_status | query | object; enum=no_history, demo_history |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/candidates/{pk}
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. employer.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| pk | path | integer; minimum=1; maximum=9223372036854775807 |
+| need_id | query | integer; minimum=1 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/candidates/{pk}/proofs
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. employer.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| pk | path | integer; minimum=1; maximum=9223372036854775807 |
+| limit | query | integer; minimum=1; maximum=100 |
+| offset | query | integer; minimum=0; maximum=2147483647 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/candidates/{pk}/private
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. employer.read; contacts.read; kind=cli
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| pk | path | integer; minimum=1; maximum=9223372036854775807 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/invitations
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read OR employer.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| limit | query | integer; minimum=1; maximum=100 |
+| offset | query | integer; minimum=0; maximum=2147483647 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/invitations/{pk}
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read OR employer.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| pk | path | integer; minimum=1; maximum=9223372036854775807 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/invitations/{pk}/contacts
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read OR employer.read; contacts.read; kind=cli
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| pk | path | integer; minimum=1; maximum=9223372036854775807 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/me/profile/resume.pdf
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. candidate.read; kind=cli; contacts.read when with_contacts=true
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| with_contacts | query | boolean |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | PDF, contacts opt-in subject to accepted grant |
+| 400 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 401 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 403 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 404 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 405 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 429 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 503 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/candidates/{pk}/resume.pdf
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. IDs use same bounded positive parser; malformed/foreign IDs 404. employer.read; kind=cli; contacts.read when with_contacts=true
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| pk | path | integer |
+| with_contacts | query | boolean |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | PDF, contacts opt-in subject to accepted grant |
+| 400 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 401 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 403 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 404 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 405 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 429 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 503 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/openapi.json
+
+Same token authentication, rate limit and JSON error boundary as /api/v1/me. Unknown route GET returns 404 after valid auth; unsupported method 405.
+
+| Статус | Ответ |
+| --- | --- |
+| 401 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 403 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 404 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 405 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 429 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 503 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 200 | OpenAPI of token API module |
+
+### GET /api/v1/
+
+Same token authentication, rate limit and JSON error boundary as /api/v1/me. Unknown route GET returns 404 after valid auth; unsupported method 405.
+
+| Статус | Ответ |
+| --- | --- |
+| 401 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 403 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 404 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 405 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 429 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 503 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/{unknown}
+
+Same token authentication, rate limit and JSON error boundary as /api/v1/me. Unknown route GET returns 404 after valid auth; unsupported method 405.
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| unknown | path | string; minLength=1 |
+
+| Статус | Ответ |
+| --- | --- |
+| 401 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 403 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 404 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 405 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 429 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 503 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+## Схемы полей
+
+Числа/boolean ниже — логические типы после сериализации формы; на HTTP проводе URLencoded значения текстовые. Required относится к допустимому успешному POST. Схема не заменяет межполевую и владельческую проверку сервера.
+
+### Registration
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| email | да | string; maxLength=254 | Unique @demo.invalid address, trimmed/lowercased. No real email is sent. |
+| role | да | string; minLength=1; enum=candidate, employer | — |
+| password1 | да | string; minLength=8 | Minimum configured length 8; common passwords rejected; must equal password2. |
+| password2 | да | string; minLength=8 | Must equal password1. |
+| processing_consent | да | True | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Login
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| username | да | string; minLength=1; maxLength=150 | — |
+| password | да | string; minLength=1 | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+| next | нет | string | Optional safe redirect on same host; unsafe destination replaced by /. |
+
+### Consent
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| processing_consent | да | True | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Profile
+
+Experience formset is validated only when TOTAL_FORMS is present; INITIAL_FORMS then required. At most 20 entries. Empty extra rows are skipped; existing id must be owned; hidden profile must match own Profile if present. Any error prevents the entire profile/formset save.
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| name | нет | string; maxLength=80 | Letters, spaces, hyphens; required when published=true. |
+| city | нет | string; maxLength=80 | Letters, spaces, hyphens; contacts belong in private fields. |
+| skills | нет | string; maxLength=200 | Comma-separated Swift, SwiftUI, UIKit, Combine, CoreData, Git, XCTest, URLSession; case/spacing aliases canonicalized; unknown skill is a form error. |
+| specialization | нет | string; enum=(empty), ios_swift | Empty/omitted becomes ios_swift. |
+| experience_months | нет | integer; minimum=0; maximum=600 | Omitted/empty becomes 0; self-reported. |
+| roles | нет | array[string; enum=developer, reviewer, mentor, lead] | — |
+| soft_skills | нет | array[string; enum=communication, teamwork, planning, feedback] | — |
+| description | нет | string; maxLength=3000 | Private until this company has an accepted invitation. Plain text, not HTML. |
+| contact_email | нет | string; maxLength=254 | Valid email when non-empty. |
+| contact_phone | нет | string; maxLength=40 | — |
+| desired_grade | да | string; minLength=1; enum=Junior, Middle | — |
+| published | нет | boolean | Separate publication consent. Omitted checkbox is false; accepted invitation grants survive unpublishing. |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+| experience-TOTAL_FORMS | нет | integer; minimum=0; maximum=20 | — |
+| experience-INITIAL_FORMS | нет | integer; minimum=0; maximum=20 | — |
+| experience-MIN_NUM_FORMS | нет | integer; minimum=0 | — |
+| experience-MAX_NUM_FORMS | нет | integer; minimum=0 | — |
+
+Динамические поля:
+
+- `^experience-[0-9]+-(organization|role)$`: string; maxLength=120.
+- `^experience-[0-9]+-months$`: integer; minimum=0; maximum=600.
+- `^experience-[0-9]+-description$`: string; maxLength=2000.
+- `^experience-[0-9]+-(id|profile)$`: integer; minimum=1; maximum=9223372036854775807 / ''.
+- `^experience-[0-9]+-DELETE$`: boolean.
+
+### FspConnect
+
+Explicit fsp-mock-v1 consent; external ID unique in this app, not verified by a real registry.
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| external_id | да | string; minLength=1; maxLength=40 | — |
+| consent | да | True | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Company
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| name | да | string; minLength=1; maxLength=120 | — |
+| industry | нет | string; maxLength=120 | — |
+| description | нет | string; maxLength=3000 | — |
+| contact_email | нет | string; maxLength=254 | Valid email when non-empty. |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Need
+
+salary_min/max are positive rubles before tax per month; max >= min. Creates a new Need and updates own company name/email. No edit of existing Need.
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| title | да | string; minLength=1; maxLength=120 | — |
+| grade | да | string; minLength=1; enum=Junior, Middle | — |
+| skills | нет | string; maxLength=200 | Comma-separated Swift, SwiftUI, UIKit, Combine, CoreData, Git, XCTest, URLSession; case/spacing aliases canonicalized; unknown skill is a form error. |
+| tasks | да | string; minLength=1; maxLength=1500 | — |
+| salary_min | да | integer; minimum=1; maximum=9223372036854775807 | — |
+| salary_max | да | integer; minimum=1; maximum=9223372036854775807 | — |
+| work_format | да | string; minLength=1; enum=remote, office, hybrid | — |
+| next_step | да | string; minLength=1; maxLength=200 | — |
+| recruiter | нет | integer; minimum=1; maximum=9223372036854775807 / '' | Optional HR of own Company; empty means unassigned. Invitation stores current HR separately; reassigning Need does not rewrite old invitations. |
+| company_name | да | string; minLength=1; maxLength=120 | — |
+| company_email | нет | string; maxLength=320 | Valid email when non-empty. |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### NeedPrompt
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| grade | нет | string; enum=(empty), Junior, Middle | — |
+| skills | нет | string; maxLength=200 | Comma-separated Swift, SwiftUI, UIKit, Combine, CoreData, Git, XCTest, URLSession; case/spacing aliases canonicalized; unknown skill is a form error. |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### ProfileDraft
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| description | да | string; minLength=1; maxLength=3000 | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Recruiter
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| name | да | string; minLength=1; maxLength=120 | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Assignment
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| need | да | integer; minimum=1; maximum=9223372036854775807 | Owned dropdown object. Invalid selection is a form error, not necessarily 404; see endpoint. |
+| recruiter | нет | integer; minimum=1; maximum=9223372036854775807 / '' | Owned dropdown object. Invalid selection is a form error, not necessarily 404; see endpoint. |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Token
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| name | да | string; minLength=1; maxLength=80 | — |
+| kind | да | string; minLength=1; enum=cli, mcp | — |
+| contacts | нет | boolean | — |
+| drafts | нет | boolean | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### CsrfOnly
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Confirmation
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| token | да | string; minLength=1 | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### FspAction
+
+Варианты: FspConnect, object
+
+### StartAttempt
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| grade | да | string; enum=Junior, Middle | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Answers
+
+q_<task-id> from this attempt, choice 0..3. Missing answers remain stored/unanswered. Non-q_ fields ignored; unknown task/invalid answer gives 302 + message with no partial save.
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+Динамические поля:
+
+- `^q_.+$`: integer; minimum=0; maximum=3.
+
+### Invitation
+
+Own Need, published candidate of same category. Selected results must be finished, owned by candidate, same grade; employer explicitly accepts them. Contact company email required for a new invitation.
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| need | да | integer; minimum=1; maximum=9223372036854775807 | Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404. |
+| candidate | да | integer; minimum=1; maximum=9223372036854775807 | Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404. |
+| accepted_attempts | нет | array[integer; minimum=1; maximum=9223372036854775807]; maxItems=20 | — |
+| discussion | нет | string; maxLength=2000 | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### Assistant
+
+Mode default depends on role. profile/result: candidate; need/matching/invitation: employer; conversation: either role. Matching/invitation require need + candidate; conversation requires invitation. Partial stage selection GET shows form; POST returns 400 before ownership resolution. Complete stage selection resolves ownership/visibility. For result identifier selects own finished attempt, else latest. For need identifier selects own Need, else last unless new_need=on; a new employer may start without Company/Need.
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| mode | нет | string; enum=profile, need, result, matching, invitation, conversation | — |
+| identifier | нет | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+| new_need | нет | string; enum=on, (empty) | — |
+| grade | нет | string; enum=(empty), Junior, Middle | — |
+| skills | нет | string; maxLength=200 | Comma-separated Swift, SwiftUI, UIKit, Combine, CoreData, Git, XCTest, URLSession; case/spacing aliases canonicalized; unknown skill is a form error. |
+| need | нет | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+| candidate | нет | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+| invitation | нет | integer; minimum=1; maximum=9223372036854775807 / '' | Omitted/empty selects the documented default; explicit ID must be owned/visible. |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### DraftApply
+
+Actual stored Draft.mode selects the form. Profile applies description only; need creates a new own Need. Body cannot choose mode/owner/grade of Profile.
+
+Варианты: ProfileDraft, Need
+
+### TeamAction
+
+Варианты: object, object
+
+### TokenAction
+
+Create displays token once in no-store HTML. MCP cannot request contacts. Revoke only own token; repeated revoke is safe. Draft scope may be reserved before V2 paths exist.
+
+Варианты: object, object
+
+### ClientArtifact
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| filename | да | string | — |
+| bytes | да | integer; minimum=1 | — |
+| sha256 | да | string | — |
+
+### ClientManifest
+
+Actual wheel and source archive of this client version; hashes and byte sizes checked by build_client_release.py and contract verifier.
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| version | да | string; minLength=1 | — |
+| commit | да | string | — |
+| files | да | array[ClientArtifact]; maxItems=2 | — |
+
+### HealthOk
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| status | да | 'ok' | — |
+
+### HealthUnavailable
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| status | да | 'unavailable' | — |
+
+### Version
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| commit | да | string | — |
+| assistant_mode | да | 'mock' | — |
+
+### FspEvent
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| event_id | да | string | — |
+| source | да | 'mock' | — |
+| event_name | да | string | — |
+| occurred_on | да | string | — |
+| discipline | да | string | — |
+| result | да | string | — |
+| team | да | boolean | — |
+| prize | да | boolean | — |
+
+### FspHistory
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| source | да | 'mock' | — |
+| status | да | string; enum=not_connected, no_history, demo_history, unavailable | — |
+| changes_grade | да | False | — |
+| external_id | да | ['string', 'null'] | — |
+| events | да | array[FspEvent] | — |
+
+### ApiMeta
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| api_version | да | '1' | — |
+| data_mode | да | 'demo' | — |
+| request_id | да | string | — |
+
+### ApiPagination
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| limit | да | integer | — |
+| offset | да | integer | — |
+| total | да | integer | — |
+
+### ApiIdentity
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| role | да | object; enum=candidate, employer | — |
+| token_kind | да | object; enum=cli, mcp | — |
+| scopes | да | array[string] | — |
+| expires_at | да | string | — |
+
+### ApiProfile
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| name | да | string | — |
+| city | да | string | — |
+| skills | да | array[string] | — |
+| specialization | да | 'ios_swift' | — |
+| experience_months | да | integer | — |
+| roles | да | array[string] | — |
+| soft_skills | да | array[string] | — |
+| published | да | boolean | — |
+| desired_grade | да | string | — |
+| confirmed_grade | да | string | — |
+| test_score | да | number | — |
+| fsp_status | да | string | — |
+| self_declared | да | array[string] | — |
+
+### ApiExperience
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| organization | да | string | — |
+| role | да | string | — |
+| months | да | integer | — |
+| description | да | string | — |
+
+### ApiPrivateProfile
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| contact_email | да | string | — |
+| contact_phone | да | string | — |
+| description | да | string | — |
+| experiences | да | array[ApiExperience] | — |
+
+### ApiProof
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| attempt_id | да | ['integer', 'null'] | — |
+| specialization | да | string | — |
+| grade | да | string | — |
+| finished_at | да | ['string', 'null'] | — |
+| bank_version | да | string | — |
+| rules_version | да | string | — |
+| variant | да | ['string', 'null'] | — |
+| areas | да | object | — |
+| correct_count | да | integer | — |
+| total | да | integer | — |
+| passed | да | boolean | — |
+| expired | да | boolean | — |
+| criteria | да | object | — |
+| limitations | да | string | — |
+
+### ApiAssessment
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| grade | да | string | — |
+| status | да | string | — |
+| started_at | да | string | — |
+| expires_at | да | string | — |
+| result | да | ApiProof / null | — |
+
+### ApiCompany
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| name | да | string | — |
+| industry | нет | string | — |
+| description | нет | string | — |
+
+### ApiCompanyState
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| state | да | object; enum=ready, company_not_created | — |
+| company | да | ApiCompany / null | — |
+
+### ApiNeed
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| company_id | да | integer | — |
+| title | да | string | — |
+| grade | да | string | — |
+| skills | да | array[string] | — |
+| salary_min | да | integer | — |
+| salary_max | да | integer | — |
+| currency | да | 'RUB' | — |
+| salary_period | да | 'month' | — |
+| salary_tax | да | 'gross' | — |
+| work_format | да | string | — |
+| tasks | нет | string | — |
+| next_step | нет | string | — |
+
+### ApiExplanation
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| declared_matches | да | array[string] | — |
+| declared_gaps | да | array[string] | — |
+| confirmation | да | ApiProof / null | — |
+| unknown | да | array[string] | — |
+
+### ApiMatch
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| profile | да | ApiProfile | — |
+| score | да | number | — |
+| parts | да | object | — |
+| explanation | да | ApiExplanation | — |
+
+### ApiCandidate
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| profile | да | ApiProfile | — |
+| contacts_allowed | да | boolean | — |
+| explanation | да | ApiExplanation | — |
+
+### ApiInvitation
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| candidate_id | да | integer | — |
+| need_id | да | integer | — |
+| company_id | да | integer | — |
+| company | да | ['string', 'null'] | — |
+| title | да | ['string', 'null'] | — |
+| grade | да | string | — |
+| salary_min | да | ['integer', 'null'] | — |
+| salary_max | да | ['integer', 'null'] | — |
+| currency | да | string | — |
+| salary_period | да | string | — |
+| salary_tax | да | string | — |
+| work_format | да | ['string', 'null'] | — |
+| status | да | string | — |
+| created_at | да | string | — |
+| responded_at | да | ['string', 'null'] | — |
+| accepted_results | да | array[ApiProof] | — |
+| company_description | нет | string | — |
+| company_industry | нет | string | — |
+| tasks | нет | string | — |
+| next_step | нет | string | — |
+| discussion | нет | string | — |
+
+### ApiCompanyContact
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| company_id | да | integer | — |
+| contact_email | да | string | — |
+
+### ApiAchievement
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| source | да | 'mock' | — |
+| event_name | да | string | — |
+| occurred_on | да | string | — |
+| team | да | boolean | — |
+| prize | да | boolean | — |
+| event_id | нет | string | — |
+| discipline | нет | string | — |
+| result | нет | string | — |
+
+### ApiAchievements
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| source | да | 'mock' | — |
+| status | да | string | — |
+| changes_grade | да | False | — |
+| events | да | array[ApiAchievement] | — |
+| external_id | нет | ['string', 'null'] | — |
+
+### ApiCatalog
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| specializations | да | array[string] | — |
+| grades | да | array[string] | — |
+| skills | да | array[string] | — |
+| roles | да | object | — |
+| soft_skills | да | object | — |
+| features | да | array[string] | — |
+| fsp_source | да | 'mock' | — |
+
+### ApiError
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| error | да | object | — |
+| meta | да | ApiMeta | — |
+
+### ApiContactUnion
+
+## Источники формата
+
+Формат закреплён по [OpenAPI 3.1.1](https://spec.openapis.org/oas/v3.1.1.html); документ проверяет [openapi-spec-validator](https://openapi-spec-validator.readthedocs.io/en/latest/python.html), установленный только в dev группе lock. Production deploy использует --no-dev. Это описание нашего браузерного HTTP, не официального API ФСП.

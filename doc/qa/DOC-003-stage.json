@@ -1,0 +1,41 @@
+{
+  "task": "DOC-003",
+  "status": "IN_PROGRESS",
+  "checked_at": "2026-10-11T21:06:31.496275+00:00",
+  "verified_snapshot": "b82b455",
+  "stage_status": "PASS",
+  "scope": "56 paths / 84 operations, initial browser + token V1 + owner; latest main learning and token V2 still to integrate",
+  "failures_retained": [
+    {
+      "id": "formset-fields",
+      "status": "FAIL",
+      "reason": "hidden experience profile omitted; corrected schema and coverage guard"
+    },
+    {
+      "id": "stale-manifest",
+      "status": "FAIL",
+      "reason": "56 regression errors due to absent prototype/accessibility.css in local collected static; collectstatic then 90 PASS"
+    },
+    {
+      "id": "binary-media-validation",
+      "status": "FAIL",
+      "reason": "integrated downloads are binary and have no JSON schema; added ZIP/gzip signature and manifest validation"
+    }
+  ],
+  "checks": {
+    "http_runtime": 352,
+    "all_operations": 84,
+    "paths": 56,
+    "request_response_examples": 43,
+    "counterfactuals": 3,
+    "application_tests": 109,
+    "tool_tests": 23,
+    "openapi_validator": "PASS",
+    "production_lock_no_dev": "PASS"
+  },
+  "pending": [
+    "Merge latest main learning/UUID browser approval/token V2; preserve all routes and DTOs",
+    "Extend runtime fixtures/semantics for these new routes; rerun complete contract checker",
+    "Commit exact final task and publish method guard changes only after integrated release checks"
+  ]
+}

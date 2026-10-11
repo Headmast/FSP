@@ -4,7 +4,7 @@ from django.db import transaction
 from django.http import FileResponse,Http404
 from django.shortcuts import get_object_or_404,redirect,render
 from django.utils import timezone
-from django.views.decorators.http import require_http_methods,require_POST
+from django.views.decorators.http import require_http_methods,require_POST,require_safe
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from accounts.access import role_required
@@ -48,6 +48,7 @@ def needs(request):
     return render(request,'hiring/needs.html',{'form':form,'needs':Need.objects.filter(company=company)})
 
 @role_required('employer')
+@require_safe
 def candidates(request):
     company=company_for(request.user);data=request.GET.copy()
     default=Need.objects.filter(company=company).order_by('pk').first()
@@ -60,6 +61,7 @@ def candidates(request):
     return render(request,'hiring/candidates.html',{'form':form,'results':results,'query':data.urlencode(),'selected_need':chosen})
 
 @role_required('employer')
+@require_safe
 def candidate(request,pk):
     company=company_for(request.user);profile,grant=visible_profile(company,pk)
     need_id=parse_identifier(request.GET.get('need'),required=False)
@@ -69,6 +71,7 @@ def candidate(request,pk):
         'proofs':[witness(item) for item in Attempt.objects.filter(candidate=profile,status='finished',grade=profile.confirmed_grade).order_by('-finished_at')]})
 
 @role_required('employer')
+@require_safe
 def resume(request,pk):
     profile,grant=visible_profile(company_for(request.user),pk)
     return FileResponse(build_pdf(profile,include_contacts=grant),as_attachment=True,filename='candidate-resume.pdf')
@@ -96,6 +99,7 @@ def send(request):
     return redirect('invitations')
 
 @login_required
+@require_safe
 def invitations(request):
     if not request.user.email_confirmed:raise PermissionDenied
     if not request.user.has_processing_consent:return redirect('consent')

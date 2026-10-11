@@ -212,6 +212,9 @@ def client_version():
     return tomllib.loads((settings.ROOT/'clients/python/pyproject.toml').read_text())['project']['version']
 
 
+from django.views.decorators.http import require_safe
+
+@require_safe
 def download_client(request,filename):
     from django.conf import settings
     from django.http import Http404

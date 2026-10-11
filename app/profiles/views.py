@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.http import FileResponse, JsonResponse
 from django.shortcuts import render, redirect
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods,require_safe
 from accounts.access import role_required
 from accounts.models import ConsentEvent
 from accounts.consents import PUBLICATION_VERSION
@@ -83,10 +83,12 @@ def build_pdf(profile, include_contacts=False):
     return stream
 
 @role_required("candidate")
+@require_safe
 def resume(request):
     return FileResponse(build_pdf(Profile.objects.get(user=request.user), include_contacts=True), as_attachment=True, filename="resume.pdf")
 
 @role_required("candidate")
+@require_safe
 def fsp(request):
     p = Profile.objects.get(user=request.user)
     link=FspLink.objects.filter(profile=p).first()
