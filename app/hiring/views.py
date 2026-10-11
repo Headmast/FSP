@@ -13,6 +13,7 @@ from profiles.models import Profile
 from profiles.views import build_pdf
 from .models import Company,Need,Invitation
 from .forms import NeedForm,SearchForm,CompanyForm
+from .access import visible_profile, invitation_query
 from .services import search,contacts_allowed,invite,decide,InvalidProof,explain
 from assessments.models import Attempt
 from assessments.proofs import witness
@@ -58,12 +59,6 @@ def candidates(request):
     if form.is_valid():results=search(**form.cleaned_data)
     return render(request,'hiring/candidates.html',{'form':form,'results':results,'query':data.urlencode(),'selected_need':chosen})
 
-def visible_profile(company,pk):
-    profile=get_object_or_404(Profile,pk=pk)
-    grant=contacts_allowed(company,profile)
-    if not grant and not(profile.published and profile.confirmed_grade):raise Http404
-    return profile,grant
-
 @role_required('employer')
 def candidate(request,pk):
     company=company_for(request.user);profile,grant=visible_profile(company,pk)
@@ -106,9 +101,9 @@ def invitations(request):
     if not request.user.has_processing_consent:return redirect('consent')
     if request.user.role=='candidate':
         profile=get_object_or_404(Profile,user=request.user)
-        items=Invitation.objects.filter(candidate=profile).select_related('candidate')
+        items=invitation_query(request.user).select_related('candidate')
         items.filter(viewed_at__isnull=True).update(viewed_at=timezone.now())
-    elif request.user.role=='employer':items=Invitation.objects.filter(company=company_for(request.user)).select_related('candidate')
+    elif request.user.role=='employer':items=invitation_query(request.user).select_related('candidate')
     else:raise PermissionDenied
     return render(request,'hiring/invitations.html',{'items':items.order_by('-created_at')})
 

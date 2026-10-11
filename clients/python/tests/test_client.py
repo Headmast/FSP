@@ -1,0 +1,67 @@
+import contextlib
+import io
+import json
+import os
+import tempfile
+import unittest
+from unittest.mock import patch
+import httpx
+from fsp_client.http import FspClient,ClientError,server_url
+from fsp_client.cli import parser,run
+from fsp_client.config import Connections
+
+
+class ClientTests(unittest.TestCase):
+    def test_no_redirect_or_cross_origin_credentials(self):
+        requests=[]
+        def handle(request):
+            requests.append(request)
+            return httpx.Response(302,headers={'Location':'https://other.invalid/api/v1/me'})
+        client=FspClient('https://demo.invalid','synthetic',transport=httpx.MockTransport(handle))
+        with self.assertRaises(ClientError):client.get('me')
+        self.assertEqual(len(requests),1)
+        self.assertEqual(str(requests[0].url),'https://demo.invalid/api/v1/me')
+        for value in ['http://demo.invalid','https://user:password@demo.invalid','https://demo.invalid?token=x']:
+            with self.assertRaises(ClientError):server_url(value)
+        client.close()
+
+    def test_error_exit_codes_do_not_print_token(self):
+        for status,code in [(400,2),(401,3),(403,3),(404,4),(409,4),(503,5)]:
+            client=FspClient('https://demo.invalid','synthetic',transport=httpx.MockTransport(lambda r:httpx.Response(status,json={'error':{'code':'TEST','message':'Example'}})))
+            with self.assertRaises(ClientError) as error:client.get('me')
+            self.assertEqual(error.exception.exit_code,code)
+            self.assertNotIn('synthetic',str(error.exception))
+            client.close()
+
+    def test_commands_and_json_output(self):
+        requests=[]
+        def handle(request):
+            requests.append(str(request.url))
+            return httpx.Response(200,json={'data':[{'id':1}],'meta':{'api_version':'1','data_mode':'demo'}})
+        api=FspClient('https://demo.invalid','synthetic',transport=httpx.MockTransport(handle))
+        with patch.object(Connections,'load',return_value=({'server':'https://demo.invalid'},'synthetic')),patch('fsp_client.cli.FspClient',return_value=api):
+            stream=io.StringIO()
+            with contextlib.redirect_stdout(stream):run(parser().parse_args(['candidates','search','--need-id','2','--json']))
+            self.assertEqual(json.loads(stream.getvalue())['data'],[{'id':1}])
+        self.assertIn('need_id=2',requests[0])
+        self.assertEqual(parser().parse_args(['auth','login','--connection','ai','--server','https://demo.invalid']).connection,'ai')
+        with contextlib.redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):parser().parse_args(['candidates','show','²'])
+
+    def test_no_insecure_keyring_fallback_and_no_config_secret(self):
+        class Secure:
+            __module__='keyring.backends.macOS'
+            priority=1
+            passwords={}
+            def set_password(self,s,r,t):self.passwords[r]=t
+            def get_password(self,s,r):return self.passwords.get(r)
+            def delete_password(self,s,r):self.passwords.pop(r,None)
+        with tempfile.TemporaryDirectory() as directory,patch.dict(os.environ,{'FSP_CONFIG_DIR':directory}),patch('keyring.get_keyring',return_value=Secure()):
+            config=Connections();config.login('demo','https://demo.invalid','synthetic-secret',{'role':'candidate','token_kind':'mcp'})
+            self.assertNotIn('synthetic-secret',config.path.read_text())
+            self.assertEqual(config.load('demo')[1],'synthetic-secret')
+            self.assertEqual(config.path.stat().st_mode & 0o777,0o600)
+            config.logout('demo');self.assertEqual(config.read(),{})
+            with patch('keyring.get_keyring',return_value=object()),self.assertRaises(ClientError):config.backend()
+
+
+if __name__=='__main__':unittest.main()
