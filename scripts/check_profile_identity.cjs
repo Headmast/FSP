@@ -1,0 +1,40 @@
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+(async()=>{
+ const url=process.argv[2]||'http://127.0.0.1:8042';
+ const browser=await chromium.launch({headless:true});
+ const page=await browser.newPage();const errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(url);const screening=page.getByRole('button',{name:/Enter\s+site/i});if(await screening.count())await screening.click();
+ await page.locator('#profile').waitFor();await page.getByRole('button',{name:'Сбросить демо'}).click();
+ // Reproduce the reported path: fill fields, go directly to a test without Save.
+ await page.locator('[name=name]').fill('ДЖ Проверка');
+ await page.locator('[name=city]').fill('Самара');
+ await page.locator('[name=skills]').fill('Swift, Core Data');
+ await page.getByRole('button',{name:'Перейти к тесту'}).click();
+ await page.locator('[name=grade]').selectOption('Middle');
+ for(let i=0;i<4;i++)await page.locator(`input[name=q${i}][value="${i}"]`).check();
+ await page.getByRole('button',{name:'Завершить тест'}).click();
+ assert.equal(await page.getByRole('heading',{name:'ДЖ Проверка',exact:true}).count(),1);
+ await page.getByRole('button',{name:'Посмотреть глазами работодателя'}).click();
+ assert.equal(await page.locator('[name=grade]').inputValue(),'Middle');
+ const own=page.locator('article').filter({hasText:'ДЖ Проверка'});
+ assert.equal(await own.count(),1);assert.match(await own.innerText(),/Ваш профиль кандидата/);
+ assert.match(await own.innerText(),/Самара.*Swift, Core Data/);
+ assert.match(await page.locator('article').filter({hasText:'Иван Демо'}).innerText(),/Вымышленный кандидат для примера/);
+ await own.getByRole('button',{name:'Профиль и предложение'}).click();
+ assert.equal(await page.getByRole('heading',{name:'ДЖ Проверка',exact:true}).count(),1);
+ await page.reload();assert.equal(await page.getByRole('heading',{name:'ДЖ Проверка',exact:true}).count(),1);
+ await page.getByRole('button',{name:'Кандидат',exact:true}).click();
+ assert.equal(await page.locator('[name=name]').inputValue(),'ДЖ Проверка');
+ // Switching roles also preserves edited profile fields.
+ await page.locator('[name=name]').fill('ДЖ Новое имя');
+ await page.getByRole('button',{name:'Работодатель',exact:true}).click();
+ assert.equal(await page.locator('article').filter({hasText:'ДЖ Новое имя'}).count(),1);
+ await page.getByRole('button',{name:'Кандидат',exact:true}).click();
+ await page.locator('[name=visible]').uncheck();await page.getByRole('button',{name:'Работодатель',exact:true}).click();
+ assert.equal(await page.locator('article').filter({hasText:'ДЖ Новое имя'}).count(),0);
+ assert.deepEqual(errors,[]);
+ console.log(JSON.stringify({status:'PASS',url,scenarios:['unsaved_profile_to_test','Middle_filter','result_name','own_profile_label','fixture_label','detail_name','reload','edit_then_role_switch','visibility_preserved'],browserErrors:errors},null,2));
+ await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});
