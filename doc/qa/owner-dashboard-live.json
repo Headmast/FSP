@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-10-11T20:53:57.123048+00:00",
+  "commit": "bb798f347ccdb33ba445719dedf4b93466eafcc0",
+  "url": "https://usiai-194-226-126-123.free.pinggy.net",
+  "checks": [
+    "HTTPS health and exact release SHA",
+    "CSRF login and authenticated owner dashboard",
+    "30 sent, 12 accepted, 40% conversion, 1.5 days",
+    "HR filter 10 sent and 4 accepted",
+    "foreign company isolation"
+  ],
+  "live_browser": "NOT_RUN: Codex browser blocked tunnel domain; local desktop/mobile screenshots verified separately"
+}
