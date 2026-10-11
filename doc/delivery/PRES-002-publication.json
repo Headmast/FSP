@@ -1,0 +1,32 @@
+{
+  "published_at": "2026-10-11T23:38:38.000944+03:00",
+  "files": [
+    {
+      "url": "https://llmlove.ru/dreamwork/trudyazhki-fsp.html",
+      "bytes": 6008593,
+      "sha256": "47c156a98565ce8f4123ddfa453591bea81fa8937b4306a357dbc84d85cac622",
+      "http_status": 200,
+      "robots_header": "noindex, nofollow, nosnippet",
+      "verified_sha256": "47c156a98565ce8f4123ddfa453591bea81fa8937b4306a357dbc84d85cac622",
+      "slide_count": 18,
+      "meta_noindex": true
+    },
+    {
+      "url": "https://llmlove.ru/dreamwork/trudyazhki-fsp.pptx",
+      "bytes": 12289318,
+      "sha256": "003d5d56ad2cff821cd5c4be04371afb4b412f3a855beb29605852cdde335a1b",
+      "http_status": 200,
+      "robots_header": "noindex, nofollow, nosnippet",
+      "verified_sha256": "003d5d56ad2cff821cd5c4be04371afb4b412f3a855beb29605852cdde335a1b"
+    },
+    {
+      "url": "https://llmlove.ru/dreamwork/trudyazhki-fsp.md",
+      "bytes": 44074,
+      "sha256": "c40f1c0f51333422dc5298657a664ffa145741865893527b3d4dc3abc6553336",
+      "http_status": 200,
+      "robots_header": "noindex, nofollow, nosnippet",
+      "verified_sha256": "c40f1c0f51333422dc5298657a664ffa145741865893527b3d4dc3abc6553336"
+    }
+  ],
+  "robots": "noindex, nofollow, nosnippet"
+}
