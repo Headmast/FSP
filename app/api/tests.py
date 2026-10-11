@@ -63,3 +63,39 @@ class TokenTests(ApiFixture):
         with self.assertRaises(ApiError):issue_token(self.actor,'AI','mcp',contacts=True)
         self.assertEqual(self.client.post('/api/v1/me').status_code,405)
         self.assertNotIn('email', self.get('me').json()['data'])
+
+
+class CandidateTests(ApiFixture):
+    def test_read_profile_attempts_and_no_questions(self):
+        from assessments.services import start_attempt
+        attempt=start_attempt(self.actor.profile,'Junior')
+        before=attempt.status
+        response=self.get('me/assessments')
+        text=response.content.decode()
+        for word in ['tasks','answers','options','prompt','correct\"']:
+            self.assertNotIn(word,text)
+        attempt.refresh_from_db(); self.assertEqual(attempt.status,before)
+        self.assertEqual(self.get(f'me/assessments/{attempt.pk}/result').status_code,409)
+        self.assertEqual(self.get('me/profile').json()['data']['name'],'Иван')
+        self.assertNotIn('hidden@demo.invalid',self.get('me/profile').content.decode())
+        self.assertEqual(self.get('me/profile/private').status_code,403)
+        self.assertEqual(self.get('me/achievements').json()['data']['source'],'mock')
+        other=self.user(label='other')
+        foreign=start_attempt(other.profile,'Junior')
+        self.assertEqual(self.get(f'me/assessments/{foreign.pk}/result').status_code,404)
+        self.assertEqual(self.get('me/assessments/²/result').status_code,404)
+        self.assertEqual(self.get('me/assessments',limit=101).status_code,400)
+
+    def test_mcp_projection_and_cli_private_pdf(self):
+        _,secret=issue_token(self.actor,'MCP','mcp')
+        self.client.defaults['HTTP_AUTHORIZATION']='Bearer '+secret
+        self.assertEqual(self.get('me/profile/private').status_code,403)
+        self.assertEqual(self.get('me/profile/resume.pdf').status_code,403)
+        self.assertNotIn('hidden',self.get('me/profile').content.decode())
+        self.assertNotIn('external_id',self.get('me/achievements').content.decode())
+        _,secret=issue_token(self.actor,'Private','cli',contacts=True)
+        self.client.defaults['HTTP_AUTHORIZATION']='Bearer '+secret
+        self.assertEqual(self.get('me/profile/private').json()['data']['contact_email'],'hidden@demo.invalid')
+        response=self.get('me/profile/resume.pdf',with_contacts='true')
+        self.assertEqual(response.status_code,200)
+        self.assertTrue(b''.join(response.streaming_content).startswith(b'%PDF'))
