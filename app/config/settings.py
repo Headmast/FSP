@@ -29,7 +29,7 @@ if not SECRET_KEY:
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost,testserver").split(",")
 CSRF_TRUSTED_ORIGINS = [x for x in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if x]
 INSTALLED_APPS = ["django.contrib.auth", "django.contrib.contenttypes", "django.contrib.sessions",
-                  "django.contrib.messages", "django.contrib.staticfiles", "accounts", "profiles", "assessments", "hiring", "assistant"]
+                  "django.contrib.messages", "django.contrib.staticfiles", "accounts", "profiles", "assessments", "hiring", "assistant", "api"]
 MIDDLEWARE = ["django.middleware.security.SecurityMiddleware", "whitenoise.middleware.WhiteNoiseMiddleware",
               "django.contrib.sessions.middleware.SessionMiddleware", "django.middleware.common.CommonMiddleware",
               "django.middleware.csrf.CsrfViewMiddleware", "django.contrib.auth.middleware.AuthenticationMiddleware",

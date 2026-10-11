@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -28,3 +29,17 @@ class DemoConfirmation(models.Model):
     session_nonce_hash = models.CharField(max_length=64)
     expires_at = models.DateTimeField()
     used_at = models.DateTimeField(null=True, blank=True)
+
+
+class ApiToken(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=80)
+    kind = models.CharField(max_length=3, choices=[('cli', 'CLI'), ('mcp', 'MCP')])
+    digest = models.CharField(max_length=64, unique=True)
+    scopes = models.JSONField(default=list)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    last_used_at = models.DateTimeField(null=True)
+    revoked_at = models.DateTimeField(null=True)
+    window_start = models.DateTimeField(null=True)
+    request_count = models.PositiveIntegerField(default=0)
