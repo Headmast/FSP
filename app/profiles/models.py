@@ -24,7 +24,7 @@ class Profile(models.Model):
     confirmed_grade = models.CharField(max_length=8, blank=True)
     test_score = models.FloatField(default=0)
     grade_changed_at = models.DateTimeField(null=True, blank=True)
-    fsp_status = models.CharField(max_length=20, default="not_connected", choices=[("not_connected", "Не подключено"), ("no_history", "Нет истории"), ("demo_history", "Демо история")])
+    fsp_status = models.CharField(max_length=20, default="not_connected", choices=[("not_connected", "Не подключено"), ("no_history", "Нет истории"), ("demo_history", "Демо история"), ("unavailable", "Источник недоступен")])
     fsp_prize = models.BooleanField(default=False)
 
     @property
@@ -35,6 +35,10 @@ class Profile(models.Model):
     def soft_skill_labels(self):
         return ', '.join(dict(SOFT_SKILLS)[key] for key in self.soft_skills if key in dict(SOFT_SKILLS))
 
+    @property
+    def achievement_events(self):
+        return Achievement.objects.filter(link__profile=self).order_by('occurred_on','pk')
+
 
 class Experience(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='experiences')
@@ -42,3 +46,28 @@ class Experience(models.Model):
     role = models.CharField(max_length=120)
     months = models.PositiveSmallIntegerField(validators=[MaxValueValidator(600)])
     description = models.TextField(max_length=2000, blank=True)
+
+
+class FspLink(models.Model):
+    profile=models.OneToOneField(Profile,on_delete=models.CASCADE,related_name='fsp_link')
+    external_id=models.CharField(max_length=40,unique=True)
+    source=models.CharField(max_length=12,default='mock')
+    consented_at=models.DateTimeField()
+    consent_version=models.CharField(max_length=40,default='fsp-mock-v1')
+    synced_at=models.DateTimeField(null=True)
+    status=models.CharField(max_length=20)
+
+
+class Achievement(models.Model):
+    link=models.ForeignKey(FspLink,on_delete=models.CASCADE,related_name='achievements')
+    event_id=models.CharField(max_length=40)
+    source=models.CharField(max_length=12,default='mock')
+    event_name=models.CharField(max_length=120)
+    occurred_on=models.DateField()
+    discipline=models.CharField(max_length=80)
+    result=models.CharField(max_length=80)
+    team=models.BooleanField(default=False)
+    prize=models.BooleanField(default=False)
+
+    class Meta:
+        constraints=[models.UniqueConstraint(fields=['link','event_id'],name='unique_fsp_event')]

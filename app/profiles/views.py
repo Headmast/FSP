@@ -11,7 +11,10 @@ from accounts.access import role_required
 from accounts.models import ConsentEvent
 from accounts.consents import PUBLICATION_VERSION
 from django.utils import timezone
-from .forms import ProfileForm, ExperienceFormSet
+from .forms import ProfileForm, ExperienceFormSet, FspLinkForm
+from .fsp_service import connect, disconnect
+from .models import FspLink
+from django.core.exceptions import ValidationError
 from .models import Profile
 
 @role_required("candidate")
@@ -52,6 +55,9 @@ def build_pdf(profile, include_contacts=False):
              f"Софт-скиллы (самоописание): {profile.soft_skill_labels or 'не указаны'}",
              f"Подтверждённая категория: {profile.confirmed_grade or 'не подтверждена'}", f"Результат теста: {profile.test_score:.0%}",
              f"ФСП: {profile.get_fsp_status_display()} (мок интеграции)"]
+    for event in profile.achievement_events:
+        texts.append(f"{event.event_name}: {event.occurred_on}, {event.discipline}, {event.result}, "
+                     f"{'команда' if event.team else 'личное участие'} (источник: мок)")
     if include_contacts:
         texts.extend(["О себе (самоописание):", profile.description or 'Не заполнено', "Опыт (самоописание):"])
         for item in profile.experiences.order_by('pk'):
@@ -73,4 +79,23 @@ def resume(request):
 @role_required("candidate")
 def fsp(request):
     p = Profile.objects.get(user=request.user)
-    return JsonResponse({"source": "mock", "status": p.fsp_status, "changes_grade": False})
+    link=FspLink.objects.filter(profile=p).first()
+    return JsonResponse({"source": "mock", "status": p.fsp_status, "changes_grade": False,
+        'external_id':link.external_id if link else None,'events':list(link.achievements.values(
+            'event_id','source','event_name','occurred_on','discipline','result','team','prize')) if link else []})
+
+
+@role_required('candidate')
+@require_http_methods(['GET','POST'])
+def fsp_link(request):
+    p=Profile.objects.get(user=request.user)
+    link=FspLink.objects.filter(profile=p).first()
+    form=FspLinkForm(request.POST or None,initial={'external_id':link.external_id if link else ''})
+    if request.method=='POST' and request.POST.get('action')=='unlink':
+        disconnect(p);messages.success(request,'Демо ID отвязан; достижения и бонус убраны. Категория сохранена.')
+        return redirect('fsp-link')
+    if request.method=='POST' and form.is_valid():
+        try:connect(p,form.cleaned_data['external_id'],form.cleaned_data['consent'])
+        except ValidationError as exc:form.add_error(None,exc)
+        else:return redirect('fsp-link')
+    return render(request,'profiles/fsp.html',{'form':form,'link':link,'profile':p})

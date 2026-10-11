@@ -1,0 +1,35 @@
+{
+  "task": "MVP-009",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:50:08.424412+00:00",
+  "base_commit": "b71bae53d79e5b8879e85c020d54dfcc2950a531",
+  "checked_sources": {
+    "app/config/urls.py": "e010ca19e24c8530bca9ccb33be036e556c2e61f586fd39c26b9e6ae0d850cc8",
+    "app/profiles/forms.py": "e45a18308c487488f165ae3b023da21ac3b9d56046dc895f329e5c0a23a806f1",
+    "app/profiles/models.py": "95bc5e41a911581f50b9eb533bd759a92b561d45e039fce44113e74a37999da9",
+    "app/profiles/tests.py": "f4b7045d05ffbfbeb9c825775f56e3487a045a227c9c9df10df8e01812a4a7cb",
+    "app/profiles/views.py": "64e02974e803cd5a29845f6cd2bb8bd6b0b4b48add33e0956dd601a1c448bd93",
+    "app/templates/hiring/candidate.html": "94bf24eb0931c028963090f35c4936186138ef6bc0ae14055da8b949a233581c",
+    "app/templates/profiles/profile.html": "a4c1901cdd74d16b2523c7be1f85194df7fbd67dbe261fd22d9110d2e52abaa8",
+    "app/profiles/fsp_adapter.py": "02651ddfaf806d9f4f5af0163e1776327e13c9a28b8937b6914c185289227235",
+    "app/profiles/fsp_service.py": "0de8b8bcdc4bc9ee2694bebe233397e884d5c6f41b7b36fd19d2b6169e18175e",
+    "app/profiles/migrations/0005_alter_profile_fsp_status_fsplink_achievement.py": "cd85aaa2ed3a07b168d988a358b66bc8198d131f8f71f874cce5079b612a8405",
+    "app/templates/profiles/fsp.html": "c4c80abafc4fbdf77f150da79fd619967eb3fb13a92f34a0e60c7f56e62cca1d"
+  },
+  "tests": {
+    "command": "python app/manage.py test profiles hiring --verbosity 0",
+    "count": 31,
+    "failures": 0,
+    "seconds": 12.104
+  },
+  "checks": [
+    "four states",
+    "explicit binding consent",
+    "duplicate external ID rejected",
+    "POST foreign profile ignored; unlink own only",
+    "sync deduplicates events",
+    "unlink removes bonus; grade/test unchanged"
+  ],
+  "pdf": "Synthetic achievement PDF rendered and visually inspected; readable wrapped event line",
+  "deployment": "NOT_RUN: local stage"
+}

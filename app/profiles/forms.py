@@ -56,3 +56,8 @@ ExperienceFormSet = forms.inlineformset_factory(Profile, Experience, formset=Own
     max_num=20, validate_max=True, can_delete=True, labels={
         'organization':'Организация / проект (скрыто)', 'role':'Роль в проекте (скрыто)',
         'months':'Длительность, месяцев', 'description':'Задачи и результаты (скрыто)'})
+
+
+class FspLinkForm(forms.Form):
+    external_id=forms.CharField(max_length=40,label='Демо FSP ID',help_text='DEMO-001..999 — история, DEMO-EMPTY — без истории, DEMO-DOWN — недоступность.')
+    consent=forms.BooleanField(label='Разрешаю демо-привязку и получение синтетических достижений (fsp-mock-v1). Понимаю, что личность не проверяется реестром.',required=True)

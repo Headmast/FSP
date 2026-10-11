@@ -30,4 +30,5 @@ urlpatterns = [path("company/", hiring.company_profile, name="company-profile"),
     path("profile/", profiles.profile, name="profile"),
     path("profile/resume.pdf", profiles.resume, name="resume"),
     path("profile/fsp/", profiles.fsp, name="fsp"),
+    path("profile/fsp/link/", profiles.fsp_link, name="fsp-link"),
     path("health/", accounts.health, name="health"), path("version/", accounts.version, name="version")]

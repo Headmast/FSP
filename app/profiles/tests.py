@@ -44,7 +44,7 @@ class ProfileTests(TestCase):
     def test_pdf_and_fsp_contract(self):
         response=self.client.get('/profile/resume.pdf');self.assertEqual(response.status_code,200)
         self.assertTrue(b''.join(response.streaming_content).startswith(b'%PDF'))
-        self.assertEqual(self.client.get('/profile/fsp/').json(),{'source':'mock','status':'not_connected','changes_grade':False})
+        self.assertEqual(self.client.get('/profile/fsp/').json(),{'source':'mock','status':'not_connected','changes_grade':False,'external_id':None,'events':[]})
 
     def test_skill_aliases_save_one_canonical_value_and_unknown_is_rejected(self):
         self.assertEqual(normalized('CoreData, Core Data, CORE DATA'),{'coredata'})
@@ -112,3 +112,39 @@ class ProfileTests(TestCase):
         self.assertFalse(self.profile.published)
         self.assertIsNone(self.profile.publication_consented_at)
         self.assertEqual(self.profile.publication_consent_version,'')
+
+    def test_fsp_states_and_repeat_sync_never_change_grade_or_accumulate_bonus(self):
+        from hiring.services import rank
+        for identifier,status in [('DEMO-EMPTY','no_history'),('DEMO-DOWN','unavailable'),('DEMO-001','demo_history')]:
+            self.assertEqual(self.client.post('/profile/fsp/link/',{'external_id':identifier,'consent':'on'}).status_code,302)
+            self.profile.refresh_from_db()
+            self.assertEqual(self.profile.fsp_status,status)
+            self.assertEqual(self.profile.confirmed_grade,'Junior')
+            self.assertEqual(self.profile.test_score,.75)
+            response=self.client.get('/profile/fsp/').json()
+            self.assertEqual(response['source'],'mock');self.assertEqual(response['external_id'],identifier)
+        for _ in range(3):self.client.post('/profile/fsp/link/',{'external_id':'DEMO-001','consent':'on'})
+        self.assertEqual(self.profile.achievement_events.count(),1)
+        event=self.profile.achievement_events.get()
+        self.assertTrue(event.team);self.assertEqual(event.source,'mock')
+        self.assertEqual(rank(self.profile)[1]['fsp'],5)
+        self.client.post('/profile/fsp/link/',{'action':'unlink'})
+        self.profile.refresh_from_db();self.assertEqual(self.profile.fsp_status,'not_connected')
+        self.assertEqual(self.profile.achievement_events.count(),0)
+        self.assertEqual(rank(self.profile)[1]['fsp'],0)
+        self.assertEqual(self.profile.confirmed_grade,'Junior')
+
+    def test_fsp_link_requires_consent_and_cannot_steal_existing_identity(self):
+        from .models import FspLink
+        self.client.post('/profile/fsp/link/',{'external_id':'DEMO-001'})
+        self.assertEqual(FspLink.objects.count(),0)
+        for bad in ['DEMO-000','real-id','DEMO-١٢٣','DEMO-001 '+('x'*100)]:
+            self.assertEqual(self.client.post('/profile/fsp/link/',{'external_id':bad,'consent':'on'}).status_code,200)
+            self.assertEqual(FspLink.objects.count(),0)
+        self.client.post('/profile/fsp/link/',{'external_id':'DEMO-001','consent':'on','profile':self.other_profile.pk})
+        self.assertEqual(FspLink.objects.get().profile_id,self.profile.pk)
+        self.client.force_login(self.other)
+        self.assertContains(self.client.post('/profile/fsp/link/',{'external_id':'DEMO-001','consent':'on'}),'другому аккаунту')
+        self.assertEqual(FspLink.objects.count(),1)
+        self.client.post('/profile/fsp/link/',{'action':'unlink','profile':self.profile.pk})
+        self.assertEqual(FspLink.objects.count(),1)
