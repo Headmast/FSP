@@ -18,6 +18,7 @@
 - [HTTP интерфейсы](api/contracts.md)
 - [Проверки и сценарии](qa/test-plan.md)
 - [Статусы проверок](qa/gates.json)
+- [Результаты подготовки документации и worktree](qa/preparation-results.md)
 - [Публикация и откат](deployment/runbook.md)
 - [Отчёт о выпуске](delivery/release-template.md)
 - [Рабочие промпты](prompts/README.md) и [ответы](responses/README.md)
