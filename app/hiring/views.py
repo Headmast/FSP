@@ -13,7 +13,7 @@ from profiles.models import Profile
 from profiles.views import build_pdf
 from .models import Company,Need,Invitation
 from .forms import NeedForm,SearchForm,CompanyForm
-from .services import search,contacts_allowed,invite,decide,InvalidProof
+from .services import search,contacts_allowed,invite,decide,InvalidProof,explain
 from assessments.models import Attempt
 from assessments.proofs import witness
 
@@ -67,8 +67,10 @@ def visible_profile(company,pk):
 @role_required('employer')
 def candidate(request,pk):
     company=company_for(request.user);profile,grant=visible_profile(company,pk)
+    need_id=parse_identifier(request.GET.get('need'),required=False)
+    chosen=get_object_or_404(Need,pk=need_id,company=company) if need_id else Need.objects.filter(company=company,grade=profile.confirmed_grade).order_by('pk').first()
     return render(request,'hiring/candidate.html',{'profile':profile,'grant':grant,
-        'needs':Need.objects.filter(company=company,grade=profile.confirmed_grade),'query':request.GET.urlencode(),
+        'needs':Need.objects.filter(company=company,grade=profile.confirmed_grade),'query':request.GET.urlencode(),'explanation':explain(profile,chosen),'chosen_need':chosen,
         'proofs':[witness(item) for item in Attempt.objects.filter(candidate=profile,status='finished',grade=profile.confirmed_grade).order_by('-finished_at')]})
 
 @role_required('employer')

@@ -1,0 +1,30 @@
+{
+  "task": "MVP-011",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:56:53.600743+00:00",
+  "base_commit": "b964b2c6ace17ee0271ca084813a52202d04960d",
+  "checked_sources": {
+    "app/hiring/services.py": "dc0fa4c6b1dfffc37962bfc09a28c15ad970cf6780198f077912b4450bfc633b",
+    "app/hiring/tests.py": "a7f52c92f13054b062763a977299f1bc88c2eedd0b21c32710688fbadaf63edd",
+    "app/hiring/views.py": "82987df0aebf6204e14cea0ca676a092eecdd648bfd3d4afe6d3bd9e7b13a650",
+    "app/templates/hiring/candidate.html": "32f4b05510aba15576203777811fe3c401fed0778384beba7537c6c6bc3ac44f",
+    "app/templates/hiring/candidates.html": "ce33b521aceebb091c701ff47e36dbde7e02915ac4906d8777c5aeb0de9e1c6a",
+    "app/templates/hiring/explanation.html": "35d1fcdaf5d483d5a2ce16969351238a6910ad2e9e0a3c4fbc6636f67e00f26c"
+  },
+  "tests": {
+    "command": "python app/manage.py test hiring --verbosity 0",
+    "count": 23,
+    "failures": 0,
+    "seconds": 1.134
+  },
+  "checks": [
+    "canonical named matches and gaps",
+    "source and date only from completed successful witness",
+    "declarations not called independent confirmation",
+    "unknown/unavailable FSP distinct from no_history",
+    "owned query and filters preserved",
+    "deterministic repeated ranking"
+  ],
+  "benchmark": "Fresh 24 synthetic profiles, P@5=1.0 vs baseline=0.733333; zero hard violations",
+  "deployment": "NOT_RUN: local stage"
+}

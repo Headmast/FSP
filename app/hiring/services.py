@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from profiles.models import Profile
-from profiles.skills import normalized
+from profiles.skills import normalized,canonical_skill
 from .models import Company,Need,Invitation
 from assessments.models import Attempt
 from assessments.proofs import witness
@@ -11,6 +11,23 @@ from assessments.proofs import witness
 
 class InvalidProof(ValueError):
     pass
+
+
+def explain(profile,need=None):
+    desired=normalized(need.skills) if need else set()
+    declared=normalized(profile.skills)
+    result=Attempt.objects.filter(candidate=profile,status='finished',passed=True,grade=profile.confirmed_grade).order_by('-finished_at','-pk').first()
+    unknown=['Опыт, роли и софт-скиллы указаны кандидатом; независимой проверки нет.']
+    if desired:unknown.append('Совпадение заявленных навыков не означает отдельную проверку каждого инструмента.')
+    else:unknown.append('Потребность с конкретными навыками не выбрана.')
+    if not result:unknown.append('Для указанной категории нет сохранённого свидетельства успешного теста.')
+    if profile.fsp_status=='not_connected':unknown.append('FSP ID не привязан; история неизвестна.')
+    elif profile.fsp_status=='unavailable':unknown.append('Источник ФСП недоступен; история неизвестна.')
+    elif profile.fsp_status=='no_history':unknown.append('Демо источник ФСП вернул отсутствие истории.')
+    else:unknown.append('Достижения ФСП синтетические; реестр не проверялся.')
+    return {'declared_matches':[canonical_skill(s) for s in sorted(desired&declared)],
+        'declared_gaps':[canonical_skill(s) for s in sorted(desired-declared)],
+        'confirmation':witness(result) if result else None,'unknown':unknown}
 
 def rank(profile,need=None):
     desired=normalized(need.skills) if need else set()
@@ -22,13 +39,13 @@ def rank(profile,need=None):
 def search(grade,need=None,skill='',fsp=''):
     profiles=Profile.objects.filter(published=True,confirmed_grade=grade).order_by('pk')
     if fsp=='demo_history':profiles=profiles.filter(fsp_status='demo_history')
-    elif fsp=='no_history':profiles=profiles.exclude(fsp_status='demo_history')
+    elif fsp=='no_history':profiles=profiles.filter(fsp_status='no_history')
     results=[]
     for p in profiles:
         if skill and not normalized(skill).issubset(normalized(p.skills)):continue
         score,parts=rank(p,need)
         results.append({'id':p.pk,'name':p.name,'city':p.city,'skills':p.skills,'grade':p.confirmed_grade,
-            'test_score':p.test_score,'fsp_status':p.fsp_status,'score':score,'parts':parts})
+            'test_score':p.test_score,'fsp_status':p.fsp_status,'score':score,'parts':parts,'explanation':explain(p,need)})
     return sorted(results,key=lambda row:(-row['score'],-row['test_score'],row['id']))
 
 def contacts_allowed(company,profile):

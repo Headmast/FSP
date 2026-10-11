@@ -243,3 +243,29 @@ class HiringTests(TestCase):
         self.assertEqual(self.client.get(url).status_code,404)
         self.client.force_login(self.candidate);self.assertEqual(self.client.get(url).status_code,200)
         self.client.force_login(self.other);self.assertEqual(self.client.get(url).status_code,404)
+
+    def test_explanation_distinguishes_declared_matches_gaps_and_unknown_evidence(self):
+        from .services import explain
+        self.need.skills='SwiftUI, Combine, Core Data';self.need.save()
+        self.profile.skills='SwiftUI, CoreData';self.profile.save()
+        explanation=explain(self.profile,self.need)
+        self.assertEqual(explanation['declared_matches'],['CoreData','SwiftUI'])
+        self.assertEqual(explanation['declared_gaps'],['Combine'])
+        self.assertIsNone(explanation['confirmation'])
+        self.assertTrue(any('свидетельства' in text for text in explanation['unknown']))
+        proof=self.complete_attempt()
+        explanation=explain(self.profile,self.need)
+        self.assertEqual(explanation['confirmation']['finished_at'],proof.finished_at.isoformat())
+        self.assertTrue(any('не означает отдельную проверку' in text for text in explanation['unknown']))
+        self.assertNotIn('contact_email',explanation)
+        self.profile.fsp_status='unavailable';self.profile.save()
+        self.assertEqual(search('Junior',self.need,fsp='no_history'),[])
+
+    def test_pair_explanation_and_back_link_preserve_owned_filters(self):
+        query={'need':self.need.pk,'grade':'Junior','skill':'SwiftUI','fsp':''}
+        response=self.client.get(f'/candidates/{self.profile.pk}/',query)
+        self.assertContains(response,'Заявленные совпадения: SwiftUI')
+        self.assertContains(response,'skill=SwiftUI')
+        self.assertEqual(self.client.get(f'/candidates/{self.profile.pk}/',{'need':self.other_need.pk}).status_code,404)
+        self.assertEqual(self.client.get(f'/candidates/{self.profile.pk}/',{'need':'²'}).status_code,404)
+        self.assertEqual(search('Junior',self.need),search('Junior',self.need))
