@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-10-11T17:02:03.972156+00:00",
+  "commit": "462ed459c29ff3a0c4fa687e1876d2644b4a0bb0",
+  "application": {
+    "count": 70,
+    "failures": 0,
+    "seconds": 14.232,
+    "command": "python app/manage.py test accounts profiles assessments hiring assistant --verbosity 0"
+  },
+  "tools": {
+    "count": 23,
+    "failures": 0,
+    "seconds": 5.955,
+    "command": "python -m unittest discover -s scripts/tests -v"
+  },
+  "docs": {
+    "count": 68,
+    "status": "PASS"
+  },
+  "clean_worktree": {
+    "status": "PASS",
+    "commit": "462ed459c29ff3a0c4fa687e1876d2644b4a0bb0",
+    "checks": [
+      "isolated Git worktree",
+      "locked install",
+      "migrations",
+      "static manifest",
+      "Django check",
+      "migration drift",
+      "Gunicorn startup",
+      "health",
+      "version",
+      "registration page"
+    ]
+  },
+  "complete_goal": false,
+  "completed_tasks": 10,
+  "remaining_tasks": 17,
+  "public_commit_at_check": "ba3d270dd5a75d2ab2374a9e7baf5aed998a42fd"
+}
