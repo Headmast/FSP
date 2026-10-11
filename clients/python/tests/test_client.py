@@ -47,6 +47,27 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(parser().parse_args(['auth','login','--connection','ai','--server','https://demo.invalid']).connection,'ai')
         with contextlib.redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):parser().parse_args(['candidates','show','²'])
 
+    def test_cli_drafts_send_prepare_only_and_preserve_json(self):
+        from pathlib import Path
+        for command,kind,target in [(['profile','draft'],'profile.update',None),
+            (['company','draft'],'company.update',None),(['needs','update','7'],'need.update',7),
+            (['drafts','prepare','--kind','invitation.send','--target-id','7'],'invitation.send',7)]:
+            with tempfile.TemporaryDirectory() as directory:
+                path=Path(directory)/'changes.json';path.write_text('{"name":"Команда"}')
+                requests=[]
+                def handle(request):
+                    requests.append(request)
+                    return httpx.Response(201,json={'data':{'approval_path':'/drafts/example/'},'meta':{}})
+                api=FspClient('https://demo.invalid','synthetic',transport=httpx.MockTransport(handle))
+                with patch.object(Connections,'load',return_value=({'server':'https://demo.invalid'},'synthetic')),patch('fsp_client.cli.FspClient',return_value=api),contextlib.redirect_stdout(io.StringIO()),contextlib.redirect_stderr(io.StringIO()):
+                    run(parser().parse_args(command+['--file',str(path),'--json']))
+                self.assertEqual(len(requests),1)
+                self.assertEqual(requests[0].method,'POST')
+                self.assertEqual(requests[0].url.path,'/api/v1/drafts')
+                body=json.loads(requests[0].content)
+                self.assertEqual(body['kind'],kind);self.assertEqual(body['target_id'],target)
+                self.assertEqual(body['payload'],{'name':'Команда'})
+
     def test_no_insecure_keyring_fallback_and_no_config_secret(self):
         class Secure:
             __module__='keyring.backends.macOS'

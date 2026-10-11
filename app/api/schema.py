@@ -88,3 +88,34 @@ def document():
     return {'openapi':'3.1.0','info':{'title':'FSP token API','version':'1.0.0','description':'Demo. Separate from HTML/session forms. MCP has no private/PDF/contact access.'},
         'servers':[{'url':'/api/v1'}],'security':[{'BearerToken':[]}],'paths':paths,
         'components':{'securitySchemes':{'BearerToken':{'type':'http','scheme':'bearer'}},'schemas':schemas}}
+
+
+def add_drafts(spec):
+    schema=spec['components']['schemas']
+    schema['Draft']=obj({'id':{'type':'string','format':'uuid'},'kind':S,'target_id':{'type':['integer','null']},
+        'status':{'enum':['pending','applied','cancelled','expired']},'source':{'enum':['cli','mcp']},'expires_at':S,'created_at':S,
+        'approval_path':S,'applied_target_id':{'type':['integer','null']},'fields':array(S),'payload':{'type':'object'},'preview':{'type':'object'}},
+        ['id','kind','target_id','status','source','expires_at','created_at','approval_path','applied_target_id','fields'])
+    envelope=obj({'data':ref('Draft'),'meta':ref('Meta')})
+    success={'description':'Own draft; MCP and non-private CLI projections hide contact/private values','content':{'application/json':{'schema':envelope}}}
+    errors={str(status):{'description':'API error','content':{'application/json':{'schema':ref('Error')}}} for status in [400,401,403,404,405,409,410,429,503]}
+    kinds=['profile.update','profile.publish','profile.unpublish','invitation.accept','invitation.decline','company.update','need.create','need.update','invitation.send']
+    list_success={'description':'Own drafts','content':{'application/json':{'schema':obj({
+        'data':array(ref('Draft')),'meta':ref('Meta'),'pagination':ref('Pagination')})}}}
+    prepare_schema=obj({'kind':{'enum':kinds},'target_id':{'type':['integer','null'],'minimum':1},'payload':{'type':'object'}},['kind','payload'])
+    spec['paths']['/drafts']={
+        'get':{'x-required-scopes':['candidate.read OR employer.read'],'responses':errors|{'200':list_success}},
+        'post':{'x-required-scopes':['candidate.draft OR employer.draft'],
+            'requestBody':{'required':True,'content':{'application/json':{'schema':prepare_schema}}},
+            'description':'Prepare only. Contacts/experience require CLI contacts.read. No API apply endpoint.',
+            'responses':errors|{'201':success}}}
+    identifier={'name':'id','in':'path','required':True,'schema':{'type':'string','format':'uuid'}}
+    spec['paths']['/drafts/{id}']={'get':{'parameters':[identifier],'responses':dict(errors,**{'200':success})}}
+    spec['paths']['/drafts/{id}/cancel']={'post':{'parameters':[identifier],'x-required-scopes':['candidate.draft OR employer.draft'],
+        'requestBody':{'required':True,'content':{'application/json':{'schema':obj({})}}},'responses':dict(errors,**{'200':success})}}
+    return spec
+
+_original_document=document
+
+def document():
+    return add_drafts(_original_document())

@@ -14,4 +14,6 @@ urlpatterns += [path('me/company',views.company),path('needs',views.needs),path(
     path('candidates/<str:pk>/resume.pdf',views.candidate_pdf)]
 urlpatterns += [path('openapi.json',views.openapi)]
 
+urlpatterns += [path('drafts',views.drafts),path('drafts/<str:pk>',views.draft),path('drafts/<str:pk>/cancel',views.cancel_draft)]
+
 urlpatterns += [path('',views.not_found),path('<path:unknown>',views.not_found)]

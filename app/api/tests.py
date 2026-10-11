@@ -158,3 +158,148 @@ class EmployerTests(ApiFixture):
             for forbidden in ['@demo.invalid','contact_email','contact_phone','"tasks"','"answers"','"description"','"discussion"','"next_step"']:
                 self.assertNotIn(forbidden,text)
         self.assertEqual(self.get(path).status_code,403)
+
+
+class DraftFixture(ApiFixture):
+    def setUp(self):
+        super().setUp()
+        self.token,self.secret=issue_token(self.actor,'Drafts','cli',contacts=True,drafts=True)
+        self.client.defaults['HTTP_AUTHORIZATION']='Bearer '+self.secret
+
+    def prepare(self,kind,payload=None,target=None):
+        return self.client.post('/api/v1/drafts',{'kind':kind,'payload':payload or {},'target_id':target},content_type='application/json')
+
+
+class DraftPreparationTests(DraftFixture):
+    def test_prepare_is_immutable_and_does_not_apply(self):
+        from .models import ActionDraft
+        from django.core.exceptions import ValidationError
+        response=self.prepare('profile.update',{'city':'Казань','description':'hidden@demo.invalid'})
+        self.assertEqual(response.status_code,201)
+        self.actor.profile.refresh_from_db();self.assertEqual(self.actor.profile.city,'Москва')
+        obj=ActionDraft.objects.get(pk=response.json()['data']['id'])
+        obj.payload={'city':'Самара'}
+        with self.assertRaises(ValidationError):obj.save()
+        self.assertEqual(self.client.post('/api/v1/drafts/'+str(obj.pk)+'/apply',{},content_type='application/json').status_code,404)
+        self.assertEqual(self.get('drafts/invalid').status_code,404)
+        other=self.user(label='other-drafts')
+        self.client.defaults['HTTP_AUTHORIZATION']='Bearer '+issue_token(other,'Other','cli',drafts=True)[1]
+        self.assertEqual(self.get('drafts/'+str(obj.pk)).status_code,404)
+        self.assertEqual(self.get('drafts').json()['data'],[])
+
+    def test_scopes_mcp_redaction_and_cancel(self):
+        response=self.prepare('profile.update',{'contact_email':'new@demo.invalid','description':'secret@demo.invalid'})
+        identifier=response.json()['data']['id']
+        self.client.defaults['HTTP_AUTHORIZATION']='Bearer '+issue_token(self.actor,'AI','mcp',drafts=True)[1]
+        text=self.get('drafts/'+identifier).content.decode()
+        self.assertNotIn('@demo.invalid',text)
+        self.assertNotIn('payload',self.get('drafts/'+identifier).json()['data'])
+        self.assertEqual(self.prepare('profile.update',{'contact_email':'bad@demo.invalid'}).status_code,400)
+        self.assertEqual(self.prepare('profile.update',{'confirmed_grade':'Middle'}).status_code,400)
+        self.assertEqual(self.prepare('profile.update',{'city':'Казань'},target=99999).status_code,404)
+        cancelled=self.client.post('/api/v1/drafts/'+identifier+'/cancel',{},content_type='application/json')
+        self.assertEqual(cancelled.json()['data']['status'],'cancelled')
+        self.client.defaults['HTTP_AUTHORIZATION']='Bearer '+issue_token(self.actor,'Read','cli')[1]
+        self.assertEqual(self.prepare('profile.publish').status_code,403)
+        self.assertNotIn('@demo.invalid',self.get('drafts/'+identifier).content.decode())
+
+    def test_company_need_and_invitation_prepare_only(self):
+        from hiring.models import Company,Need,Invitation
+        employer=self.user('employer','draft-employer')
+        self.client.defaults['HTTP_AUTHORIZATION']='Bearer '+issue_token(employer,'Employer','cli',contacts=True,drafts=True)[1]
+        self.assertEqual(self.prepare('company.update',{'name':'Новая компания','contact_email':'new@demo.invalid'}).status_code,201)
+        self.assertFalse(Company.objects.filter(user=employer).exists())
+        company=Company.objects.create(user=employer,name='Компания',contact_email='company@demo.invalid')
+        response=self.prepare('need.create',{'title':'Разработчик','grade':'Junior','skills':'Swift','tasks':'Разработка','salary_min':100,'salary_max':200,'work_format':'remote','next_step':'Знакомство'})
+        self.assertEqual(response.status_code,201)
+        self.assertFalse(Need.objects.filter(company=company).exists())
+        need=Need.objects.create(company=company,title='Разработчик',grade='Junior',skills='Swift',tasks='Разработка',salary_min=100,salary_max=200,work_format='remote')
+        response=self.prepare('invitation.send',{'candidate_id':self.actor.profile.pk},target=need.pk)
+        self.assertEqual(response.status_code,201)
+        self.assertEqual(Invitation.objects.count(),0)
+        self.assertEqual(self.prepare('need.update',{'salary_min':300},target=need.pk).status_code,400)
+
+
+class DraftApprovalTests(DraftFixture):
+    def approve(self,identifier,**extra):
+        self.client.force_login(self.actor)
+        return self.client.post('/drafts/'+identifier+'/',{'action':'apply','acknowledge':'on',**extra})
+
+    def test_session_csrf_ack_and_single_apply(self):
+        from .models import ActionDraft
+        from accounts.models import ConsentEvent
+        response=self.prepare('profile.update',{'city':'Казань'})
+        identifier=response.json()['data']['id']
+        # A bearer alone cannot grant web approval.
+        self.assertEqual(self.client.post('/drafts/'+identifier+'/',{'action':'apply','acknowledge':'on'}).status_code,302)
+        self.actor.profile.refresh_from_db();self.assertEqual(self.actor.profile.city,'Москва')
+        secure=Client(enforce_csrf_checks=True);secure.force_login(self.actor)
+        self.assertEqual(secure.post('/drafts/'+identifier+'/',{'action':'apply','acknowledge':'on'}).status_code,403)
+        self.client.force_login(self.actor)
+        self.assertEqual(self.client.post('/drafts/'+identifier+'/',{'action':'apply'}).status_code,400)
+        self.assertEqual(self.approve(identifier).status_code,302)
+        self.actor.profile.refresh_from_db();self.assertEqual(self.actor.profile.city,'Казань')
+        self.assertEqual(self.approve(identifier).status_code,302)
+        self.assertEqual(ActionDraft.objects.get(pk=identifier).status,'applied')
+        self.client.logout()
+        unpublished=self.prepare('profile.unpublish').json()['data']['id']
+        self.assertEqual(self.approve(unpublished).status_code,302)
+        self.client.logout()
+        published=self.prepare('profile.publish').json()['data']['id']
+        self.assertEqual(self.approve(published).status_code,400)
+        self.assertEqual(self.approve(published,publication_consent='on').status_code,302)
+        event=ConsentEvent.objects.filter(user=self.actor,purpose='publication').latest('pk')
+        self.assertTrue(event.granted);self.assertEqual(event.source,'draft_web_cli')
+
+    def test_stale_expiry_cancel_foreign_and_live_consent(self):
+        from .models import ActionDraft
+        response=self.prepare('profile.update',{'city':'Казань'});identifier=response.json()['data']['id']
+        Profile.objects.filter(user=self.actor).update(city='Самара')
+        self.assertEqual(self.approve(identifier).status_code,409)
+        self.client.logout()
+        identifier=self.prepare('profile.update',{'city':'Казань'}).json()['data']['id']
+        ActionDraft.objects.filter(pk=identifier).update(expires_at=timezone.now()-timedelta(seconds=1))
+        self.assertEqual(self.approve(identifier).status_code,410)
+        self.client.logout()
+        identifier=self.prepare('profile.update',{'city':'Казань'}).json()['data']['id']
+        self.client.post('/api/v1/drafts/'+identifier+'/cancel',{},content_type='application/json')
+        self.assertEqual(self.approve(identifier).status_code,409)
+        other=self.user(label='foreign-browser');self.client.force_login(other)
+        self.assertEqual(self.client.get('/drafts/'+identifier+'/').status_code,404)
+        self.actor.processing_consent_version='old';self.actor.save()
+        self.assertEqual(self.approve(identifier).status_code,302)
+        self.actor.profile.refresh_from_db();self.assertEqual(self.actor.profile.city,'Самара')
+
+    def test_company_need_invitation_apply_and_snapshot_replay(self):
+        from hiring.models import Company,Need,Invitation
+        employer=self.user('employer','approve-employer')
+        self.client.defaults['HTTP_AUTHORIZATION']='Bearer '+issue_token(employer,'Employer','cli',contacts=True,drafts=True)[1]
+        identifier=self.prepare('company.update',{'name':'Компания','contact_email':'company@demo.invalid'}).json()['data']['id']
+        self.client.force_login(employer)
+        self.assertEqual(self.client.post('/drafts/'+identifier+'/',{'action':'apply','acknowledge':'on'}).status_code,302)
+        company=Company.objects.get(user=employer)
+        self.client.logout()
+        identifier=self.prepare('need.create',{'title':'Разработчик','grade':'Junior','skills':'Swift','tasks':'Разработка','salary_min':100,'salary_max':200,'work_format':'remote'}).json()['data']['id']
+        self.client.force_login(employer)
+        self.assertEqual(self.client.post('/drafts/'+identifier+'/',{'action':'apply','acknowledge':'on'}).status_code,302)
+        self.assertEqual(self.client.post('/drafts/'+identifier+'/',{'action':'apply','acknowledge':'on'}).status_code,302)
+        self.assertEqual(Need.objects.filter(company=company).count(),1)
+        need=Need.objects.get(company=company)
+        self.client.logout()
+        identifier=self.prepare('invitation.send',{'candidate_id':self.actor.profile.pk,'discussion':'Обсудить Swift'},target=need.pk).json()['data']['id']
+        self.client.force_login(employer)
+        page=self.client.get('/drafts/'+identifier+'/')
+        self.assertNotContains(page,'hidden@demo.invalid')
+        self.assertEqual(self.client.post('/drafts/'+identifier+'/',{'action':'apply','acknowledge':'on'}).status_code,302)
+        self.assertEqual(self.client.post('/drafts/'+identifier+'/',{'action':'apply','acknowledge':'on'}).status_code,302)
+        self.assertEqual(Invitation.objects.count(),1)
+        invitation=Invitation.objects.get();self.assertEqual(invitation.snapshot['discussion'],'Обсудить Swift')
+        self.client.logout()
+        self.client.defaults['HTTP_AUTHORIZATION']='Bearer '+self.secret
+        identifier=self.prepare('invitation.accept',target=invitation.pk).json()['data']['id']
+        self.assertEqual(self.approve(identifier).status_code,302)
+        invitation.refresh_from_db();self.assertEqual(invitation.status,'accepted')
+        self.client.logout()
+        identifier=self.prepare('invitation.decline',target=invitation.pk).json()['data']['id']
+        self.assertEqual(self.approve(identifier).status_code,400)
+        invitation.refresh_from_db();self.assertEqual(invitation.status,'accepted')
