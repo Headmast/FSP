@@ -4,51 +4,51 @@
     {
       "id": "P0",
       "status": "PASS",
-      "checked_at": "2026-10-11T12:36:39+00:00",
-      "commit": "5e40c4a2014658f4056305bf8980245072618c3d",
-      "evidence": "prototype-results.md"
+      "checked_at": "2026-10-11T13:36:25.335768+00:00",
+      "commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
+      "evidence": "release-results.md"
     },
     {
       "id": "G1",
       "status": "PASS",
-      "checked_at": "2026-10-11T12:46:41+00:00",
-      "commit": "5d92818f603d968dac1fa1ff7fca63ffd3fbf3e3",
-      "evidence": "clean-worktree.json"
+      "checked_at": "2026-10-11T13:36:25.335768+00:00",
+      "commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
+      "evidence": "release-results.md"
     },
     {
       "id": "G2",
       "status": "PASS",
-      "checked_at": "2026-10-11T13:17:53.632767+00:00",
-      "commit": "5d92818f603d968dac1fa1ff7fca63ffd3fbf3e3",
-      "evidence": "hiring-results.md"
+      "checked_at": "2026-10-11T13:36:25.335768+00:00",
+      "commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
+      "evidence": "release-results.md"
     },
     {
       "id": "G3",
       "status": "PASS",
-      "checked_at": "2026-10-11T12:57:33+00:00",
-      "commit": "5c11632f2b5b2a7966ec3737f42de929ccf28a2b",
-      "evidence": "assessment-results.md"
+      "checked_at": "2026-10-11T13:36:25.335768+00:00",
+      "commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
+      "evidence": "release-results.md"
     },
     {
       "id": "G4",
       "status": "PASS",
-      "checked_at": "2026-10-11T13:17:53.633430+00:00",
-      "commit": "5d92818f603d968dac1fa1ff7fca63ffd3fbf3e3",
-      "evidence": "hiring-results.md"
+      "checked_at": "2026-10-11T13:36:25.335768+00:00",
+      "commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
+      "evidence": "release-results.md"
     },
     {
       "id": "G5",
       "status": "PASS",
-      "checked_at": "2026-10-11T13:17:53.633438+00:00",
-      "commit": "5d92818f603d968dac1fa1ff7fca63ffd3fbf3e3",
-      "evidence": "hiring-results.md"
+      "checked_at": "2026-10-11T13:36:25.335768+00:00",
+      "commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
+      "evidence": "release-results.md"
     },
     {
       "id": "G6",
-      "status": "NOT_RUN",
-      "checked_at": null,
-      "commit": null,
-      "evidence": null
+      "status": "PASS",
+      "checked_at": "2026-10-11T13:36:25.335768+00:00",
+      "commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
+      "evidence": "release-results.md"
     }
   ]
 }

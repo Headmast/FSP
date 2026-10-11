@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "checks": [
+    "restart preserves entities",
+    "rollback preserves entities",
+    "restore preserves entities",
+    "SQLite backup restoration",
+    "external version after SSH disconnect"
+  ],
+  "releases": [
+    {
+      "stage": "before",
+      "commit": "13ff1dec6b7126d199465c278b9c20e655262f62"
+    },
+    {
+      "stage": "updated",
+      "commit": "60d9cb9f8f732f4d6c2668190e1dad94f87d777d"
+    },
+    {
+      "stage": "rollback",
+      "commit": "13ff1dec6b7126d199465c278b9c20e655262f62"
+    },
+    {
+      "stage": "restored",
+      "commit": "60d9cb9f8f732f4d6c2668190e1dad94f87d777d"
+    }
+  ],
+  "state": {
+    "accounts_user": {
+      "count": 30,
+      "sha256": "0ea63b0ee613cd412aa952baa79779aa2ab03489bdbe43b72fc662b3660eeedd"
+    },
+    "profiles_profile": {
+      "count": 26,
+      "sha256": "a6ea205cd03d09a1cadc3d45e926763259b4138888702593565a39611d696e1f"
+    },
+    "assessments_attempt": {
+      "count": 22,
+      "sha256": "3555534752deb620107f892681b31c310ec722c6bce50c8b29ee073a8b6c6e90"
+    },
+    "hiring_company": {
+      "count": 4,
+      "sha256": "9be7a03da69b9f336a302297298d13a2bd1807179caf91490802387145984ef8"
+    },
+    "hiring_need": {
+      "count": 5,
+      "sha256": "ff1ea216bca778740de6e38125836223a41075db2af00b096e31e92940a9d0a1"
+    },
+    "hiring_invitation": {
+      "count": 2,
+      "sha256": "3a430e4b0cbfeca91cc2994b78ed73a086a1923ad0011623c7e870db0187ee74"
+    }
+  }
+}

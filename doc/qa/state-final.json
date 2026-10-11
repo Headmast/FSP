@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
+  "backup_restore": "PASS",
+  "state": {
+    "accounts_user": {
+      "count": 33,
+      "sha256": "ec944e13d1854ddf0b768e3a954fe2f6b138f12d33181b53b01356cb36a16266"
+    },
+    "profiles_profile": {
+      "count": 27,
+      "sha256": "16458339d276f0754b803b4d99d28ee863680bcbe7245c8ab6b5ff3d8b4789df"
+    },
+    "assessments_attempt": {
+      "count": 23,
+      "sha256": "99bee2eed9a50a6f8e0fcd53ecbabc139e0fee2a15763cc291a309c589495efc"
+    },
+    "hiring_company": {
+      "count": 6,
+      "sha256": "97b0c063cd56ba9ca456c0e198b198533507e4c1d8ee69aecc268f4a9fa62dc3"
+    },
+    "hiring_need": {
+      "count": 7,
+      "sha256": "99545228b6eebd95679039310ab318f1e05ef0815cfec40364fc03354606d57c"
+    },
+    "hiring_invitation": {
+      "count": 4,
+      "sha256": "d9d3d68d306d4e35d1fef6de5d658bafa4b9a2cb843f1160d48511c5c8f29223"
+    }
+  }
+}

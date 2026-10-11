@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "url": "https://vqahd-194-226-126-123.run.pinggy-free.link",
+  "scenarios": [
+    "register-two-roles",
+    "profile",
+    "mock-assistant",
+    "active-exam-helper-denied",
+    "test-category",
+    "search",
+    "public-PDF-no-contacts",
+    "duplicate-offer",
+    "acceptance",
+    "sender-only-contacts",
+    "accepted-PDF",
+    "other-employer-PDF-denied",
+    "decline",
+    "employer-mock-helper"
+  ],
+  "browserErrors": []
+}

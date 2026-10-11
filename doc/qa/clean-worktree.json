@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "commit": "5d92818f603d968dac1fa1ff7fca63ffd3fbf3e3",
+  "commit": "d1efa6409715bbc6c22dc28c4659fa38509b1878",
   "checks": [
     "isolated Git worktree",
     "locked install",

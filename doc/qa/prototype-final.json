@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "url": "https://vqahd-194-226-126-123.run.pinggy-free.link/static/prototype/index.html",
+  "scenarios": [
+    "profile",
+    "test",
+    "offer",
+    "accept",
+    "contact",
+    "reload",
+    "reset",
+    "decline",
+    "mobile"
+  ],
+  "browserErrors": []
+}

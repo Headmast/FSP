@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "virtual_users": 25,
+  "independent_sessions": 25,
+  "distinct_accounts": 2,
+  "persistent_http_connections": true,
+  "requests": 250,
+  "search_requests": 200,
+  "profile_writes": 50,
+  "setup_in_elapsed": true,
+  "elapsed_seconds": 16.533,
+  "p95_seconds": 0.622,
+  "mean_seconds": 0.369,
+  "errors": []
+}

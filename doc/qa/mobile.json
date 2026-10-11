@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "url": "https://vqahd-194-226-126-123.run.pinggy-free.link",
+  "viewport": "390x844",
+  "checks": [
+    "provider screening",
+    "employer login",
+    "search and profile no horizontal overflow"
+  ],
+  "browserErrors": []
+}
