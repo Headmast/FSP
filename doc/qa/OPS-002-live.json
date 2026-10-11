@@ -1,0 +1,21 @@
+{
+  "app": {
+    "commit": "ba3d270dd5a75d2ab2374a9e7baf5aed998a42fd",
+    "url": "https://wmugf-194-226-126-123.free.pinggy.net",
+    "assistant": "mock",
+    "tunnel": "pinggy-free"
+  },
+  "watchdog": {
+    "commit": "ba3d270dd5a75d2ab2374a9e7baf5aed998a42fd"
+  },
+  "public_status": {
+    "schema_version": 1,
+    "available": true,
+    "url": "https://wmugf-194-226-126-123.free.pinggy.net",
+    "prototype_url": "https://wmugf-194-226-126-123.free.pinggy.net/static/prototype/index.html",
+    "commit": "ba3d270dd5a75d2ab2374a9e7baf5aed998a42fd",
+    "checked_at": "2026-10-11T16:32:03.240941+00:00",
+    "message": "Демо доступно",
+    "assistant": "mock"
+  }
+}
