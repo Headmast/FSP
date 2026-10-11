@@ -6,13 +6,13 @@ from django.shortcuts import get_object_or_404,redirect,render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods,require_POST
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from accounts.access import role_required
 from accounts.identifiers import parse_identifier
 from profiles.models import Profile
 from profiles.views import build_pdf
 from .models import Company,Need,Invitation
-from .forms import NeedForm,SearchForm
+from .forms import NeedForm,SearchForm,CompanyForm
 from .services import search,contacts_allowed,invite,decide
 
 def posted_id(request, key):
@@ -20,6 +20,16 @@ def posted_id(request, key):
 
 def company_for(user):
     return Company.objects.get_or_create(user=user)[0]
+
+@role_required('employer')
+@require_http_methods(['GET','POST'])
+def company_profile(request):
+    company=company_for(request.user)
+    form=CompanyForm(request.POST or None,instance=company)
+    if request.method=='POST' and form.is_valid():
+        form.save();messages.success(request,'Профиль компании сохранён.')
+        return redirect('company-profile')
+    return render(request,'hiring/company.html',{'form':form,'company':company})
 
 @role_required('employer')
 @require_http_methods(['GET','POST'])
@@ -73,6 +83,9 @@ def send(request):
         invite(company,need.pk,profile.pk)
     except (Need.DoesNotExist, Profile.DoesNotExist):
         raise Http404
+    except ValidationError:
+        messages.error(request,'Перед отправкой заполните корректный email компании для связи.')
+        return redirect('company-profile')
     messages.success(request,'Предложение отправлено. Повторная отправка не создаёт дубликат.')
     return redirect('invitations')
 

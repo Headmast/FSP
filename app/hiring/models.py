@@ -8,6 +8,8 @@ class Company(models.Model):
     user=models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     name=models.CharField(max_length=120,default='Демо компания')
     contact_email=models.EmailField(blank=True)
+    description=models.TextField(max_length=3000,blank=True)
+    industry=models.CharField(max_length=120,blank=True)
 
 class Need(models.Model):
     company=models.ForeignKey(Company,on_delete=models.CASCADE)

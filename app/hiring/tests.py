@@ -11,7 +11,7 @@ class HiringTests(TestCase):
         self.profile=Profile.objects.create(user=self.candidate,name='Алексей',city='Москва',skills='Swift, SwiftUI',published=True,
             confirmed_grade='Junior',test_score=.75,contact_email='private@demo.invalid',contact_phone='+70000000000')
         self.employer=User.objects.create_user(username='employer@demo.invalid',role='employer',email_confirmed=True)
-        self.company=Company.objects.create(user=self.employer,name='Компания Демо')
+        self.company=Company.objects.create(user=self.employer,name='Компания Демо',contact_email='company@demo.invalid')
         self.other=User.objects.create_user(username='other-company@demo.invalid',role='employer',email_confirmed=True)
         self.other_company=Company.objects.create(user=self.other,name='Другая Демо')
         self.need=Need.objects.create(company=self.company,title='iOS',grade='Junior',skills='SwiftUI',tasks='Развитие приложения',salary_min=100000,salary_max=150000,work_format='remote')
@@ -144,7 +144,35 @@ class HiringTests(TestCase):
         Experience.objects.create(profile=self.profile,organization='private@demo.invalid',role='Разработчик',months=6,description='+70000000000')
         url=f'/candidates/{self.profile.pk}/'
         self.assertNotContains(self.client.get(url),'private@demo.invalid')
+
         obj=invite(self.company,self.need.pk,self.profile.pk);decide(self.profile,obj.pk,'accepted')
         self.assertContains(self.client.get(url),'Описание private@demo.invalid')
         self.client.force_login(self.other)
         self.assertNotContains(self.client.get(url),'private@demo.invalid')
+
+    def test_company_profile_is_owned_and_invitation_keeps_description_snapshot(self):
+        self.assertEqual(self.client.post('/company/',{'id':self.other_company.pk,'name':'Компания Новая',
+            'industry':'Разработка приложений','description':'Делаем продукты на Swift','contact_email':'hello@demo.invalid'}).status_code,302)
+        self.company.refresh_from_db();self.other_company.refresh_from_db()
+        self.assertEqual(self.other_company.name,'Другая Демо')
+        self.assertEqual(self.company.industry,'Разработка приложений')
+        obj=invite(self.company,self.need.pk,self.profile.pk)
+        self.company.description='Другое описание';self.company.contact_email='new@demo.invalid';self.company.save()
+        self.client.force_login(self.candidate)
+        response=self.client.get('/invitations/')
+        self.assertContains(response,'Делаем продукты на Swift');self.assertContains(response,'hello@demo.invalid')
+        self.assertNotContains(response,'Другое описание')
+        self.assertEqual(self.client.get('/company/').status_code,403)
+        obj.refresh_from_db();self.assertEqual(obj.status,'sent')
+
+    def test_company_contact_required_by_service_and_http_send(self):
+        from django.core.exceptions import ValidationError
+        for email in ['', 'invalid']:
+            self.company.contact_email=email;self.company.save()
+            with self.assertRaises(ValidationError):invite(self.company,self.need.pk,self.profile.pk)
+            self.assertRedirects(self.client.post('/invitations/send/',{'need':self.need.pk,'candidate':self.profile.pk}),'/company/')
+            self.assertEqual(Invitation.objects.count(),0)
+        self.company.contact_email='valid@demo.invalid';self.company.save()
+        obj=invite(self.company,self.need.pk,self.profile.pk)
+        self.company.contact_email='';self.company.save()
+        self.assertEqual(invite(self.company,self.need.pk,self.profile.pk).pk,obj.pk)

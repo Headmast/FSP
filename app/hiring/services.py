@@ -1,8 +1,10 @@
 from django.db import transaction
 from django.utils import timezone
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 from profiles.models import Profile
 from profiles.skills import normalized
-from .models import Need,Invitation
+from .models import Company,Need,Invitation
 
 def rank(profile,need=None):
     desired=normalized(need.skills) if need else set()
@@ -30,7 +32,13 @@ def invite(company,need_id,candidate_id):
     with transaction.atomic():
         need=Need.objects.get(pk=need_id,company=company)
         profile=Profile.objects.get(pk=candidate_id,published=True,confirmed_grade=need.grade)
-        snapshot={'company':company.name,'company_email':company.contact_email,'title':need.title,'grade':need.grade,
+        existing=Invitation.objects.filter(company=company,need=need,candidate=profile).first()
+        if existing:return existing
+        company=Company.objects.get(pk=company.pk)
+        if not company.contact_email:raise ValidationError('Укажите контакт компании.')
+        validate_email(company.contact_email)
+        snapshot={'company':company.name,'company_email':company.contact_email,
+            'company_description':company.description,'company_industry':company.industry,'title':need.title,'grade':need.grade,
             'tasks':need.tasks,'salary_min':need.salary_min,'salary_max':need.salary_max,
             'work_format':need.get_work_format_display(),'next_step':need.next_step}
         invitation,_=Invitation.objects.get_or_create(company=company,need=need,candidate=profile,defaults={'snapshot':snapshot})

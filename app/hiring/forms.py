@@ -1,6 +1,13 @@
 from django import forms
 from profiles.skills import SKILLS,validate_skills,canonical_skill
-from .models import Need
+from .models import Need,Company
+
+class CompanyForm(forms.ModelForm):
+    class Meta:
+        model=Company
+        fields=('name','industry','description','contact_email')
+        labels={'name':'Название компании','industry':'Направление деятельности','description':'О компании',
+                'contact_email':'Email для связи (обязателен перед отправкой предложения)'}
 
 class NeedForm(forms.ModelForm):
     company_name=forms.CharField(max_length=120,label='Название компании')

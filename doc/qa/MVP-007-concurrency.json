@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "concurrent_calls": 8,
+  "invitations_created": 1,
+  "final_status": "declined",
+  "outcomes": [
+    "declined",
+    "conflict",
+    "declined",
+    "conflict",
+    "declined",
+    "conflict",
+    "declined",
+    "conflict"
+  ]
+}

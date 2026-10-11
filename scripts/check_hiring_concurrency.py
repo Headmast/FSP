@@ -16,7 +16,7 @@ suffix=uuid.uuid4().hex
 candidate=User.objects.create_user(username=f'concurrent-c-{suffix}@demo.invalid',role='candidate')
 employer=User.objects.create_user(username=f'concurrent-e-{suffix}@demo.invalid',role='employer')
 p=Profile.objects.create(user=candidate,published=True,confirmed_grade='Junior')
-c=Company.objects.create(user=employer)
+c=Company.objects.create(user=employer,contact_email="company@demo.invalid")
 n=Need.objects.create(company=c,title='Демо',grade='Junior',salary_min=100,salary_max=200,work_format='remote')
 def isolated(fn):
     try:return fn()

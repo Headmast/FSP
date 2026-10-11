@@ -39,3 +39,7 @@ Query/form ID принимают только положительное ASCII �
 ## Полный профиль после MVP-006
 
 POST /profile/: specialization=ios_swift, experience_months=0..600, roles[] и soft_skills[] из словарей, description до 3000. Необязательные поля дополняют прежний контракт. Inline experience-* использует management form, максимум 20 записей; поля organization/role/months/description и DELETE. Чужой ID — ошибка формы (200), весь профиль не сохраняется. Успех 302. Свободные описания/опыт доступны в HTML/PDF только владельцу либо компании с принятым приглашением.
+
+## Компания после MVP-007
+
+GET/POST /company/ — employer с подтверждённым email. Поля name (120), industry (120), description (3000), contact_email. Редактируется собственная компания; лишний id игнорируется. Невалидная форма — 200, успех — 302. POST /invitations/send/ требует валидный email компании для нового предложения; при отсутствии возвращает 302 /company/ с сообщением. Старый снимок приглашения неизменяемый.

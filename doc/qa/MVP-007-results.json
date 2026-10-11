@@ -1,0 +1,33 @@
+{
+  "task": "MVP-007",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:41:58.028510+00:00",
+  "base_commit": "a87362ab3d8622f88ac0dd0c01390a3d83cf5d81",
+  "checked_sources": {
+    "app/hiring/models.py": "4fc6ef342d2a0fcdcb1caedf4226a93379eb348f810089ae2b839c3e638dea8b",
+    "app/hiring/forms.py": "36762fe997d6a4bfefaef9632f562da1287201b3ac7494aa5b0027321615647e",
+    "app/hiring/views.py": "aa19943dc14f386c3061384b6e06f688bcb564a539bba92ca4f9a4c9f7904484",
+    "app/hiring/services.py": "9e8a6a1411859eb43b1c79650384d90ef6cd9dde67752b5442726cac2ff2630d",
+    "app/hiring/tests.py": "f0b0b0cd2c05bde667d1aa856830bd62012c9f4c6ce3c4880cd944bfb41c9375",
+    "app/hiring/migrations/0002_company_description_company_industry.py": "2d3bd462cb7f691d82ea73444e9502ea9435f3a63bee73916763e625870ea36a",
+    "app/config/urls.py": "4e6887a67fb2fd78bc291af5b6ca01cc7a45b1d3f495d129fe8630c157512781",
+    "app/templates/base.html": "e932536b2ea6ce84a41646badb8005d1a78f773419e2731793721a508fa11599",
+    "app/templates/hiring/company.html": "8c2c7f0afd386abfd8e0a70cd808d09fc2b833ed555f6fc3fadddfa2dc855e7f",
+    "app/templates/hiring/invitations.html": "4234a27b72855620d6314ad421d29509c8407f6bd6030cfef0754e46afcd654a",
+    "scripts/check_hiring_concurrency.py": "9e9976c26431d7ca03bddeab21eac03c7eff6de711e8cc252e38bf457955fcb1"
+  },
+  "tests": {
+    "command": "python app/manage.py test hiring profiles assistant --verbosity 0",
+    "count": 34,
+    "failures": 0,
+    "seconds": 4.231
+  },
+  "checks": [
+    "own company edit only",
+    "blank and invalid email block new invitation",
+    "company snapshot visible before acceptance and immutable",
+    "duplicate preserves original even after company edit"
+  ],
+  "concurrency": "8 sends -> one invitation; 8 competing decisions -> one outcome, 4 conflicts",
+  "deployment": "NOT_RUN: local stage"
+}

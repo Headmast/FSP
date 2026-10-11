@@ -5,7 +5,8 @@ from profiles import views as profiles
 from assessments import views as assessments
 from hiring import views as hiring
 from assistant import views as assistant
-urlpatterns = [path("company/needs/", hiring.needs, name="needs"),
+urlpatterns = [path("company/", hiring.company_profile, name="company-profile"),
+    path("company/needs/", hiring.needs, name="needs"),
     path("candidates/", hiring.candidates, name="candidates"),
     path("candidates/<int:pk>/", hiring.candidate, name="candidate"),
     path("candidates/<int:pk>/resume.pdf", hiring.resume, name="candidate-resume"),
