@@ -26,10 +26,10 @@ uv run python scripts/run_app.py
 ```sh
 uv run python app/manage.py check
 uv run python app/manage.py makemigrations --check --dry-run
-uv run python app/manage.py test accounts profiles
+uv run python app/manage.py test accounts profiles assessments
 python3 scripts/check_docs.py
 ```
 
 scripts/check_accounts.cjs проверяет реальный браузерный путь и PDF; требует Playwright и запущенное приложение. В demo базе появляются новые синтетические аккаунты. Результаты и снимки сохраняются в исключённом из Git .runtime/qa.
 
-Прочие модули добавляются следующими этапами. Наличие ссылок в общей навигации пока не означает завершение тестирования и найма.
+Assessments реализован: выбор категории, сохранение и завершение попытки, разбор и история. Найм и помощник добавляются следующими этапами. Наличие ссылок в общей навигации пока не означает завершение тестирования и найма.

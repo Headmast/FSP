@@ -2,7 +2,13 @@ from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from accounts import views as accounts
 from profiles import views as profiles
-urlpatterns = [path("", accounts.home, name="home"),
+from assessments import views as assessments
+urlpatterns = [path("assessments/", assessments.dashboard, name="assessments"),
+    path("assessments/start/", assessments.start, name="assessment-start"),
+    path("assessments/<int:pk>/", assessments.attempt, name="attempt"),
+    path("assessments/<int:pk>/answer/", assessments.answer, name="assessment-answer"),
+    path("assessments/<int:pk>/finish/", assessments.finish, name="assessment-finish"),
+    path("", accounts.home, name="home"),
     path("accounts/register/", accounts.register, name="register"),
     path("accounts/login/", LoginView.as_view(template_name="accounts/login.html"), name="login"),
     path("accounts/logout/", LogoutView.as_view(), name="logout"),
