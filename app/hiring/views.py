@@ -38,7 +38,7 @@ def company_profile(request):
 @require_http_methods(['GET','POST'])
 def needs(request):
     company=company_for(request.user)
-    form=NeedForm(request.POST or None,initial={'company_name':company.name,'company_email':company.contact_email})
+    form=NeedForm(request.POST or None,company=company,initial={'company_name':company.name,'company_email':company.contact_email})
     if request.method=='POST' and form.is_valid():
         with transaction.atomic():
             company.name=form.cleaned_data['company_name'];company.contact_email=form.cleaned_data['company_email'];company.save()

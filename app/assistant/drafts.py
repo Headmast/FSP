@@ -29,7 +29,7 @@ def create_draft(user,mode,text,context,source_need=None):
 def form_for(draft,data=None):
     if draft.mode=='profile':return ProfileDraftForm(data,initial=draft.payload)
     company=Company.objects.filter(user=draft.user).first()
-    return NeedForm(data,initial={**draft.payload,'company_name':company.name if company else 'Демо компания',
+    return NeedForm(data,company=company,initial={**draft.payload,'company_name':company.name if company else 'Демо компания',
         'company_email':company.contact_email if company else ''})
 
 

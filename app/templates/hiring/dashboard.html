@@ -1,0 +1,59 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Работа HR · Дашборд владельца · ФСП{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'dashboard.css' %}">{% endblock %}
+{% block main_class %}owner-main{% endblock %}
+{% block content %}
+<div class="owner-dashboard">
+  <section class="owner-hero" aria-labelledby="dashboard-title">
+    <div><p class="owner-eyebrow">Кабинет владельца / {{ company.name|default:'Ваша компания' }}</p><h1 id="dashboard-title">Как работает ваша HR-команда</h1><p>От первого приглашения до согласия кандидата. Вся работа по найму — в одном месте.</p></div>
+    <div class="owner-hero-actions"><span class="owner-date">На {{ today|date:'d.m.Y' }}</span><a class="button" href="{% url 'needs' %}">Создать потребность ↗</a></div>
+  </section>
+
+  <form method="get" class="owner-filters" aria-label="Фильтры дашборда">
+    <label>Период отправки<select name="period"><option value="7"{% if period == '7' %} selected{% endif %}>Последние 7 дней</option><option value="30"{% if period == '30' %} selected{% endif %}>Последние 30 дней</option><option value="90"{% if period == '90' %} selected{% endif %}>Последние 90 дней</option><option value="all"{% if period == 'all' %} selected{% endif %}>Всё время</option></select></label>
+    <label>Ответственный HR<select name="hr"><option value="">Вся команда</option>{% for person in recruiters %}<option value="{{ person.pk }}"{% if hr_filter == person.pk|stringformat:'s' %} selected{% endif %}>{{ person.name }}</option>{% endfor %}<option value="unassigned"{% if hr_filter == 'unassigned' %} selected{% endif %}>Без ответственного</option></select></label>
+    <label>Потребность<select name="need"><option value="">Все потребности</option>{% for need in needs %}<option value="{{ need.pk }}"{% if need_filter == need.pk|stringformat:'s' %} selected{% endif %}>{{ need.title }}</option>{% endfor %}</select></label>
+    <button class="primary">Показать</button><a href="{% url 'owner-dashboard' %}" class="owner-reset">Сбросить</a>
+  </form>
+
+  {% if not summary.total %}<div class="notice owner-empty" role="status"><strong>В выбранном периоде пока нет приглашений.</strong><p>Добавьте HR, назначьте ответственного за потребность и отправьте первое предложение. Показатели появятся по мере работы команды.</p><a href="{% url 'candidates' %}">Перейти к кандидатам →</a></div>{% endif %}
+
+  <section class="owner-kpis" aria-label="Основные показатели">
+    <article class="owner-kpi"><p>Отправлено приглашений</p><strong>{{ summary.total }}</strong><span>За выбранный период</span></article>
+    <article class="owner-kpi owner-kpi-highlight"><p>Принято кандидатами</p><strong>{{ summary.accepted }}</strong><span>Готовы к следующему шагу</span></article>
+    <article class="owner-kpi"><p>Конверсия в согласие</p><strong>{% if summary.conversion != None %}{{ summary.conversion }}<small>%</small>{% else %}—{% endif %}</strong><span>Принято / отправлено</span></article>
+    <article class="owner-kpi"><p>Среднее время ответа</p><strong>{% if summary.response_days != None %}{{ summary.response_days }}<small> дн.</small>{% else %}—{% endif %}</strong><span>Среди ответивших кандидатов</span></article>
+  </section>
+
+  <div class="owner-chart-grid">
+    <section class="owner-panel" aria-labelledby="trend-title"><div class="owner-section-heading"><div><p class="owner-eyebrow">Активность команды</p><h2 id="trend-title">Динамика приглашений</h2></div><span class="owner-badge">{{ summary.total }} всего</span></div>
+      <div class="owner-legend"><span><i class="owner-dot sent"></i>Отправлено</span><span><i class="owner-dot accepted"></i>Из них принято</span></div>
+      <div class="owner-chart" aria-hidden="true">{% for bucket in buckets %}<div class="owner-chart-bucket"><div class="owner-bars"><div class="owner-bar sent" style="height:{{ bucket.sent_height }}%"><span>{{ bucket.sent }}</span></div><div class="owner-bar accepted" style="height:{{ bucket.accepted_height }}%"></div></div><span class="owner-chart-label">{{ bucket.label }}</span></div>{% endfor %}</div>
+      <details class="owner-chart-data"><summary>Данные графика и методика</summary><p>Дата — день отправки приглашения. «Принято» — текущее решение по приглашениям, отправленным в этот день, а не число ответов в этот день.</p><div class="owner-table-wrap" tabindex="0" role="region" aria-label="Данные динамики"><table><caption>Приглашения по дате отправки</caption><thead><tr><th scope="col">Дата</th><th scope="col">Отправлено</th><th scope="col">Принято</th></tr></thead><tbody>{% for bucket in buckets %}<tr><th scope="row">{{ bucket.label }}</th><td>{{ bucket.sent }}</td><td>{{ bucket.accepted }}</td></tr>{% endfor %}</tbody></table></div></details>
+    </section>
+    <section class="owner-panel" aria-labelledby="funnel-title"><div class="owner-section-heading"><div><p class="owner-eyebrow">Путь кандидата</p><h2 id="funnel-title">Воронка приглашений</h2></div></div>
+      <ol class="owner-funnel">{% for stage in stages %}<li><div><span>{{ stage.label }}</span><strong>{{ stage.count }}</strong></div><div class="owner-track" aria-hidden="true"><span style="width:{{ stage.width }}%"></span></div></li>{% endfor %}</ol>
+      <p class="owner-footnote">Отклонено: <strong>{{ summary.declined }}</strong> · Ожидают ответа: <strong>{{ summary.pending }}</strong>. Ответ считается подтверждением просмотра.</p>
+    </section>
+  </div>
+
+  <section class="owner-panel" aria-labelledby="team-title"><div class="owner-section-heading"><div><p class="owner-eyebrow">Результаты по ответственным</p><h2 id="team-title">Работа HR</h2></div><a href="#manage-team" class="owner-text-link">Настроить команду ↗</a></div>
+    <div class="owner-table-wrap" tabindex="0" role="region" aria-label="Результаты работы HR"><table><caption class="owner-sr-only">Результаты HR по приглашениям выбранного периода</caption><thead><tr><th scope="col">Ответственный</th><th scope="col">Потребности¹</th><th scope="col">Отправлено</th><th scope="col">Принято</th><th scope="col">Ожидают</th><th scope="col">Конверсия</th><th scope="col">Ответ, дн.</th></tr></thead><tbody>{% for person in people %}<tr><th scope="row"><a href="?period={{ period }}&amp;hr={{ person.key }}&amp;need={{ need_filter }}">{{ person.name }}</a></th><td>{{ person.needs }}</td><td>{{ person.total }}</td><td><span class="owner-count">{{ person.accepted }}</span></td><td>{{ person.pending }}{% if person.overdue %}<small class="owner-warning">{{ person.overdue }} ≥ 7 дней</small>{% endif %}</td><td>{% if person.conversion != None %}{{ person.conversion }}%{% else %}—{% endif %}</td><td>{{ person.response_days|default_if_none:'—' }}</td></tr>{% endfor %}</tbody></table></div>
+    <p class="owner-footnote">¹ Текущие назначения. Результаты приглашений закреплены за HR на момент отправки. «Без ответственного» включает старые приглашения, где HR не был указан.</p>
+  </section>
+
+  <div class="owner-bottom-grid">
+    <section class="owner-panel" aria-labelledby="waiting-title"><div class="owner-section-heading"><div><p class="owner-eyebrow">Следующий шаг</p><h2 id="waiting-title">Ожидают ответа</h2></div><span class="owner-badge {% if summary.overdue %}warning{% endif %}">{{ summary.overdue }} ≥ 7 дней</span></div>
+      <p class="owner-footnote">Самые давние приглашения выбранного периода; до 10 записей.</p>
+      <ul class="owner-waiting">{% for item in pending %}<li><div><strong>{{ item.candidate__name }}</strong><span>{{ item.need__title }}</span><small>{{ item.recruiter__name|default:'Без ответственного' }} · {{ item.created_at|date:'d.m.Y' }}</small></div><span class="owner-age {% if item.overdue %}warning{% endif %}">{{ item.age_days }} дн.</span></li>{% empty %}<li class="owner-muted">Нет приглашений, ожидающих ответа.</li>{% endfor %}</ul><a class="owner-text-link" href="{% url 'invitations' %}">Все предложения компании →</a>
+    </section>
+    <section class="owner-panel" aria-labelledby="needs-title"><div class="owner-section-heading"><div><p class="owner-eyebrow">Направления найма</p><h2 id="needs-title">По потребностям</h2></div></div>
+      <div class="owner-table-wrap" tabindex="0" role="region" aria-label="Результаты по потребностям"><table><caption class="owner-sr-only">Приглашения по потребностям</caption><thead><tr><th scope="col">Потребность</th><th scope="col">Отправлено</th><th scope="col">Принято</th></tr></thead><tbody>{% for row in vacancies %}<tr><th scope="row"><a href="?period={{ period }}&amp;hr={{ hr_filter }}&amp;need={{ row.need.pk }}">{{ row.need.title }}</a><small>{{ row.need.grade }}</small></th><td>{{ row.total }}</td><td>{{ row.accepted }}</td></tr>{% empty %}<tr><td colspan="3">Пока нет потребностей для выбранного фильтра.</td></tr>{% endfor %}</tbody></table></div>
+    </section>
+  </div>
+
+  <details id="manage-team" class="owner-panel owner-management"{% if not recruiters %} open{% endif %}><summary>Команда HR и назначение ответственных</summary><p class="owner-footnote">HR здесь — ответственный за потребность, назначенный владельцем, с общим кабинетом компании. Добавление имени не создаёт отдельный аккаунт HR. Новое назначение действует только на будущие приглашения.</p><div class="owner-management-grid"><form method="post" action="{% url 'company-team' %}">{% csrf_token %}<input type="hidden" name="action" value="add"><h3>Добавить HR</h3>{{ recruiter_form.as_p }}<button class="primary">Добавить в команду</button></form><form method="post" action="{% url 'company-team' %}">{% csrf_token %}<input type="hidden" name="action" value="assign"><h3>Назначить ответственного</h3>{{ assignment_form.as_p }}<button{% if not needs %} disabled{% endif %}>Сохранить назначение</button></form></div></details>
+
+  <p class="owner-methodology">Показатели рассчитаны по приглашениям, отправленным в выбранный период, с их текущими решениями. Согласие на приглашение означает готовность продолжить разговор. Выход на работу и закрытие вакансий в текущем MVP не фиксируются. Данные демо — вымышленные.</p>
+</div>
+{% endblock %}

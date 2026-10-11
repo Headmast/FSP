@@ -8,11 +8,14 @@ from api.views import download_client
 from profiles import views as profiles
 from assessments import views as assessments
 from hiring import views as hiring
+from hiring.dashboard import dashboard, team
 from assistant import views as assistant
 urlpatterns = [path("downloads/<str:filename>", download_client),
 path("api/v1/", include("api.urls")),
 path("accounts/integrations/", integrations, name="integrations"),
 path("company/", hiring.company_profile, name="company-profile"),
+    path("company/dashboard/", dashboard, name="owner-dashboard"),
+    path("company/team/", team, name="company-team"),
     path("company/needs/", hiring.needs, name="needs"),
     path("candidates/", hiring.candidates, name="candidates"),
     path("candidates/<int:pk>/", hiring.candidate, name="candidate"),

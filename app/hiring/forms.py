@@ -1,6 +1,6 @@
 from django import forms
 from profiles.skills import SKILLS,validate_skills,canonical_skill
-from .models import Need,Company
+from .models import Need,Company,Recruiter
 
 class CompanyForm(forms.ModelForm):
     class Meta:
@@ -14,16 +14,37 @@ class NeedForm(forms.ModelForm):
     company_email=forms.EmailField(required=False,label='Контакт компании для кандидата')
     class Meta:
         model=Need
-        fields=('title','grade','skills','tasks','salary_min','salary_max','work_format','next_step')
+        fields=('title','grade','skills','tasks','salary_min','salary_max','work_format','next_step','recruiter')
         labels={'title':'Роль','grade':'Категория','skills':'Желаемые навыки через запятую','tasks':'Задачи',
             'salary_min':'Зарплата от, ₽ до налогов / месяц','salary_max':'Зарплата до, ₽ до налогов / месяц',
-            'work_format':'Формат работы','next_step':'Следующий шаг'}
+            'work_format':'Формат работы','next_step':'Следующий шаг','recruiter':'Ответственный HR'}
+    def __init__(self,*args,company=None,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.fields['recruiter'].queryset=Recruiter.objects.filter(company=company).order_by('name','pk') if company else Recruiter.objects.none()
+        self.fields['recruiter'].empty_label='Без ответственного'
+        self.fields['recruiter'].help_text='Список HR настраивается на дашборде владельца.'
     def clean_skills(self):return validate_skills(self.cleaned_data['skills'])
     def clean(self):
         data=super().clean()
         if data.get('salary_min') and data.get('salary_max') and data['salary_min']>data['salary_max']:
             raise forms.ValidationError('Нижняя граница зарплаты не должна превышать верхнюю.')
         return data
+
+class RecruiterForm(forms.ModelForm):
+    class Meta:
+        model=Recruiter
+        fields=('name',)
+        labels={'name':'Имя HR'}
+
+class AssignmentForm(forms.Form):
+    need=forms.ModelChoiceField(queryset=Need.objects.none(),label='Потребность')
+    recruiter=forms.ModelChoiceField(queryset=Recruiter.objects.none(),required=False,label='Ответственный HR',empty_label='Без ответственного')
+
+    def __init__(self,*args,company,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.fields['need'].queryset=Need.objects.filter(company=company).order_by('title','pk')
+        self.fields['need'].label_from_instance=lambda obj:obj.title
+        self.fields['recruiter'].queryset=Recruiter.objects.filter(company=company).order_by('name','pk')
 
 class SkillChoiceField(forms.ChoiceField):
     def to_python(self,value):
