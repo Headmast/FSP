@@ -52,7 +52,7 @@ LANGUAGE_CODE = "ru"
 TIME_ZONE = "Europe/Moscow"
 USE_TZ = True
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "static", ("prototype", ROOT / "prototype")]
 STATIC_ROOT = ROOT / ".runtime" / "static"
 STORAGES = {"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
             "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"}}
