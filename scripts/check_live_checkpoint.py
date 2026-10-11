@@ -12,6 +12,7 @@ import secrets
 import sys
 import urllib.parse
 import urllib.request
+import urllib.error
 import uuid
 from datetime import datetime, timezone
 from html.parser import HTMLParser
@@ -31,6 +32,7 @@ from accounts.models import User
 from profiles.models import Profile,FspLink
 from hiring.models import Company,Need,Invitation
 from assessments.models import Attempt
+from assistant.models import Draft
 
 class Fields(HTMLParser):
     def __init__(self,text):
@@ -56,6 +58,11 @@ class Actor:
         token=Fields(text).values['token']
         self.request('/accounts/confirm/',{'token':token})
         assert User.objects.get(username=email).has_processing_consent
+    def expect_status(self,path,status,data=None):
+        try:self.request(path,data)
+        except urllib.error.HTTPError as exc:
+            assert exc.code==status
+        else:raise AssertionError('Expected negative HTTP response')
 
 suffix=uuid.uuid4().hex
 emails=[f'checkpoint-{suffix}-{role}@demo.invalid' for role in ['candidate','employer']]
@@ -80,6 +87,17 @@ try:
     profile=Profile.objects.get(user__username=emails[0]);assert profile.published and profile.publication_consented_at
     assert profile.experience_months==12 and profile.roles==['developer']
     passed('full profile persistence and distinct publication consent')
+    helper=candidate.request('/assistant/',{'mode':'profile'})
+    assert 'Проверил черновик' in helper and 'Мок' in helper
+    draft=Draft.objects.get(user=profile.user,mode='profile')
+    assert profile.description==data['description']
+    data['description']='Проверенное описание private-checkpoint@demo.invalid'
+    candidate.request(f'/assistant/drafts/{draft.pk}/',{'description':data['description']})
+    profile.refresh_from_db();assert profile.description==data['description'] and profile.published
+    candidate.request(f'/assistant/drafts/{draft.pk}/',{'description':'Повтор не применяется'})
+    profile.refresh_from_db();assert profile.description==data['description']
+    employer.expect_status(f'/assistant/drafts/{draft.pk}/',404)
+    passed('candidate edits and applies private draft; replay and foreign draft protected')
     occupied=set(FspLink.objects.values_list('external_id',flat=True))
     external_id=next(f'DEMO-{i:03}' for i in range(999,0,-1) if f'DEMO-{i:03}' not in occupied)
     candidate.request('/profile/fsp/link/');candidate.request('/profile/fsp/link/',{'external_id':external_id,'consent':'on'})
@@ -87,31 +105,52 @@ try:
     passed('own mock FSP binding and achievement')
     candidate.request('/assessments/');candidate.request('/assessments/start/',{'grade':'Junior'})
     attempt=Attempt.objects.get(candidate=profile,status='active')
+    candidate.expect_status('/assistant/',409,{'mode':'profile'})
     # Perfect answers for this synthetic fixture only, kept inside this process.
     candidate.request(f'/assessments/{attempt.pk}/finish/',{f"q_{q['id']}":q['correct'] for q in attempt.tasks})
     profile.refresh_from_db();assert profile.confirmed_grade=='Junior'
     assert 'rules-v1' in candidate.request(f'/assessments/{attempt.pk}/proof/')
     passed('assessment completion and versioned safe witness over HTTPS')
+    assert not Company.objects.filter(user__username=emails[1]).exists()
+    employer.request('/assistant/');employer.request('/assistant/',{'mode':'need','new_need':'on','grade':'Junior','skills':'SwiftUI, Combine'})
+    need_draft=Draft.objects.get(user__username=emails[1],mode='need')
+    assert not Company.objects.filter(user__username=emails[1]).exists()
+    assert not Need.objects.filter(company__user__username=emails[1]).exists()
+    need_data={'company_name':'Тестовая Компания','company_email':'company-checkpoint@demo.invalid',
+        'title':'Синтетическая iOS роль','grade':'Junior','skills':'SwiftUI, Combine','tasks':'Демонстрационные задачи',
+        'salary_min':'100000','salary_max':'150000','work_format':'remote','next_step':'Знакомство с командой'}
+    employer.request(f'/assistant/drafts/{need_draft.pk}/',need_data)
+    employer.request(f'/assistant/drafts/{need_draft.pk}/',{})
+    company=Company.objects.get(user__username=emails[1]);need=Need.objects.get(company=company)
+    passed('fresh employer reviews draft before company/need exists; one paid need on replay')
     employer.request('/company/');employer.request('/company/',{'name':'Тестовая Компания','industry':'Разработка приложений',
         'description':'Синтетическая компания для проверки','contact_email':'company-checkpoint@demo.invalid'})
-    employer.request('/company/needs/');employer.request('/company/needs/',{'company_name':'Тестовая Компания','company_email':'company-checkpoint@demo.invalid',
-        'title':'Синтетическая iOS роль','grade':'Junior','skills':'SwiftUI, Combine','tasks':'Демонстрационные задачи',
-        'salary_min':'100000','salary_max':'150000','work_format':'remote','next_step':'Знакомство с командой'})
-    company=Company.objects.get(user__username=emails[1]);need=Need.objects.get(company=company)
     passed('company profile and concrete paid need')
     page=employer.request(f'/candidates/{profile.pk}/?need={need.pk}&grade=Junior&skill=SwiftUI')
     assert 'private-checkpoint@demo.invalid' not in page and 'Не указаны в навыках кандидата: Combine' in page
     assert 'rules-v1' in page
     passed('employer sees explanation and proof while private text and contacts stay hidden')
+    helper=employer.request('/assistant/',{'mode':'matching','need':need.pk,'candidate':profile.pk})
+    assert 'Пробелы самоописания: Combine' in helper and 'private-checkpoint@demo.invalid' not in helper
+    helper=employer.request('/assistant/',{'mode':'invitation','need':need.pk,'candidate':profile.pk})
+    assert 'Проверил текст и условия' in helper and not Invitation.objects.filter(candidate=profile,company=company).exists()
+    passed('safe mock matching and invitation preview do not send automatically')
     employer.request('/invitations/send/',{'candidate':profile.pk,'need':need.pk,'accepted_attempts':[attempt.pk],'discussion':'Обсудить архитектуру'})
     offer=Invitation.objects.get(candidate=profile,company=company)
     assert offer.snapshot['accepted_results'][0]['attempt_id']==attempt.pk
     inbox=candidate.request('/invitations/');assert 'Обсудить архитектуру' in inbox and 'Синтетическая компания для проверки' in inbox
     passed('selected result and company details visible to candidate before acceptance')
+    helper=candidate.request('/assistant/',{'mode':'conversation','invitation':offer.pk})
+    assert 'Работодатель зачёл результатов: 1' in helper
+    offer.refresh_from_db();assert offer.status=='sent'
+    passed('candidate conversation uses snapshot and preserves pending decision')
     candidate.request(f'/invitations/{offer.pk}/accept/',{})
     assert 'private-checkpoint@demo.invalid' in employer.request(f'/candidates/{profile.pk}/')
     assert employer.request(f'/candidates/{profile.pk}/resume.pdf').startswith(b'%PDF')
     passed('acceptance opens HTML and PDF access for invitation sender')
+    helper=employer.request('/assistant/',{'mode':'conversation','invitation':offer.pk})
+    assert 'Согласуйте время встречи' in helper
+    passed('employer conversation after explicit acceptance')
     data.pop('published');candidate.request('/profile/',data)
     assert 'Тестовый Кандидат' not in employer.request(f'/candidates/?need={need.pk}&grade=Junior')
     assert 'private-checkpoint@demo.invalid' in employer.request(f'/candidates/{profile.pk}/')
