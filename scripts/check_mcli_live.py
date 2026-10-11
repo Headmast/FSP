@@ -30,6 +30,12 @@ async def verify():
             response=browser.post(base+'/accounts/login/',data={'csrfmiddlewaretoken':csrf(response),'username':email,'password':'Fsp-demo-2026!'},headers={'Referer':base+'/accounts/login/'})
             assert response.status_code==302
             response=browser.get(base+'/accounts/integrations/')
+            if response.status_code==302 and response.headers.get('location')=='/accounts/consent/':
+                consent=browser.get(base+'/accounts/consent/')
+                updated=browser.post(base+'/accounts/consent/',data={'csrfmiddlewaretoken':csrf(consent),'processing_consent':'on'},headers={'Referer':base+'/accounts/consent/'})
+                assert updated.status_code==302
+                response=browser.get(base+'/accounts/integrations/')
+            assert response.status_code==200
             name='MCLI-QA-'+secrets.token_hex(6)
             response=browser.post(base+'/accounts/integrations/',data={'csrfmiddlewaretoken':csrf(response),'action':'create','name':name,'kind':'mcp','drafts':'on' if args.drafts else ''},headers={'Referer':base+'/accounts/integrations/'})
             assert response.status_code==200

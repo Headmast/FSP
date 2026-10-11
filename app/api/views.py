@@ -30,7 +30,7 @@ def owned_profile(request):
 @endpoint()
 def catalog(request):
     return reply(request, {'specializations':['ios_swift'],'grades':['Junior','Middle'],'skills':list(SKILLS),
-        'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'features':['read'],'fsp_source':'mock'})
+        'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'features':['read','drafts'],'fsp_source':'mock'})
 
 
 @endpoint('candidate')

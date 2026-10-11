@@ -194,3 +194,56 @@ def cancel(user,draft):
         if draft.status=='pending':
             draft.status='cancelled';draft.save(update_fields=['status'])
     return draft
+
+
+def apply(user,identifier):
+    """Called by session-only browser view, never by bearer token handlers."""
+    with transaction.atomic():
+        user=User.objects.get(pk=user.pk)
+        draft=get_draft(user,identifier)
+        checked_actor(user,draft.kind)
+        if draft.status=='applied':return draft
+        require(draft.status=='pending',409,'DRAFT_FINAL','Черновик отменён или завершён.')
+        require(draft.expires_at>timezone.now(),410,'DRAFT_EXPIRED','Срок черновика истёк.')
+        obj,fingerprint=context(user,draft.kind,draft.target_id,draft.payload)
+        require(fingerprint==draft.fingerprint,409,'DRAFT_STALE','Данные изменились. Подготовьте новый черновик.')
+        payload=clean_payload(user,draft.kind,draft.target_id,draft.payload,draft.source,['contacts.read'])
+        if draft.kind=='profile.update':
+            for key,value in payload.items():
+                if key!='experiences':setattr(obj,key,value)
+            obj.save(update_fields=[key for key in payload if key!='experiences'])
+            if 'experiences' in payload:
+                keep=[]
+                for row in payload['experiences']:
+                    row=row.copy();pk=row.pop('id')
+                    if pk:
+                        item=get_object_or_404(Experience,pk=pk,profile=obj)
+                        for k,v in row.items():setattr(item,k,v)
+                        item.save()
+                    else:item=Experience.objects.create(profile=obj,**row)
+                    keep.append(item.pk)
+                obj.experiences.exclude(pk__in=keep).delete()
+        elif draft.kind in {'profile.publish','profile.unpublish'}:
+            published=draft.kind=='profile.publish'
+            if published:require(bool(obj.name),400,'PROFILE_INCOMPLETE','Заполните имя.')
+            if obj.published!=published or published and obj.publication_consent_version!=PUBLICATION_VERSION:
+                obj.published=published
+                if published:
+                    obj.publication_consented_at=timezone.now();obj.publication_consent_version=PUBLICATION_VERSION
+                obj.save(update_fields=['published','publication_consented_at','publication_consent_version'])
+                ConsentEvent.objects.create(user=user,purpose='publication',version=PUBLICATION_VERSION,granted=published,source='draft_web_'+draft.source)
+        elif draft.kind=='company.update':
+            obj=obj or Company(user=user)
+            for key,value in payload.items():setattr(obj,key,value)
+            obj.save()
+        elif draft.kind in {'need.create','need.update'}:
+            obj=obj or Need(company=company_read(user))
+            for key,value in payload.items():setattr(obj,key,value)
+            obj.full_clean();obj.save()
+        elif draft.kind=='invitation.send':
+            obj=invite(obj.company,obj.pk,payload['candidate_id'],payload['accepted_attempts'],payload['discussion'])
+        else:
+            obj=decide(user.profile,obj.pk,'accepted' if draft.kind=='invitation.accept' else 'declined')
+        draft.status='applied';draft.applied_at=timezone.now();draft.applied_target_id=obj.pk
+        draft.save(update_fields=['status','applied_at','applied_target_id'])
+        return draft

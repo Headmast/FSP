@@ -3,11 +3,13 @@ from django.contrib.auth.views import LoginView, LogoutView
 from accounts import views as accounts
 from accounts.integrations import integrations
 from api.views import download_client
+from api.web import detail as action_draft, index as action_drafts
 from profiles import views as profiles
 from assessments import views as assessments
 from hiring import views as hiring
 from assistant import views as assistant
-urlpatterns = [path("downloads/<str:filename>", download_client),
+urlpatterns = [path("drafts/",action_drafts,name="action-drafts"),path("drafts/<uuid:pk>/",action_draft,name="action-draft"),
+path("downloads/<str:filename>", download_client),
 path("api/v1/", include("api.urls")),
 path("accounts/integrations/", integrations, name="integrations"),
 path("company/", hiring.company_profile, name="company-profile"),
