@@ -37,5 +37,31 @@
     "Merge latest main learning/UUID browser approval/token V2; preserve all routes and DTOs",
     "Extend runtime fixtures/semantics for these new routes; rerun complete contract checker",
     "Commit exact final task and publish method guard changes only after integrated release checks"
-  ]
+  ],
+  "exact_commit_recheck": {
+    "commit": "12c29ba7c40ce0fcf35d5188e77c794004506893",
+    "checked_at": "2026-10-11T21:09:24.089373+00:00",
+    "status": "PASS",
+    "runtime_checks": 352,
+    "paths": 56,
+    "operations": 84,
+    "counterfactuals": [
+      {
+        "id": "removed-route",
+        "status": "PASS",
+        "meaning": "Rejected"
+      },
+      {
+        "id": "wrong-success-status",
+        "status": "PASS",
+        "meaning": "Rejected"
+      },
+      {
+        "id": "wrong-json-field",
+        "status": "PASS",
+        "meaning": "Rejected"
+      }
+    ],
+    "source_hashes_match_original": true
+  }
 }
