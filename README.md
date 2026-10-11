@@ -180,7 +180,7 @@ GitHub показывает HTML как исходный код: для прос
 | Валидация оценки | [Протокол](doc/qa/validation-protocol.md), [результаты](doc/qa/validation-results.md), [разбор вопросов](doc/qa/validation-question-review.md) |
 | Выпуск MVP | [Отчёт выпуска](doc/delivery/mvp-release.md), [результаты](doc/qa/release-results.md) |
 | Помощник и черновики | [Checkpoint](doc/delivery/assistant-checkpoint.md), [общий evidence](doc/qa/assistant-checkpoint.json), [HTTPS-сценарий](doc/qa/assistant-checkpoint-live.json) |
-| Аудит полноты | [Актуальная сверка](doc/qa/scope-current.md), [исходный аудит](doc/qa/scope-audit.md), [историческая сверка](doc/qa/scope-recheck.md) |
+| Аудит полноты | [Актуальная сверка DOC-008](doc/plan/implementation-gaps-2026-10-12.md), [предыдущий срез DOC-006](doc/qa/scope-current.md), [исходный аудит](doc/qa/scope-audit.md), [историческая сверка](doc/qa/scope-recheck.md) |
 | Восстановление демо | [Watchdog](doc/qa/watchdog-results.md), [evidence восстановления](doc/qa/watchdog-recovery.json) |
 | Все свидетельства | [Каталог QA](doc/qa/) — отчёты, JSON и скриншоты |
 
@@ -293,3 +293,9 @@ python3 -m unittest discover -s scripts/tests -v
 В общий выпуск интегрированы четыре учебных трека (iOS, Android, Flutter, Аврора), дашборд HR, API V1, подготовка и подтверждение черновиков MCP/CLI, доступность, моковые боты Telegram/MAX и шесть видео. [Презентация онлайн](https://llmlove.ru/dreamwork/doc/presentation/trudyazhki-fsp.html), [бот кандидата](https://llmlove.ru/dreamwork/bots/index.html), [видео](https://llmlove.ru/dreamwork/video/index.html). Учебная самопроверка не присваивает категорию; боты не подключены к реальным мессенджерам.
 
 Публикация статических материалов: `python3 scripts/deploy_public_site.py --ref <SHA>` после выпуска MVP. Передаются только перечисленные публичные файлы коммита, проверяется SHA-256 каждого загруженного файла. Секреты остаются на сервере.
+
+
+[Что ещё реализовать — актуальная сверка 12 октября](doc/plan/implementation-gaps-2026-10-12.md): исходные 14 открытых задач, дополнительные поручения, приоритеты и проверки завершения.
+
+
+DOC-003 завершена: [полный HTTP/OpenAPI контракт и проверки](doc/responses/DOC-003-contracts.md). Текущий прогресс — 14/27 DONE, 13 открыты; DEL-001 следующая P1.

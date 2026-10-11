@@ -1,0 +1,664 @@
+{
+  "source_commit": "7cb4db07fcb75c1ac87045358a120a4606627b20",
+  "routes": [
+    {
+      "path": "/learning/",
+      "name": "learning",
+      "view": "assessments.learning_views.dashboard"
+    },
+    {
+      "path": "/learning/lessons/<str:grade>/<slug:topic>/",
+      "name": "learning-lesson",
+      "view": "assessments.learning_views.lesson"
+    },
+    {
+      "path": "/learning/lessons/<str:grade>/<slug:topic>/complete/",
+      "name": "learning-lesson-complete",
+      "view": "assessments.learning_views.lesson_complete"
+    },
+    {
+      "path": "/learning/tracks/<slug:track>/lessons/<str:grade>/<slug:topic>/",
+      "name": "learning-track-lesson",
+      "view": "assessments.learning_views.lesson"
+    },
+    {
+      "path": "/learning/tracks/<slug:track>/lessons/<str:grade>/<slug:topic>/complete/",
+      "name": "learning-track-lesson-complete",
+      "view": "assessments.learning_views.lesson_complete"
+    },
+    {
+      "path": "/learning/start/",
+      "name": "learning-start",
+      "view": "assessments.learning_views.start"
+    },
+    {
+      "path": "/learning/sessions/<int:pk>/",
+      "name": "learning-session",
+      "view": "assessments.learning_views.session"
+    },
+    {
+      "path": "/learning/sessions/<int:pk>/answer/",
+      "name": "learning-answer",
+      "view": "assessments.learning_views.answer"
+    },
+    {
+      "path": "/drafts/",
+      "name": "action-drafts",
+      "view": "api.web.index"
+    },
+    {
+      "path": "/drafts/<uuid:pk>/",
+      "name": "action-draft",
+      "view": "api.web.detail"
+    },
+    {
+      "path": "/downloads/<str:filename>",
+      "name": null,
+      "view": "api.views.download_client"
+    },
+    {
+      "path": "/api/v1/me",
+      "name": null,
+      "view": "api.views.me"
+    },
+    {
+      "path": "/api/v1/catalog",
+      "name": null,
+      "view": "api.views.catalog"
+    },
+    {
+      "path": "/api/v1/me/profile",
+      "name": null,
+      "view": "api.views.profile"
+    },
+    {
+      "path": "/api/v1/me/profile/private",
+      "name": null,
+      "view": "api.views.profile_private"
+    },
+    {
+      "path": "/api/v1/me/profile/resume.pdf",
+      "name": null,
+      "view": "api.views.profile_pdf"
+    },
+    {
+      "path": "/api/v1/me/assessments",
+      "name": null,
+      "view": "api.views.assessments"
+    },
+    {
+      "path": "/api/v1/me/assessments/<str:pk>/result",
+      "name": null,
+      "view": "api.views.assessment_result"
+    },
+    {
+      "path": "/api/v1/me/achievements",
+      "name": null,
+      "view": "api.views.achievements"
+    },
+    {
+      "path": "/api/v1/invitations",
+      "name": null,
+      "view": "api.views.invitations"
+    },
+    {
+      "path": "/api/v1/invitations/<str:pk>",
+      "name": null,
+      "view": "api.views.invitation"
+    },
+    {
+      "path": "/api/v1/invitations/<str:pk>/contacts",
+      "name": null,
+      "view": "api.views.invitation_contacts"
+    },
+    {
+      "path": "/api/v1/me/company",
+      "name": null,
+      "view": "api.views.company"
+    },
+    {
+      "path": "/api/v1/needs",
+      "name": null,
+      "view": "api.views.needs"
+    },
+    {
+      "path": "/api/v1/needs/<str:pk>",
+      "name": null,
+      "view": "api.views.need"
+    },
+    {
+      "path": "/api/v1/candidates",
+      "name": null,
+      "view": "api.views.candidates"
+    },
+    {
+      "path": "/api/v1/candidates/<str:pk>",
+      "name": null,
+      "view": "api.views.candidate"
+    },
+    {
+      "path": "/api/v1/candidates/<str:pk>/proofs",
+      "name": null,
+      "view": "api.views.candidate_proofs"
+    },
+    {
+      "path": "/api/v1/candidates/<str:pk>/private",
+      "name": null,
+      "view": "api.views.candidate_private"
+    },
+    {
+      "path": "/api/v1/candidates/<str:pk>/resume.pdf",
+      "name": null,
+      "view": "api.views.candidate_pdf"
+    },
+    {
+      "path": "/api/v1/openapi.json",
+      "name": null,
+      "view": "api.views.openapi"
+    },
+    {
+      "path": "/api/v1/drafts",
+      "name": null,
+      "view": "api.views.drafts"
+    },
+    {
+      "path": "/api/v1/drafts/<str:pk>",
+      "name": null,
+      "view": "api.views.draft"
+    },
+    {
+      "path": "/api/v1/drafts/<str:pk>/cancel",
+      "name": null,
+      "view": "api.views.cancel_draft"
+    },
+    {
+      "path": "/api/v1/",
+      "name": null,
+      "view": "api.views.not_found"
+    },
+    {
+      "path": "/api/v1/<path:unknown>",
+      "name": null,
+      "view": "api.views.not_found"
+    },
+    {
+      "path": "/accounts/integrations/",
+      "name": "integrations",
+      "view": "accounts.integrations.integrations"
+    },
+    {
+      "path": "/company/",
+      "name": "company-profile",
+      "view": "hiring.views.company_profile"
+    },
+    {
+      "path": "/company/dashboard/",
+      "name": "owner-dashboard",
+      "view": "hiring.dashboard.dashboard"
+    },
+    {
+      "path": "/company/team/",
+      "name": "company-team",
+      "view": "hiring.dashboard.team"
+    },
+    {
+      "path": "/company/needs/",
+      "name": "needs",
+      "view": "hiring.views.needs"
+    },
+    {
+      "path": "/candidates/",
+      "name": "candidates",
+      "view": "hiring.views.candidates"
+    },
+    {
+      "path": "/candidates/<int:pk>/",
+      "name": "candidate",
+      "view": "hiring.views.candidate"
+    },
+    {
+      "path": "/candidates/<int:pk>/resume.pdf",
+      "name": "candidate-resume",
+      "view": "hiring.views.resume"
+    },
+    {
+      "path": "/invitations/",
+      "name": "invitations",
+      "view": "hiring.views.invitations"
+    },
+    {
+      "path": "/invitations/send/",
+      "name": "invitation-send",
+      "view": "hiring.views.send"
+    },
+    {
+      "path": "/invitations/<int:pk>/accept/",
+      "name": "invitation-accept",
+      "view": "hiring.views.respond"
+    },
+    {
+      "path": "/invitations/<int:pk>/decline/",
+      "name": "invitation-decline",
+      "view": "hiring.views.respond"
+    },
+    {
+      "path": "/assistant/",
+      "name": "assistant",
+      "view": "assistant.views.assistant"
+    },
+    {
+      "path": "/assistant/drafts/<int:pk>/",
+      "name": "assistant-draft",
+      "view": "assistant.views.draft_detail"
+    },
+    {
+      "path": "/assessments/",
+      "name": "assessments",
+      "view": "assessments.views.dashboard"
+    },
+    {
+      "path": "/assessments/start/",
+      "name": "assessment-start",
+      "view": "assessments.views.start"
+    },
+    {
+      "path": "/assessments/<int:pk>/",
+      "name": "attempt",
+      "view": "assessments.views.attempt"
+    },
+    {
+      "path": "/assessments/<int:pk>/proof/",
+      "name": "assessment-proof",
+      "view": "assessments.views.proof"
+    },
+    {
+      "path": "/assessments/<int:pk>/answer/",
+      "name": "assessment-answer",
+      "view": "assessments.views.answer"
+    },
+    {
+      "path": "/assessments/<int:pk>/finish/",
+      "name": "assessment-finish",
+      "view": "assessments.views.finish"
+    },
+    {
+      "path": "/",
+      "name": "home",
+      "view": "accounts.views.home"
+    },
+    {
+      "path": "/accounts/register/",
+      "name": "register",
+      "view": "accounts.views.register"
+    },
+    {
+      "path": "/accounts/consent/",
+      "name": "consent",
+      "view": "accounts.views.consent"
+    },
+    {
+      "path": "/accounts/privacy/",
+      "name": "privacy",
+      "view": "accounts.views.privacy"
+    },
+    {
+      "path": "/accounts/login/",
+      "name": "login",
+      "view": "django.contrib.auth.views.view"
+    },
+    {
+      "path": "/accounts/logout/",
+      "name": "logout",
+      "view": "django.contrib.auth.views.view"
+    },
+    {
+      "path": "/accounts/confirm/",
+      "name": "confirm",
+      "view": "accounts.views.confirm"
+    },
+    {
+      "path": "/profile/",
+      "name": "profile",
+      "view": "profiles.views.profile"
+    },
+    {
+      "path": "/profile/resume.pdf",
+      "name": "resume",
+      "view": "profiles.views.resume"
+    },
+    {
+      "path": "/profile/fsp/",
+      "name": "fsp",
+      "view": "profiles.views.fsp"
+    },
+    {
+      "path": "/profile/fsp/link/",
+      "name": "fsp-link",
+      "view": "profiles.views.fsp_link"
+    },
+    {
+      "path": "/health/",
+      "name": "health",
+      "view": "accounts.views.health"
+    },
+    {
+      "path": "/version/",
+      "name": "version",
+      "view": "accounts.views.version"
+    }
+  ],
+  "route_count": 69,
+  "token_route_count": 25,
+  "learning_route_count": 8,
+  "tracked_files": 452,
+  "mobile_source_paths_in_git": [],
+  "openapi_files": [
+    "doc/api/mcp-cli.openapi.json"
+  ],
+  "documentation_pdf_files": [
+    "doc/sources/materials/fsp-specification.pdf"
+  ],
+  "source_sha256": {
+    "doc/sources/original-mvp-plan.md": "4f35f50a5baa4c6da73f85d178e3c06cd1b1f3c560f82e14694947d4d20963d4",
+    "doc/sources/requirements-map.md": "95c9e61becef459f97bc10033388535eef581d705879df6d178fac1e6635cd60",
+    "doc/sources/discussion-map.md": "d5a5019923d6f9c3ae795a9e34d0308ae1173eb9ca5d0ce4a0ebeb537bdde31c",
+    "doc/goal.md": "a120e851276e8780da0bc025e53f4950ad4a1c7236bd35ad4be5ef258b0c522f",
+    "doc/plan/backlog.md": "8f5c5d000cb041bcdc2a30fde1718bba2b9701e9c603ddd285e7fb9a6bcfe298",
+    "doc/plan/mcp-cli.md": "26dcb61132f00041accf03735e182d448dbb8f66b442d3d30e09146b83739759",
+    "doc/qa/scope-current.md": "50f0ca7ccf59699736786d89b8c930743e61f26334b72590ee0cf8399496ee90",
+    "doc/delivery/unified-release.md": "d32f39d6c256f13e43ab4cba38769294977e9a839b11d609bcd2d641b73c5e14",
+    "doc/delivery/video-links.md": "64d01434f7ba3c4d1bdcd93cccd48161db5ca0e2f086082de135497e5be62a06",
+    "doc/responses/OWNER-001.md": "710efe0f0e4be7adfc5b20a6e1d0efcdc151c23f6352a3b5eaaf783e37bc361f",
+    "app/config/urls.py": "af8c1e0ffb805dbb4215a3b64acd72c48171a79ea72f9e74c42948b48eaf6a0a",
+    "app/profiles/models.py": "95bc5e41a911581f50b9eb533bd759a92b561d45e039fce44113e74a37999da9",
+    "app/hiring/models.py": "48836c3072b91b4cd9fac1bc0d0f7c8caadcfd8e1dfef07aad46dd92e42556c7",
+    "app/hiring/access.py": "482ca5b2e78369923110c806d5f8f9e6bd6293f8934b872e45baf07decbc06af",
+    "app/accounts/forms.py": "8587d99467f8098c31b0c5d75b5ce6345f1b8164ab6d444f019eb34467d1b266",
+    "app/assistant/provider.py": "88547d340c6de0189fa479ce6b9202b0d10afa8e27ac702281580579f19a9559",
+    "app/api/urls.py": "66ecdca6c1c1d2e5d61edd894641cacd3c698cb08be46c5f8c20f3ce23bd3949",
+    "app/api/models.py": "f7e7e0120f45693c6ada58e70771381e7f4ef72d4f6b9458233dccde83b387f7",
+    "app/api/drafts.py": "0dc281b39bc9c7a4116a7cfaec1844f9efc53b0bd33722a2a3626fe27fb84109",
+    "app/api/schema.py": "4e56ec89844b173ca52e57f295ac7a9d0a9bf93563a0b947d8ec5430dc69986f",
+    "app/assessments/learning_urls.py": "9983cf31d62ca87ef534f26d9a8a530de6395369fd7941f1d9851d3f4bae734f",
+    "app/assessments/learning_views.py": "789e95fa7d6d30edc37b2e51c363113041d682484e55a386e6a3272dc4fdce3e",
+    "video/manifest.json": "190de4149ff71743d2bad6dccd588cc90caa1c62ed6d753bf44588678f682c20"
+  },
+  "task": "DOC-008",
+  "status": "PASS",
+  "checked_at": "2026-10-11T21:19:39.140915+00:00",
+  "branch": "mvp/scope-refresh",
+  "original_scope": {
+    "total": 27,
+    "done": 13,
+    "open": 14,
+    "todo": 12,
+    "in_progress": [
+      "DOC-003"
+    ],
+    "not_run": [
+      "OPS-003"
+    ]
+  },
+  "open_tasks": [
+    "DOC-003",
+    "DEL-001",
+    "PROD-001",
+    "PROD-002",
+    "PROD-003",
+    "PROD-004",
+    "PROD-005",
+    "OPS-003",
+    "OPS-004",
+    "INT-001",
+    "INT-002",
+    "INT-003",
+    "QA-002",
+    "FUT-001"
+  ],
+  "additional_acceptance": [
+    "MCLI-013 full V2",
+    "Android/Flutter sources and reproducible builds in Git",
+    "real VoiceOver/NVDA",
+    "ANALYTICS-001 committed integration and API/UA coverage"
+  ],
+  "checks": {
+    "locked_install": "PASS",
+    "collectstatic": "PASS",
+    "django_regression": {
+      "status": "PASS",
+      "command": "uv run python app/manage.py test accounts profiles assessments hiring assistant api --verbosity 1",
+      "count": 147,
+      "seconds": 19.527,
+      "isolated_test_database": true
+    },
+    "tool_regression": {
+      "status": "PASS",
+      "command": "python3 -m unittest discover -s scripts/tests -v",
+      "count": 23,
+      "seconds": 4.588
+    },
+    "actual_route_inventory": "PASS",
+    "documentation_links": {
+      "status": "PASS",
+      "command": "python3 scripts/check_docs.py",
+      "documents": 130
+    },
+    "diff_check": {
+      "status": "PASS",
+      "command": "git diff --check"
+    },
+    "committed_source_hashes": "PASS",
+    "worktree_isolation": {
+      "status": "PASS",
+      "command": "python3 scripts/worktree.py check",
+      "port": 8099
+    },
+    "snapshot_diff": "PASS"
+  },
+  "live_read": {
+    "checked_at": "2026-10-11T21:15:45.326876+00:00",
+    "checks": [
+      {
+        "url": "https://llmlove.ru/dreamwork/fsp-demo-status.json",
+        "status": 200,
+        "data": {
+          "available": true,
+          "commit": "21b755b5bd1ac48983accd6277eea2cd2639cbb1",
+          "assistant": "mock",
+          "url": "https://feclq-194-226-126-123.free.pinggy.net"
+        }
+      },
+      {
+        "url": "https://feclq-194-226-126-123.free.pinggy.net/health/",
+        "status": 200,
+        "data": {
+          "status": "ok"
+        }
+      },
+      {
+        "url": "https://feclq-194-226-126-123.free.pinggy.net/version/",
+        "status": 200,
+        "data": {
+          "commit": "21b755b5bd1ac48983accd6277eea2cd2639cbb1"
+        }
+      },
+      {
+        "url": "https://llmlove.ru/dreamwork/analytics/",
+        "status": 401
+      }
+    ]
+  },
+  "not_run": [
+    "full new browser/live V2 acceptance",
+    "VoiceOver/NVDA manual",
+    "mobile builds in this audit",
+    "authenticated analytics data read",
+    "OS reboot",
+    "backup restore",
+    "live SMTP/FSP/Yandex",
+    "human pilot"
+  ],
+  "historical_contract_stage": {
+    "task": "DOC-003",
+    "status": "IN_PROGRESS",
+    "checked_at": "2026-10-11T21:06:31.496275+00:00",
+    "verified_snapshot": "b82b455",
+    "stage_status": "PASS",
+    "scope": "56 paths / 84 operations, initial browser + token V1 + owner; latest main learning and token V2 still to integrate",
+    "failures_retained": [
+      {
+        "id": "formset-fields",
+        "status": "FAIL",
+        "reason": "hidden experience profile omitted; corrected schema and coverage guard"
+      },
+      {
+        "id": "stale-manifest",
+        "status": "FAIL",
+        "reason": "56 regression errors due to absent prototype/accessibility.css in local collected static; collectstatic then 90 PASS"
+      },
+      {
+        "id": "binary-media-validation",
+        "status": "FAIL",
+        "reason": "integrated downloads are binary and have no JSON schema; added ZIP/gzip signature and manifest validation"
+      }
+    ],
+    "checks": {
+      "http_runtime": 352,
+      "all_operations": 84,
+      "paths": 56,
+      "request_response_examples": 43,
+      "counterfactuals": 3,
+      "application_tests": 109,
+      "tool_tests": 23,
+      "openapi_validator": "PASS",
+      "production_lock_no_dev": "PASS"
+    },
+    "pending": [
+      "Merge latest main learning/UUID browser approval/token V2; preserve all routes and DTOs",
+      "Extend runtime fixtures/semantics for these new routes; rerun complete contract checker",
+      "Commit exact final task and publish method guard changes only after integrated release checks"
+    ],
+    "exact_commit_recheck": {
+      "commit": "12c29ba7c40ce0fcf35d5188e77c794004506893",
+      "checked_at": "2026-10-11T21:09:24.089373+00:00",
+      "status": "PASS",
+      "runtime_checks": 352,
+      "paths": 56,
+      "operations": 84,
+      "counterfactuals": [
+        {
+          "id": "removed-route",
+          "status": "PASS",
+          "meaning": "Rejected"
+        },
+        {
+          "id": "wrong-success-status",
+          "status": "PASS",
+          "meaning": "Rejected"
+        },
+        {
+          "id": "wrong-json-field",
+          "status": "PASS",
+          "meaning": "Rejected"
+        }
+      ],
+      "source_hashes_match_original": true
+    }
+  },
+  "discussion_sources": [
+    {
+      "thread_id": "01a12c8f-ae0f-75f3-b467-6d536ff97737",
+      "title": "Составить план внедрения МСП и CLI",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a12c8f-c20e-74c3-8257-a72961513c23",
+      "title": "Создай папки Android и Flutter",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a12cbf-1350-72b2-88a3-3b19c43bbbd6",
+      "title": "Обнови деплой на LLM Love",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a12c91-f587-7003-b9d6-b891c062a0cf",
+      "title": "Разработать модуль для mobile7",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a12cb3-b358-7682-b455-fa39b501fb95",
+      "title": "Добавь дашборд для HR",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a12cb9-beba-7620-8a95-21997f1447e4",
+      "title": "Создать бота для соискателей",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a12c90-e382-73e3-94bc-cd6594a78d00",
+      "title": "Добавить версию сайта для незрячих",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a12cbc-999a-7521-a8ef-6655aacc80fc",
+      "title": "Добавь описание возможностей MSP",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a12cbf-d021-7fd3-9ba2-0580d8962387",
+      "title": "Добавь аналитику переходов",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a1220a-8bc6-7fb3-98c1-850582a511fe",
+      "title": "Продумать пути соискателя и работод",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    },
+    {
+      "thread_id": "01a12acb-92bd-7633-8a14-5bc9f53d0882",
+      "title": "Сформулировать истории сервиса",
+      "scope": "relevant recent turns only; intent/status source, not standalone acceptance"
+    }
+  ],
+  "external_mobile_sources": {
+    "Android": {
+      "document": "QA.md",
+      "sha256": "ad4bdcdb1dc5530e94723ece958c11a971e75f3fe17e07b6fb837945d4f5d598",
+      "status": "reported previous checks; not rebuilt in this audit"
+    },
+    "Flutter": {
+      "document": "QA.md",
+      "sha256": "b0ef50925df104214528b6125b0339637d946374d891cb2e69db3cfe1e979284",
+      "status": "reported previous checks; not rebuilt in this audit"
+    }
+  },
+  "snapshot": {
+    "path": "DOC-008-snapshot.tsv",
+    "source_commit": "7cb4db07fcb75c1ac87045358a120a4606627b20",
+    "scope": "Git archive of committed source only; excludes all local secret/runtime files",
+    "sha256": "0c3b11d91ac71d20a6f0a643b247d8f7726804ead3e16a5b63cbef6b6694e474",
+    "path_count": 449,
+    "omissions": [
+      "doc/qa/.project-brief/INDEX.md",
+      "doc/qa/.project-brief/config.yaml",
+      "doc/qa/.project-brief/snapshots/2026-10-11-1856.tsv"
+    ],
+    "normalization": "LF line endings and absent count values represented as 0; unchanged content hashes",
+    "previous": ".project-brief/snapshots/2026-10-11-1856.tsv",
+    "comparison": {
+      "added": 276,
+      "changed": 173,
+      "current_paths": 449,
+      "previous_paths": 176,
+      "removed": 3
+    },
+    "comparison_scope": "Previous baseline DOC-002; differing checkout mtimes can affect metadata-only paths, not proof of changed binary content"
+  },
+  "format_failure_retained": {
+    "check": "git diff --check",
+    "initial": "FAIL: generated TSV CRLF and empty trailing fields",
+    "repair": "LF and zero count columns; staged diff check PASS"
+  }
+}
