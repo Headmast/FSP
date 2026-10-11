@@ -1,0 +1,254 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-10-11T20:31:45.839Z",
+  "staticUrl": "http://127.0.0.1:8032",
+  "appUrl": "http://127.0.0.1:8031",
+  "checks": [
+    "landing: semantics, keyboard, contrast themes, 200%/320px, persistence and reset",
+    "prototype: semantics, keyboard, contrast themes, 200%/320px, persistence and reset",
+    "login: semantics, keyboard, contrast themes, 200%/320px, persistence and reset",
+    "registration: semantics, keyboard, contrast themes, 200%/320px, persistence and reset",
+    "prototype: keyboard examination, screen-change heading focus, role state, current navigation and retained submit focus",
+    "speech API double: no autoplay, Russian/rate, pause/resume, completion, Escape, selection and typed-value exclusion",
+    "missing speech API and blocked localStorage preserve usable page and controls",
+    "Django main content and login form remain available without JavaScript",
+    "server form validation announces and focuses the first error",
+    "authenticated candidate/employer forms: contrast scan and 200%/320px layout",
+    "WebKit: skip-link focus, simplified mode, 200% text and 320px reflow"
+  ],
+  "scans": [
+    {
+      "page": "landing: original",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ]
+    },
+    {
+      "page": "landing: light",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ]
+    },
+    {
+      "page": "landing: dark",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ]
+    },
+    {
+      "page": "landing: sepia",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ]
+    },
+    {
+      "page": "prototype: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "prototype: light",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "prototype: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "prototype: sepia",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "login: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "login: light",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "login: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "login: sepia",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "registration: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "registration: light",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "registration: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "registration: sepia",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "prototype: employer candidate list",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django: invalid login error",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /profile/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /profile/: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /assessments/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /assessments/: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /profile/fsp/link/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /profile/fsp/link/: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /assistant/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /assistant/: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /invitations/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /invitations/: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /company/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /company/: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /company/needs/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /company/needs/: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /candidates/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /candidates/: dark",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /invitations/: original",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "page": "Django /invitations/: dark",
+      "violations": [],
+      "incomplete": []
+    }
+  ],
+  "browserErrors": [],
+  "limitations": [
+    "Actual VoiceOver/NVDA and audible speech not manually verified; API double tests speech controls only.",
+    "axe passing is a bounded automated check, not WCAG certification."
+  ],
+  "commit": "c65f80c00786d981cb3c6244bbb5a9a90fc1c379",
+  "source_sha256": {
+    "accessibility/accessibility.css": "89cb75d71ce18cccf38354d83a066f3daac6e20062f94052365982264a041edf",
+    "accessibility/accessibility.js": "8da5331fdd09c9c3d88717897f7b94d27a1b55d5bf741964f610fcc7ca8af596",
+    "prototype/index.html": "9fafad2041f4de8e5b1e4dc9a32a6503342d0e8ad8c161141bb04909b8c11869",
+    "prototype/app.js": "73bc37baebcc1d66bf6dfda915a561ec38ee47e8c77c56955f0b2d2021bcbe9e",
+    "index.html": "7a85b7749eca71d3a363978e017cc5fb7440d8e2160b92a4e85166a34b0536bf",
+    "app/templates/base.html": "9434054a3672d547430ad4789759feb6bf354b368c99b0059fd70a97fcdb4bd9",
+    "app/accounts/forms.py": "8587d99467f8098c31b0c5d75b5ce6345f1b8164ab6d444f019eb34467d1b266",
+    "app/config/urls.py": "842500a26f9ce2cb314849a80e0f4dad6f3e8859a0159711a20db9ce871f3e26",
+    "scripts/check_accessibility.cjs": "34f6c88baeab79bb6075402de42c54281f4542e7fb4de050e86ce345bf93d436"
+  },
+  "server_tests": {
+    "status": "PASS",
+    "count": 90,
+    "seconds": 8.97,
+    "commit": "04f86f5047fa0da46897bb4ac67310065af15ff1",
+    "scope": "Python/template code unchanged from tested merge; final error focus verified by browser."
+  },
+  "prototype_journey": {
+    "status": "PASS",
+    "commit": "04f86f5047fa0da46897bb4ac67310065af15ff1",
+    "mode": "simple",
+    "scenarios": [
+      "profile",
+      "test",
+      "offer",
+      "accept",
+      "contact",
+      "reload",
+      "reset",
+      "decline",
+      "mobile"
+    ]
+  },
+  "archive": {
+    "status": "PASS",
+    "commit": "c65f80c00786d981cb3c6244bbb5a9a90fc1c379",
+    "scope": "Final Git archive extracts both symlink targets; earlier HTTP archive check also PASS on 04f86f5."
+  }
+}
