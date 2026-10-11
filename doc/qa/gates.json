@@ -12,15 +12,15 @@
       "id": "G1",
       "status": "PASS",
       "checked_at": "2026-10-11T12:46:41+00:00",
-      "commit": "aa0e6e76e23ccb8dd9d8aa9ac315e1ffdfb85a47",
-      "evidence": "accounts-results.md"
+      "commit": "5d92818f603d968dac1fa1ff7fca63ffd3fbf3e3",
+      "evidence": "clean-worktree.json"
     },
     {
       "id": "G2",
-      "status": "NOT_RUN",
-      "checked_at": null,
-      "commit": null,
-      "evidence": null
+      "status": "PASS",
+      "checked_at": "2026-10-11T13:17:53.632767+00:00",
+      "commit": "5d92818f603d968dac1fa1ff7fca63ffd3fbf3e3",
+      "evidence": "hiring-results.md"
     },
     {
       "id": "G3",
@@ -31,17 +31,17 @@
     },
     {
       "id": "G4",
-      "status": "NOT_RUN",
-      "checked_at": null,
-      "commit": null,
-      "evidence": null
+      "status": "PASS",
+      "checked_at": "2026-10-11T13:17:53.633430+00:00",
+      "commit": "5d92818f603d968dac1fa1ff7fca63ffd3fbf3e3",
+      "evidence": "hiring-results.md"
     },
     {
       "id": "G5",
-      "status": "NOT_RUN",
-      "checked_at": null,
-      "commit": null,
-      "evidence": null
+      "status": "PASS",
+      "checked_at": "2026-10-11T13:17:53.633438+00:00",
+      "commit": "5d92818f603d968dac1fa1ff7fca63ffd3fbf3e3",
+      "evidence": "hiring-results.md"
     },
     {
       "id": "G6",
