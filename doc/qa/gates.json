@@ -10,10 +10,10 @@
     },
     {
       "id": "G1",
-      "status": "NOT_RUN",
-      "checked_at": null,
-      "commit": null,
-      "evidence": null
+      "status": "PASS",
+      "checked_at": "2026-10-11T12:46:41+00:00",
+      "commit": "aa0e6e76e23ccb8dd9d8aa9ac315e1ffdfb85a47",
+      "evidence": "accounts-results.md"
     },
     {
       "id": "G2",

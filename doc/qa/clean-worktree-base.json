@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "commit": "aa0e6e76e23ccb8dd9d8aa9ac315e1ffdfb85a47",
+  "checks": [
+    "isolated Git worktree",
+    "locked install",
+    "migrations",
+    "static manifest",
+    "Django check",
+    "migration drift",
+    "Gunicorn startup",
+    "health",
+    "version",
+    "registration page"
+  ]
+}
