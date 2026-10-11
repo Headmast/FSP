@@ -28,7 +28,7 @@ V2: immutable черновик на 24 часа, owner/kind/target/payload/finge
 | MCLI-006 | Устанавливаемый CLI | 004,005 | DONE |
 | MCLI-007 | MCP stdio | 006 | DONE |
 | MCLI-008 | Проверки и комплект V1 | 007 | DONE |
-| MCLI-009 | Черновики API | 008 | TODO |
+| MCLI-009 | Черновики API | 008 | DONE |
 | MCLI-010 | Подтверждение веб | 009 | TODO |
 | MCLI-011 | Черновики соискателя в CLI/MCP | 010 | TODO |
 | MCLI-012 | Черновики работодателя в CLI/MCP | 010 | TODO |
