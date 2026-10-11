@@ -1,10 +1,12 @@
 """Remote side of deploy_mvp.py. Never prints environment or secrets."""
-import json,os,re,secrets,shlex,signal,sqlite3,subprocess,sys,time,urllib.request
+import fcntl,json,os,re,secrets,shlex,signal,sqlite3,subprocess,sys,time,urllib.request
 from pathlib import Path
 sha=sys.argv[1]
 assert re.fullmatch('[0-9a-f]{40}',sha)
 root=Path.home()/'fsp-mvp';shared=root/'shared';release=root/'releases'/sha
 for name in ['logs','pids','backups']:(shared/name).mkdir(parents=True,exist_ok=True)
+maintenance_lock=(shared/'maintenance.lock').open('a')
+fcntl.flock(maintenance_lock,fcntl.LOCK_EX)
 uv=shared/'venv-check/bin/uv'
 if not uv.exists():
     subprocess.run(['python3','-m','venv',str(shared/'venv-check')],check=True)
