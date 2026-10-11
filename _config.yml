@@ -1,0 +1,10 @@
+# Keep repository documentation and tooling out of the default Jekyll Pages build.
+# A Pages workflow that bypasses Jekyll must use an explicit site-only artifact.
+exclude:
+  - doc
+  - scripts
+  - app
+  - prototype
+  - AGENTS.md
+  - pyproject.toml
+  - uv.lock

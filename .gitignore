@@ -1,0 +1,20 @@
+# Secrets and per-worktree runtime
+.env
+.env.*
+!.env.example
+.worktree-local.json
+.runtime/
+.venv/
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.log
+*.pid
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.DS_Store

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "gates": [
+    {
+      "id": "P0",
+      "status": "NOT_RUN",
+      "checked_at": null,
+      "commit": null,
+      "evidence": null
+    },
+    {
+      "id": "G1",
+      "status": "NOT_RUN",
+      "checked_at": null,
+      "commit": null,
+      "evidence": null
+    },
+    {
+      "id": "G2",
+      "status": "NOT_RUN",
+      "checked_at": null,
+      "commit": null,
+      "evidence": null
+    },
+    {
+      "id": "G3",
+      "status": "NOT_RUN",
+      "checked_at": null,
+      "commit": null,
+      "evidence": null
+    },
+    {
+      "id": "G4",
+      "status": "NOT_RUN",
+      "checked_at": null,
+      "commit": null,
+      "evidence": null
+    },
+    {
+      "id": "G5",
+      "status": "NOT_RUN",
+      "checked_at": null,
+      "commit": null,
+      "evidence": null
+    },
+    {
+      "id": "G6",
+      "status": "NOT_RUN",
+      "checked_at": null,
+      "commit": null,
+      "evidence": null
+    }
+  ]
+}
