@@ -6,12 +6,14 @@ from datetime import timedelta
 from pathlib import Path
 from django.conf import settings
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
-from .forms import RegistrationForm
+from .forms import RegistrationForm, ConsentForm
+from .consents import record_processing
 from .models import DemoConfirmation
 
 
@@ -21,6 +23,7 @@ def digest(value):
 
 def home(request):
     if request.user.is_authenticated:
+        if not request.user.has_processing_consent:return redirect('consent')
         if request.user.role == "candidate":
             return redirect("profile")
         return render(request, "accounts/employer.html")
@@ -33,6 +36,7 @@ def register(request):
     if request.method == "POST" and form.is_valid():
         with transaction.atomic():
             user = form.save()
+            record_processing(user)
             if user.role == "candidate":
                 from profiles.models import Profile
                 Profile.objects.create(user=user)
@@ -42,6 +46,20 @@ def register(request):
         request.session["pending_registration"] = {"user": user.pk, "token": token, "nonce": nonce}
         return redirect("confirm")
     return render(request, "accounts/register.html", {"form": form})
+
+
+@login_required
+@require_http_methods(['GET','POST'])
+def consent(request):
+    form=ConsentForm(request.POST or None)
+    if request.method=='POST' and form.is_valid():
+        with transaction.atomic():record_processing(request.user)
+        return redirect('home')
+    return render(request,'accounts/consent.html',{'form':form})
+
+
+def privacy(request):
+    return render(request,'accounts/privacy.html')
 
 
 @require_http_methods(["GET", "POST"])
@@ -69,12 +87,12 @@ def confirm(request):
 
 def health(request):
     from django.db import DatabaseError
-    from .models import User
+    from .models import User, ConsentEvent
     from profiles.models import Profile
     from assessments.models import Attempt
     from hiring.models import Company, Need, Invitation
     try:
-        for model in (User, Profile, Attempt, Company, Need, Invitation):
+        for model in (User, ConsentEvent, Profile, Attempt, Company, Need, Invitation):
             model.objects.exists()
     except DatabaseError:
         return JsonResponse({"status": "unavailable"}, status=503)

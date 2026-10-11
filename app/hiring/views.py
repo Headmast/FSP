@@ -92,6 +92,7 @@ def send(request):
 @login_required
 def invitations(request):
     if not request.user.email_confirmed:raise PermissionDenied
+    if not request.user.has_processing_consent:return redirect('consent')
     if request.user.role=='candidate':
         profile=get_object_or_404(Profile,user=request.user)
         items=Invitation.objects.filter(candidate=profile).select_related('candidate')

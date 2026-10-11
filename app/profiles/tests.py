@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.test import TestCase
 from accounts.models import User
 from .models import Profile, Experience
@@ -7,9 +8,9 @@ from django.core.exceptions import ValidationError
 
 class ProfileTests(TestCase):
     def setUp(self):
-        self.user=User.objects.create_user(username='owner@demo.invalid',password='synthetic',role='candidate',email_confirmed=True)
+        self.user=User.objects.create_user(username='owner@demo.invalid',password='synthetic',role='candidate',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         self.profile=Profile.objects.create(user=self.user,name='Алексей Демо',contact_email='private@demo.invalid',confirmed_grade='Junior',test_score=.75)
-        self.other=User.objects.create_user(username='other@demo.invalid',password='synthetic',role='candidate',email_confirmed=True)
+        self.other=User.objects.create_user(username='other@demo.invalid',password='synthetic',role='candidate',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         self.other_profile=Profile.objects.create(user=self.other,name='Другой Демо')
         self.client.force_login(self.user)
 
@@ -35,7 +36,7 @@ class ProfileTests(TestCase):
             self.assertNotEqual(getattr(self.profile,field),'private@demo.invalid')
 
     def test_employer_cannot_access_candidate_self_service(self):
-        employer=User.objects.create_user(username='employer@demo.invalid',role='employer',email_confirmed=True)
+        employer=User.objects.create_user(username='employer@demo.invalid',role='employer',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         self.client.force_login(employer)
         for url in ['/profile/','/profile/resume.pdf','/profile/fsp/']:
             self.assertEqual(self.client.get(url).status_code,403)
@@ -86,3 +87,28 @@ class ProfileTests(TestCase):
         self.assertEqual(self.client.post('/profile/',data).status_code,200)
         other.refresh_from_db();self.assertEqual(other.organization,'Другой')
         self.assertEqual(self.profile.experiences.count(),0)
+
+    def test_publication_consent_records_grant_and_withdrawal_separately(self):
+        from accounts.models import ConsentEvent
+        data={'name':'Алексей','city':'Москва','skills':'Swift','desired_grade':'Junior','published':'on'}
+        self.client.post('/profile/',data);self.profile.refresh_from_db()
+        self.assertTrue(self.profile.published)
+        self.assertIsNotNone(self.profile.publication_consented_at)
+        self.assertEqual(self.profile.publication_consent_version,'publication-v1')
+        self.client.post('/profile/',data)
+        self.assertEqual(ConsentEvent.objects.filter(purpose='publication').count(),1)
+        data.pop('published');self.client.post('/profile/',data)
+        self.profile.refresh_from_db();self.assertFalse(self.profile.published)
+        self.assertEqual(list(ConsentEvent.objects.order_by('pk').values_list('granted',flat=True)),[True,False])
+
+    def test_legacy_publication_is_disabled_without_fabricating_consent(self):
+        from django.apps import apps
+        from django.db import connection
+        from importlib import import_module
+        from types import SimpleNamespace
+        self.profile.published=True;self.profile.save()
+        import_module('profiles.migrations.0004_profile_publication_consent_version_and_more').unpublish_legacy(apps,SimpleNamespace(connection=connection))
+        self.profile.refresh_from_db()
+        self.assertFalse(self.profile.published)
+        self.assertIsNone(self.profile.publication_consented_at)
+        self.assertEqual(self.profile.publication_consent_version,'')

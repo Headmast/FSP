@@ -3,7 +3,8 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 from datetime import timedelta
-from accounts.models import User
+from accounts.models import User,ConsentEvent
+from accounts.consents import record_processing,PUBLICATION_VERSION
 from profiles.models import Profile
 from assessments.bank import BANK,VERSION
 from assessments.models import Attempt
@@ -23,10 +24,11 @@ class Command(BaseCommand):
                 email=f'fixture-{grade.lower()}-{index+1:02}@demo.invalid'
                 user,created=User.objects.get_or_create(username=email,defaults={'email':email,'role':'candidate','email_confirmed':True})
                 if not created:continue
-                user.set_password(PASSWORD);user.save()
+                user.set_password(PASSWORD);user.save();record_processing(user,source='synthetic_demo_seed')
                 profile=Profile.objects.create(user=user,name=f'{name} {suffix}',city='Москва',skills=SKILLS[index%3],
-                    contact_email=email,contact_phone='+70000000000',published=True,
+                    contact_email=email,contact_phone='+70000000000',published=True,publication_consented_at=timezone.now(),publication_consent_version=PUBLICATION_VERSION,
                     fsp_status='demo_history' if index%4 in (0,2) else 'no_history',fsp_prize=index%4==0)
+                ConsentEvent.objects.create(user=user,purpose='publication',version=PUBLICATION_VERSION,granted=True,source='synthetic_demo_seed')
                 now=timezone.now();tasks=copy.deepcopy(BANK[(grade,'A')])
                 obj=Attempt.objects.create(candidate=profile,grade=grade,variant='A',bank_version=VERSION,tasks=tasks,
                     started_at=now,expires_at=now+timedelta(minutes=15))
@@ -37,13 +39,15 @@ class Command(BaseCommand):
             email=f'fixture-unconfirmed-{index+1}@demo.invalid'
             user,created=User.objects.get_or_create(username=email,defaults={'email':email,'role':'candidate','email_confirmed':True})
             if created:
-                user.set_password(PASSWORD);user.save()
-                Profile.objects.create(user=user,name='Неподтверждённый '+label,city='Москва',skills='Swift, SwiftUI, Combine, UIKit, Git',published=True,contact_email=email,fsp_status='demo_history',fsp_prize=True)
+                user.set_password(PASSWORD);user.save();record_processing(user,source='synthetic_demo_seed')
+                Profile.objects.create(user=user,name='Неподтверждённый '+label,city='Москва',skills='Swift, SwiftUI, Combine, UIKit, Git',published=True,publication_consented_at=timezone.now(),publication_consent_version=PUBLICATION_VERSION,contact_email=email,fsp_status='demo_history',fsp_prize=True)
+                ConsentEvent.objects.create(user=user,purpose='publication',version=PUBLICATION_VERSION,granted=True,source='synthetic_demo_seed')
         companies=[]
         for label,name in [('alpha','Демо Альфа'),('beta','Демо Бета')]:
             email=f'fixture-company-{label}@demo.invalid'
             user,created=User.objects.get_or_create(username=email,defaults={'email':email,'role':'employer','email_confirmed':True})
-            if created:user.set_password(PASSWORD);user.save()
+            if created:
+                user.set_password(PASSWORD);user.save();record_processing(user,source='synthetic_demo_seed')
             company,_=Company.objects.get_or_create(user=user,defaults={'name':name,'contact_email':email})
             companies.append(company)
         for company,title,grade,skills in [(companies[0],'iOS SwiftUI Junior','Junior','SwiftUI, Combine'),

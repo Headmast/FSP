@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.db import transaction
-from django.shortcuts import get_object_or_404,render
+from django.shortcuts import get_object_or_404,render,redirect
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from assessments.models import Attempt
@@ -17,6 +17,7 @@ from . import provider
 @require_http_methods(['GET','POST'])
 def assistant(request):
     if not request.user.email_confirmed:raise PermissionDenied
+    if not request.user.has_processing_consent:return redirect('consent')
     mode=request.POST.get('mode',request.GET.get('mode','profile' if request.user.role=='candidate' else 'need'))
     identifier=request.POST.get('identifier',request.GET.get('attempt',request.GET.get('need','')))
     identifier=parse_identifier(identifier,required=False)

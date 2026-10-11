@@ -10,7 +10,7 @@ from .services import start_attempt, save_answers
 
 class AssessmentTests(TestCase):
     def setUp(self):
-        self.user=User.objects.create_user(username='exam@demo.invalid',role='candidate',email_confirmed=True)
+        self.user=User.objects.create_user(username='exam@demo.invalid',role='candidate',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         self.profile=Profile.objects.create(user=self.user)
         self.client.force_login(self.user)
 
@@ -59,7 +59,7 @@ class AssessmentTests(TestCase):
     def test_foreign_attempt_denied_and_fake_question_rejected(self):
         obj=start_attempt(self.profile,'Junior')
         with self.assertRaises(ValueError):save_answers(self.profile,obj.pk,{'forged-question':'0'})
-        other=User.objects.create_user(username='foreign@demo.invalid',role='candidate',email_confirmed=True)
+        other=User.objects.create_user(username='foreign@demo.invalid',role='candidate',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         Profile.objects.create(user=other);self.client.force_login(other)
         for suffix in ['', 'answer/', 'finish/']:
             response=self.client.get(f'/assessments/{obj.pk}/') if not suffix else self.client.post(f'/assessments/{obj.pk}/{suffix}')
@@ -100,7 +100,7 @@ class AssessmentTests(TestCase):
         self.profile.refresh_from_db();self.assertFalse(result.passed);self.assertEqual(self.profile.confirmed_grade,'')
 
     def test_employer_cannot_start_or_read_exam(self):
-        employer=User.objects.create_user(username='company@demo.invalid',role='employer',email_confirmed=True)
+        employer=User.objects.create_user(username='company@demo.invalid',role='employer',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         self.client.force_login(employer)
         self.assertEqual(self.client.get('/assessments/').status_code,403)
         self.assertEqual(self.client.post('/assessments/start/',{'grade':'Junior'}).status_code,403)

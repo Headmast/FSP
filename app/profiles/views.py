@@ -8,6 +8,9 @@ from django.http import FileResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from accounts.access import role_required
+from accounts.models import ConsentEvent
+from accounts.consents import PUBLICATION_VERSION
+from django.utils import timezone
 from .forms import ProfileForm, ExperienceFormSet
 from .models import Profile
 
@@ -15,12 +18,19 @@ from .models import Profile
 @require_http_methods(["GET", "POST"])
 def profile(request):
     obj = Profile.objects.get(user=request.user)
+    was_published=obj.published
     form = ProfileForm(request.POST or None, instance=obj)
     experience_data = request.POST if request.method == 'POST' and 'experience-TOTAL_FORMS' in request.POST else None
     experiences = ExperienceFormSet(experience_data, instance=obj, prefix='experience')
     if request.method == "POST" and form.is_valid() and (experience_data is None or experiences.is_valid()):
         with transaction.atomic():
-            form.save()
+            saved=form.save()
+            if saved.published != was_published or (saved.published and not saved.publication_consented_at):
+                ConsentEvent.objects.create(user=request.user,purpose='publication',version=PUBLICATION_VERSION,granted=saved.published)
+                if saved.published:
+                    saved.publication_consented_at=timezone.now()
+                    saved.publication_consent_version=PUBLICATION_VERSION
+                    saved.save(update_fields=['publication_consented_at','publication_consent_version'])
             if experience_data is not None: experiences.save()
         messages.success(request, "Профиль сохранён.")
         return redirect("profile")

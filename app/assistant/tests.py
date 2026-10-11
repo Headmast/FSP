@@ -10,7 +10,7 @@ from .models import Usage
 
 class AssistantTests(TestCase):
     def setUp(self):
-        self.user=User.objects.create_user(username='helper@demo.invalid',role='candidate',email_confirmed=True)
+        self.user=User.objects.create_user(username='helper@demo.invalid',role='candidate',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         self.profile=Profile.objects.create(user=self.user,name='Кандидат',skills='Swift',contact_email='private@demo.invalid')
         self.client.force_login(self.user)
 
@@ -45,7 +45,7 @@ class AssistantTests(TestCase):
         self.assertEqual(self.client.post('/assistant/',{'mode':'result','identifier':obj.pk}).status_code,200)
 
     def test_foreign_or_unfinished_result_and_role_rejected(self):
-        other=User.objects.create_user(username='other-helper@demo.invalid',role='candidate',email_confirmed=True)
+        other=User.objects.create_user(username='other-helper@demo.invalid',role='candidate',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         profile=Profile.objects.create(user=other);obj=start_attempt(profile,'Junior')
         save_answers(profile,obj.pk,{q['id']:q['correct'] for q in obj.tasks},finish=True)
         self.assertEqual(self.client.post('/assistant/',{'mode':'result','identifier':obj.pk}).status_code,404)
@@ -53,7 +53,7 @@ class AssistantTests(TestCase):
         self.assertEqual(self.client.post('/assistant/',{'mode':'result','identifier':'bad'}).status_code,404)
 
     def test_employer_need_draft_is_owned_and_does_not_include_contacts(self):
-        employer=User.objects.create_user(username='company-helper@demo.invalid',role='employer',email_confirmed=True)
+        employer=User.objects.create_user(username='company-helper@demo.invalid',role='employer',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         company=Company.objects.create(user=employer,contact_email='company-private@demo.invalid')
         need=Need.objects.create(company=company,title='iOS',grade='Junior',skills='Swift',tasks='Задачи',salary_min=100,salary_max=200,work_format='remote')
         self.client.force_login(employer)

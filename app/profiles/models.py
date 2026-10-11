@@ -18,6 +18,8 @@ class Profile(models.Model):
     contact_email = models.EmailField(blank=True)
     contact_phone = models.CharField(max_length=40, blank=True)
     published = models.BooleanField(default=False)
+    publication_consented_at = models.DateTimeField(null=True, blank=True)
+    publication_consent_version = models.CharField(max_length=40, blank=True)
     desired_grade = models.CharField(max_length=8, default="Junior", choices=[("Junior", "Junior"), ("Middle", "Middle")])
     confirmed_grade = models.CharField(max_length=8, blank=True)
     test_score = models.FloatField(default=0)

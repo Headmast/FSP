@@ -1,0 +1,47 @@
+{
+  "task": "MVP-008",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:46:28.348934+00:00",
+  "base_commit": "16a49e27dccfe7eeb475ef83f7aca066300ec26b",
+  "checked_sources": {
+    "app/accounts/access.py": "aa90c85d8c2c276694dab42707b8c96efe0988e2000af80d45d1dca3ff2b9008",
+    "app/accounts/forms.py": "30face5e7a5dcccfd18f41d1de75c21d81348addca17585c4c9de69dd87f5595",
+    "app/accounts/models.py": "bf1eeab2d809ee819818d234c638510fabc665402c0fa6f9c44e6f7790488ef4",
+    "app/accounts/tests.py": "372901f1b981a922ad8b7f6e84e25cbe5df4164dd7f494787133906303f0b4ad",
+    "app/accounts/views.py": "9f4291f40f651cd642160cefcd2246a5b87709d347768f2096bd059792f32773",
+    "app/assessments/tests.py": "54fe7c57885de5f9e3371671ba4bbe69dbebf618786d06b847f6430f405b9971",
+    "app/assistant/tests.py": "756136a79ad8db62a11c36b20d4c1f0e6a351a1017e102324bd017849204eefb",
+    "app/assistant/views.py": "c05ebe7faf7e1e4b1b0a8cdee396172dc2224da864397411be501ab98d7f6d09",
+    "app/config/urls.py": "18ba135f326eca2c31c283da9def99eed465d55ccf731d0b9b76d4d3b6d01563",
+    "app/hiring/management/commands/seed_demo.py": "21ad43e5d63b48356f8933848664ae6b3b65d4c25292394777e7c3ce7c394af9",
+    "app/hiring/tests.py": "820d594307763c8bbd6ee2687fdbc29fa66468cae572312ddf71b8da98bbe67e",
+    "app/hiring/views.py": "7f15ebd96ced38cca9f9c912ba4aaf720a35460d1476d1d852920597f937dc74",
+    "app/profiles/models.py": "f8e724ef8107663f7aae9b456837502eaa1381545983a70931572b6679a37907",
+    "app/profiles/tests.py": "982076c24e2ff874860cd607f664e9e0074e15c5602c4cea2a6370dece46dde4",
+    "app/profiles/views.py": "cd0dbac4b578860b71dfe8363c0384a89b58ae2c447f2932229e2c9dd2c59516",
+    "app/templates/accounts/register.html": "832786716300c688db629ddc7335ade76c9b5526661fa4e442e3f6210a7452e7",
+    "app/templates/base.html": "939aa6cf73b32fdf337b4291e0579db2c956de80fc67f3186a1cc4f78b3c043d",
+    "app/templates/profiles/profile.html": "c0ed702d1b976f09d952dd5199a088d28e35c638ee174a70ac554f1ee16ce8b0",
+    "app/accounts/consents.py": "3adf1cb1954aded851ecf4cb333a4854ab064b3f36e8b03afc35468a008575b6",
+    "app/accounts/migrations/0002_user_processing_consent_version_and_more.py": "24c83d41fb485273c30c2f3704a8f95fa1eb4b504e714bae96eb81cd3e127541",
+    "app/profiles/migrations/0004_profile_publication_consent_version_and_more.py": "8f389f8fa88bbb51be3ba5bade686481f4994fb90082a790981d2b746c1b3d30",
+    "app/templates/accounts/consent.html": "b9f2cc8df51a41686edc8d892f734a39c986536658bde0f8c96c614ef930050e",
+    "app/templates/accounts/privacy.html": "1baf808d39e9f68f477eefe2c1d233c6af7614dc5b739a3cec097e767a114b26"
+  },
+  "tests": {
+    "command": "python app/manage.py test accounts profiles assessments hiring assistant --verbosity 0",
+    "count": 61,
+    "failures": 0,
+    "seconds": 23.608
+  },
+  "migration_check": "makemigrations --check --dry-run: no changes",
+  "checks": [
+    "registration refusal creates no account",
+    "old accounts require explicit consent, no auto grant",
+    "publication grant/withdraw versioned and logged",
+    "withdraw removes search, prior grant remains",
+    "legacy publication disabled without fake timestamps",
+    "synthetic seed source marked, existing accounts untouched"
+  ],
+  "deployment": "NOT_RUN: consent migrations pending release"
+}

@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import User
 
 class RegistrationForm(UserCreationForm):
+    processing_consent = forms.BooleanField(label='Согласен на обработку данных по правилам processing-v1', required=True)
     class Meta:
         model = User
         fields = ("email", "role")
@@ -23,3 +24,7 @@ class RegistrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class ConsentForm(forms.Form):
+    processing_consent = forms.BooleanField(label='Согласен на обработку данных по правилам processing-v1', required=True)

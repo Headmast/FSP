@@ -43,3 +43,7 @@ POST /profile/: specialization=ios_swift, experience_months=0..600, roles[] и s
 ## Компания после MVP-007
 
 GET/POST /company/ — employer с подтверждённым email. Поля name (120), industry (120), description (3000), contact_email. Редактируется собственная компания; лишний id игнорируется. Невалидная форма — 200, успех — 302. POST /invitations/send/ требует валидный email компании для нового предложения; при отсутствии возвращает 302 /company/ с сообщением. Старый снимок приглашения неизменяемый.
+
+## Согласия после MVP-008
+
+POST /accounts/register/ требует processing_consent=on. Ошибка — 200 без создания пользователя; явное согласие записывает processing-v1 и дату. GET/POST /accounts/consent/ — аутентифицированный пользователь; отсутствие согласия — 200, успешный POST — 302 /. GET /accounts/privacy/ публичный. Основные маршруты без processing-v1 перенаправляются на consent (после проверки роли/email). Публикация — отдельный флажок в /profile/; grant/withdraw сохраняется в журнале. Предыдущие принятые приглашения сохраняют грант.

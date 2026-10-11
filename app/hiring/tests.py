@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.test import TestCase,Client
 from accounts.models import User
 from profiles.models import Profile
@@ -7,12 +8,12 @@ from .forms import NeedForm
 
 class HiringTests(TestCase):
     def setUp(self):
-        self.candidate=User.objects.create_user(username='candidate@demo.invalid',role='candidate',email_confirmed=True)
+        self.candidate=User.objects.create_user(username='candidate@demo.invalid',role='candidate',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         self.profile=Profile.objects.create(user=self.candidate,name='Алексей',city='Москва',skills='Swift, SwiftUI',published=True,
             confirmed_grade='Junior',test_score=.75,contact_email='private@demo.invalid',contact_phone='+70000000000')
-        self.employer=User.objects.create_user(username='employer@demo.invalid',role='employer',email_confirmed=True)
+        self.employer=User.objects.create_user(username='employer@demo.invalid',role='employer',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         self.company=Company.objects.create(user=self.employer,name='Компания Демо',contact_email='company@demo.invalid')
-        self.other=User.objects.create_user(username='other-company@demo.invalid',role='employer',email_confirmed=True)
+        self.other=User.objects.create_user(username='other-company@demo.invalid',role='employer',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         self.other_company=Company.objects.create(user=self.other,name='Другая Демо')
         self.need=Need.objects.create(company=self.company,title='iOS',grade='Junior',skills='SwiftUI',tasks='Развитие приложения',salary_min=100000,salary_max=150000,work_format='remote')
         self.other_need=Need.objects.create(company=self.other_company,title='iOS',grade='Junior',skills='Swift',tasks='Развитие',salary_min=100000,salary_max=150000,work_format='remote')
@@ -50,7 +51,7 @@ class HiringTests(TestCase):
 
     def test_other_candidate_cannot_respond_or_see_invitation(self):
         obj=invite(self.company,self.need.pk,self.profile.pk)
-        foreign=User.objects.create_user(username='foreign@demo.invalid',role='candidate',email_confirmed=True)
+        foreign=User.objects.create_user(username='foreign@demo.invalid',role='candidate',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
         Profile.objects.create(user=foreign);self.client.force_login(foreign)
         self.assertEqual(self.client.post(f'/invitations/{obj.pk}/accept/').status_code,404)
         self.assertNotContains(self.client.get('/invitations/'),'Компания Демо')
@@ -65,7 +66,7 @@ class HiringTests(TestCase):
 
     def test_only_published_confirmed_correct_category_and_filters(self):
         for grade,published in [('',True),('Middle',True),('Junior',False)]:
-            user=User.objects.create_user(username=f'hidden-{grade}-{published}@demo.invalid',role='candidate',email_confirmed=True)
+            user=User.objects.create_user(username=f'hidden-{grade}-{published}@demo.invalid',role='candidate',email_confirmed=True,processing_consented_at=timezone.now(),processing_consent_version="processing-v1")
             Profile.objects.create(user=user,name='Скрытый',confirmed_grade=grade,published=published)
         rows=search('Junior',self.need)
         self.assertEqual([row['id'] for row in rows],[self.profile.pk])
@@ -176,3 +177,14 @@ class HiringTests(TestCase):
         obj=invite(self.company,self.need.pk,self.profile.pk)
         self.company.contact_email='';self.company.save()
         self.assertEqual(invite(self.company,self.need.pk,self.profile.pk).pk,obj.pk)
+
+    def test_withdrawing_publication_hides_search_but_keeps_prior_accepted_grant(self):
+        obj=invite(self.company,self.need.pk,self.profile.pk);decide(self.profile,obj.pk,'accepted')
+        self.client.force_login(self.candidate)
+        self.client.post('/profile/',{'name':'Алексей','city':'Москва','skills':'Swift','desired_grade':'Junior','contact_email':'private@demo.invalid','contact_phone':'+70000000000'})
+        self.profile.refresh_from_db();self.assertFalse(self.profile.published)
+        self.assertEqual(search('Junior',self.need),[])
+        self.client.force_login(self.employer)
+        self.assertContains(self.client.get(f'/candidates/{self.profile.pk}/'),'private@demo.invalid')
+        self.client.force_login(self.other)
+        self.assertEqual(self.client.get(f'/candidates/{self.profile.pk}/').status_code,404)
