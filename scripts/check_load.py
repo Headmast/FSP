@@ -9,7 +9,7 @@ def actor(i):
     jar=http.cookiejar.CookieJar();client=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
     def request(path,data=None):
         body=urllib.parse.urlencode(data).encode() if data else None
-        response=client.open(urllib.request.Request(base+path,data=body,headers={'Referer':base+path,**({'X-Forwarded-Proto':'https'} if base.startswith('http://127.0.0.1:') else {})}),timeout=25)
+        response=client.open(urllib.request.Request(base+path,data=body,headers={'Referer':base.replace('http://127.0.0.1:','https://127.0.0.1:')+path,**({'X-Forwarded-Proto':'https'} if base.startswith('http://127.0.0.1:') else {})}),timeout=25)
         if base.startswith('http://127.0.0.1:'):
             for cookie in jar:cookie.secure=False
         return response
