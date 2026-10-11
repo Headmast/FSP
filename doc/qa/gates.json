@@ -24,10 +24,10 @@
     },
     {
       "id": "G3",
-      "status": "NOT_RUN",
-      "checked_at": null,
-      "commit": null,
-      "evidence": null
+      "status": "PASS",
+      "checked_at": "2026-10-11T12:57:33+00:00",
+      "commit": "5c11632f2b5b2a7966ec3737f42de929ccf28a2b",
+      "evidence": "assessment-results.md"
     },
     {
       "id": "G4",

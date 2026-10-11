@@ -20,6 +20,7 @@
 - [Статусы проверок](qa/gates.json)
 - [Результаты подготовки документации и worktree](qa/preparation-results.md)
 - [Результаты аккаунтов и профиля](qa/accounts-results.md)
+- [Результаты оценивания](qa/assessment-results.md)
 - [Публикация и откат](deployment/runbook.md)
 - [Отчёт о выпуске](delivery/release-template.md)
 - [Рабочие промпты](prompts/README.md) и [ответы](responses/README.md)
