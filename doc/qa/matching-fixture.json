@@ -1,0 +1,43 @@
+{
+  "population": {
+    "Junior": 10,
+    "Middle": 10,
+    "unconfirmed": 4
+  },
+  "labeling_basis": "Manual expected ordering from agreed score components on synthetic fixtures; not a real hiring pilot.",
+  "cases": [
+    {
+      "need": "iOS SwiftUI Junior",
+      "grade": "Junior",
+      "expected_top_5": [
+        "Алексей Юниор",
+        "Виктор Юниор",
+        "Борис Юниор",
+        "Глеб Юниор",
+        "Дмитрий Юниор"
+      ]
+    },
+    {
+      "need": "iOS SwiftUI Middle",
+      "grade": "Middle",
+      "expected_top_5": [
+        "Виктор Мидл",
+        "Алексей Мидл",
+        "Борис Мидл",
+        "Егор Мидл",
+        "Глеб Мидл"
+      ]
+    },
+    {
+      "need": "iOS UIKit Junior",
+      "grade": "Junior",
+      "expected_top_5": [
+        "Алексей Юниор",
+        "Борис Юниор",
+        "Виктор Юниор",
+        "Дмитрий Юниор",
+        "Глеб Юниор"
+      ]
+    }
+  ]
+}

@@ -3,7 +3,18 @@ from django.contrib.auth.views import LoginView, LogoutView
 from accounts import views as accounts
 from profiles import views as profiles
 from assessments import views as assessments
-urlpatterns = [path("assessments/", assessments.dashboard, name="assessments"),
+from hiring import views as hiring
+from assistant import views as assistant
+urlpatterns = [path("company/needs/", hiring.needs, name="needs"),
+    path("candidates/", hiring.candidates, name="candidates"),
+    path("candidates/<int:pk>/", hiring.candidate, name="candidate"),
+    path("candidates/<int:pk>/resume.pdf", hiring.resume, name="candidate-resume"),
+    path("invitations/", hiring.invitations, name="invitations"),
+    path("invitations/send/", hiring.send, name="invitation-send"),
+    path("invitations/<int:pk>/accept/", hiring.respond, {"status":"accepted"}, name="invitation-accept"),
+    path("invitations/<int:pk>/decline/", hiring.respond, {"status":"declined"}, name="invitation-decline"),
+    path("assistant/", assistant.assistant, name="assistant"),
+    path("assessments/", assessments.dashboard, name="assessments"),
     path("assessments/start/", assessments.start, name="assessment-start"),
     path("assessments/<int:pk>/", assessments.attempt, name="attempt"),
     path("assessments/<int:pk>/answer/", assessments.answer, name="assessment-answer"),
