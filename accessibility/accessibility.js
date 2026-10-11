@@ -113,6 +113,7 @@
       byId('voice').replaceChildren(new Option('Автоматически — русский', ''));
       for (const voice of voices) byId('voice').add(new Option(`${voice.name} (${voice.lang})`, voice.voiceURI));
       byId('voice').value = voices.some(v => v.voiceURI === settings.voice) ? settings.voice : '';
+      if (!voices.length && reading) stop();
       for (const id of ['read', 'selection', 'voice', 'rate', 'focus-speech']) byId(id).disabled = voices.length === 0;
       byId('speech-help').textContent = voices.length ? 'Используются локальные голоса устройства. Озвучивание запускается по вашему действию. При использовании VoiceOver или другого экранного диктора оставьте его выключенным.' : 'Локальные голоса пока недоступны. Добавьте голос в настройках речи устройства или используйте VoiceOver. Все разделы доступны с клавиатуры.';
     }
@@ -122,7 +123,7 @@
       utterance = new SpeechSynthesisUtterance(chunks[position++]);
       utterance.lang = 'ru-RU';
       utterance.rate = Number(settings.rate);
-      const voice = voices.find(v => v.voiceURI === settings.voice) || voices.find(v => /^ru(?:-|$)/i.test(v.lang));
+      const voice = voices.find(v => v.voiceURI === settings.voice) || voices.find(v => /^ru(?:-|$)/i.test(v.lang)) || voices[0];
       if (voice) utterance.voice = voice;
       utterance.onend = () => next(myToken);
       utterance.onerror = event => {

@@ -72,11 +72,12 @@ async function keyboardActivate(page, locator) {await locator.focus(); await pag
   const speechContext = await browser.newContext();
   await speechContext.addInitScript(() => {
     window.__speech = {spoken: [], cancel: 0, pause: 0, resume: 0};
+    window.__voices = [{name: 'Русский тестовый голос', lang: 'ru-RU', voiceURI: 'test-ru', localService: true}, {name: 'Remote voice', lang: 'ru-RU', voiceURI: 'remote-ru', localService: false}];
     window.SpeechSynthesisUtterance = class {constructor(text) {this.text = text;}};
     Object.defineProperty(window, 'speechSynthesis', {value: {
-      getVoices: () => [{name: 'Русский тестовый голос', lang: 'ru-RU', voiceURI: 'test-ru', localService: true}, {name: 'Remote voice', lang: 'ru-RU', voiceURI: 'remote-ru', localService: false}],
-      addEventListener: () => {},
-      speak: utterance => {window.__speech.spoken.push({text: utterance.text, rate: utterance.rate, lang: utterance.lang}); window.__utterance = utterance;},
+      getVoices: () => window.__voices,
+      addEventListener: (_, callback) => {window.__voiceChanged = callback;},
+      speak: utterance => {window.__speech.spoken.push({text: utterance.text, rate: utterance.rate, lang: utterance.lang, voice: utterance.voice?.voiceURI}); window.__utterance = utterance;},
       cancel: () => window.__speech.cancel++, pause: () => window.__speech.pause++, resume: () => window.__speech.resume++
     }});
   });
@@ -102,7 +103,13 @@ async function keyboardActivate(page, locator) {await locator.focus(); await pag
   await speech.evaluate(() => {const range = document.createRange(); range.selectNodeContents(document.querySelector('h1')); getSelection().removeAllRanges(); getSelection().addRange(range);});
   await speech.locator('#a11y-selection').click();
   assert.equal(await speech.evaluate(() => __speech.spoken.at(-1).text), 'Покажите, что вы умеете');
-  passed('speech API double: no autoplay, Russian/rate, pause/resume, completion, Escape, selection and typed-value exclusion');
+  await speech.evaluate(() => {window.__voices = [{name: 'Local English', lang: 'en-US', voiceURI: 'local-en', localService: true}, {name: 'Remote Russian', lang: 'ru-RU', voiceURI: 'remote-ru', localService: false}]; window.__voiceChanged();});
+  await speech.locator('#a11y-read').click();
+  assert.equal(await speech.evaluate(() => __speech.spoken.at(-1).voice), 'local-en');
+  await speech.evaluate(() => {window.__voices = []; window.__voiceChanged();});
+  assert.equal(await speech.locator('#a11y-read').isDisabled(), true);
+  assert.equal(await speech.locator('#a11y-stop').isDisabled(), true);
+  passed('speech API double: no autoplay, local-voice fallback/loss, Russian/rate, pause/resume, completion, Escape, selection and typed-value exclusion');
 
   const noSpeechContext = await browser.newContext();
   await noSpeechContext.addInitScript(() => {Object.defineProperty(window, 'speechSynthesis', {value: undefined}); Storage.prototype.getItem = () => {throw Error('storage blocked');}; Storage.prototype.setItem = () => {throw Error('storage blocked');};});
