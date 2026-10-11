@@ -109,3 +109,86 @@ def invitation_contacts(request,pk):
         return reply(request,{'company_id':obj.company_id,'contact_email':obj.snapshot.get('company_email','')})
     require(obj.status=='accepted')
     return reply(request,private_profile(obj.candidate))
+
+from hiring.access import company_read, owned_need, visible_profile
+from hiring.models import Need
+from hiring.forms import SearchForm
+from hiring.services import search, explain
+from .serializers import company_data, need_data, skills
+
+
+@endpoint('employer')
+def company(request):
+    return reply(request,company_data(company_read(request.user),is_mcp(request)))
+
+
+@endpoint('employer')
+def needs(request):
+    rows,pagination=paged(request,Need.objects.filter(company__user=request.user).order_by('pk'))
+    return reply(request,[need_data(obj,is_mcp(request)) for obj in rows],pagination=pagination)
+
+
+@endpoint('employer')
+def need(request,pk):
+    return reply(request,need_data(owned_need(request.user,parse_identifier(pk)),is_mcp(request)))
+
+
+def chosen_need(request):
+    identifier=parse_identifier(request.GET.get('need_id'),required=False)
+    return owned_need(request.user,identifier) if identifier else None
+
+
+@endpoint('employer')
+def candidates(request):
+    company=company_read(request.user)
+    chosen=chosen_need(request)
+    grade=request.GET.get('grade') or (chosen.grade if chosen else '')
+    form=SearchForm({'need':chosen.pk if chosen else '', 'grade':grade, 'skill':request.GET.get('skill',''),
+        'fsp':request.GET.get('fsp_status','')},company=company)
+    require(form.is_valid(),400,'INVALID_FILTERS','Проверьте категорию, навык и потребность.')
+    results=search(**form.cleaned_data)
+    rows,pagination=paged(request,results)
+    # Rebuild sensitive subobjects from their controlled DTOs, never spread search dictionaries.
+    data=[]
+    for row in rows:
+        obj=get_object_or_404(Profile,pk=row['id'])
+        data.append({'profile':profile_data(obj),'score':row['score'],'parts':row['parts'],
+            'explanation':explanation_data(obj,chosen)})
+    return reply(request,data,pagination=pagination)
+
+
+def explanation_data(obj,chosen):
+    value=explain(obj,chosen)
+    from .serializers import proof_snapshot
+    return {'declared_matches':value['declared_matches'],'declared_gaps':value['declared_gaps'],
+        'confirmation':proof_snapshot(value['confirmation']) if value['confirmation'] else None,
+        'unknown':value['unknown']}
+
+
+@endpoint('employer')
+def candidate(request,pk):
+    obj,grant=visible_profile(company_read(request.user),parse_identifier(pk))
+    chosen=chosen_need(request)
+    require(not chosen or chosen.grade==obj.confirmed_grade,400,'INVALID_FILTERS','Категории не совпадают.')
+    return reply(request,{'profile':profile_data(obj),'contacts_allowed':grant,
+        'explanation':explanation_data(obj,chosen)})
+
+
+@endpoint('employer')
+def candidate_proofs(request,pk):
+    obj,_=visible_profile(company_read(request.user),parse_identifier(pk))
+    rows,pagination=paged(request,Attempt.objects.filter(candidate=obj,status='finished',grade=obj.confirmed_grade).order_by('-finished_at','-pk'))
+    return reply(request,[proof_data(p) for p in rows],pagination=pagination)
+
+
+@endpoint('employer',private=True)
+def candidate_private(request,pk):
+    obj,grant=visible_profile(company_read(request.user),parse_identifier(pk))
+    require(grant)
+    return reply(request,private_profile(obj))
+
+
+@endpoint('employer')
+def candidate_pdf(request,pk):
+    obj,grant=visible_profile(company_read(request.user),parse_identifier(pk))
+    return pdf_response(request,obj,grant)

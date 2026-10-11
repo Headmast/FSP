@@ -8,3 +8,7 @@ urlpatterns += [
     path('invitations',views.invitations),path('invitations/<str:pk>',views.invitation),
     path('invitations/<str:pk>/contacts',views.invitation_contacts),
 ]
+urlpatterns += [path('me/company',views.company),path('needs',views.needs),path('needs/<str:pk>',views.need),
+    path('candidates',views.candidates),path('candidates/<str:pk>',views.candidate),
+    path('candidates/<str:pk>/proofs',views.candidate_proofs),path('candidates/<str:pk>/private',views.candidate_private),
+    path('candidates/<str:pk>/resume.pdf',views.candidate_pdf)]
