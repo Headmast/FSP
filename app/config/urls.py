@@ -1,11 +1,12 @@
-from django.urls import path
+from django.urls import include, path
 from django.contrib.auth.views import LoginView, LogoutView
 from accounts import views as accounts
 from profiles import views as profiles
 from assessments import views as assessments
 from hiring import views as hiring
 from assistant import views as assistant
-urlpatterns = [path("company/", hiring.company_profile, name="company-profile"),
+urlpatterns = [path("learning/", include("assessments.learning_urls")),
+    path("company/", hiring.company_profile, name="company-profile"),
     path("company/needs/", hiring.needs, name="needs"),
     path("candidates/", hiring.candidates, name="candidates"),
     path("candidates/<int:pk>/", hiring.candidate, name="candidate"),

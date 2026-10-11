@@ -1,0 +1,3 @@
+{% extends 'base.html' %}{% load static %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'learning.css' %}">{% endblock %}
+{% block content %}<div class="learning">{% block learning_content %}{% endblock %}</div>{% endblock %}

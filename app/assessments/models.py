@@ -21,3 +21,35 @@ class Attempt(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['candidate'], condition=Q(status='active'), name='one_active_attempt')]
+
+
+class LessonProgress(models.Model):
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    grade = models.CharField(max_length=8)
+    topic = models.CharField(max_length=16)
+    content_version = models.CharField(max_length=40)
+    completed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['candidate', 'grade', 'topic', 'content_version'],
+                                               name='unique_learning_lesson')]
+
+
+class PracticeSession(models.Model):
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    grade = models.CharField(max_length=8)
+    topic = models.CharField(max_length=16, default='all')
+    kind = models.CharField(max_length=8, default='check')
+    content_version = models.CharField(max_length=40)
+    tasks = models.JSONField()
+    answers = models.JSONField(default=dict)
+    started_at = models.DateTimeField(auto_now_add=True)
+    finished_at = models.DateTimeField(null=True)
+    status = models.CharField(max_length=8, default='active')
+    correct_count = models.PositiveSmallIntegerField(default=0)
+    area_scores = models.JSONField(default=dict)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['candidate'], condition=Q(status='active'),
+                                               name='one_active_practice')]
+        ordering = ['-started_at', '-pk']
