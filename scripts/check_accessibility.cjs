@@ -128,8 +128,8 @@ async function keyboardActivate(page, locator) {await locator.focus(); await pag
   passed('server form validation announces and focuses the first error');
 
   for (const [email, paths] of [
-    ['fixture-junior-01@demo.invalid', ['/profile/', '/assessments/', '/profile/fsp/link/', '/assistant/', '/invitations/']],
-    ['fixture-company-alpha@demo.invalid', ['/company/', '/company/needs/', '/candidates/', '/invitations/']]
+    ['fixture-junior-01@demo.invalid', ['/profile/', '/assessments/', '/profile/fsp/link/', '/assistant/', '/invitations/', '/accounts/integrations/']],
+    ['fixture-company-alpha@demo.invalid', ['/company/', '/company/needs/', '/candidates/', '/invitations/', '/accounts/integrations/']]
   ]) {
     const actor = await browser.newPage(); await actor.goto(appUrl + '/accounts/login/');
     await actor.locator('[name=username]').fill(email); await actor.locator('[name=password]').fill('Fsp-demo-2026!');
