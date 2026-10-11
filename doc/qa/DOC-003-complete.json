@@ -5,7 +5,7 @@
   "checked_at": "2026-10-11T22:08:39.920519+00:00",
   "branch": "mvp/implementation",
   "merge_source_commit": "7cb4db07fcb75c1ac87045358a120a4606627b20",
-  "source_state": "tested working tree; exact commit verification follows commit",
+  "source_state": "committed integration tree; all HTTP evidence source hashes verified against code_commit",
   "http_evidence": "DOC-003-http-complete.json",
   "checks": {
     "http_runtime": 577,
@@ -31,7 +31,7 @@
     "production_lock": "unchanged pyproject/uv.lock bytes versus verified 12c29ba; see DOC-003-production-lock.json",
     "documentation_links": {
       "status": "PASS",
-      "documents": 130
+      "documents": 133
     },
     "diff_check": "PASS",
     "worktree_isolation": "PASS",
@@ -101,5 +101,44 @@
     "MCLI-013 full client V2 acceptance remains TODO",
     "DEL-001 not complete; full C4 not PASS",
     "C5/C6, manual screen readers, native builds and human pilot not run here"
-  ]
+  ],
+  "code_commit": "3013085d18686eb7687dc92621ca23db82638248",
+  "initial_code_commit": "01f7556db0fe01b7f092227144c6f10c887d2665",
+  "exact_commit_recheck": {
+    "status": "PASS",
+    "commit": "3013085d18686eb7687dc92621ca23db82638248",
+    "http_checks": 577,
+    "operation_coverage": {
+      "status": "PASS",
+      "covered": 111,
+      "total": 111
+    },
+    "counterfactuals": [
+      {
+        "id": "removed-route",
+        "status": "PASS",
+        "meaning": "Rejected"
+      },
+      {
+        "id": "wrong-success-status",
+        "status": "PASS",
+        "meaning": "Rejected"
+      },
+      {
+        "id": "wrong-json-field",
+        "status": "PASS",
+        "meaning": "Rejected"
+      },
+      {
+        "id": "wrong-v2-request-field",
+        "status": "PASS",
+        "meaning": "Rejected"
+      }
+    ],
+    "packaged_sources": {
+      "status": "PASS",
+      "format": "wheel",
+      "scope": "all current fsp_client Python sources match packaged bytes"
+    }
+  }
 }

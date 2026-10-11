@@ -1,7 +1,7 @@
 {
   "task": "DOC-003",
-  "checked_at": "2026-10-11T22:09:58.647422+00:00",
-  "base_commit": "1fe677d67e6bdec6aaa2c7d1fc221ae1abdc8e33",
+  "checked_at": "2026-10-11T22:12:01.241286+00:00",
+  "base_commit": "3013085d18686eb7687dc92621ca23db82638248",
   "source_hashes": {
     "app/config/urls.py": "cb2f55a26962c850dd734c94e57d4aa829215c5b4d5776a77c7f25c75eadee1c",
     "app/accounts/views.py": "c7c5eea1ec0e640d4f76cb2b90a9572931b20519bd519525d5866a6adde0a4e4",
@@ -3253,7 +3253,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/accounts/login/?next=/drafts/f0ac9051-7f52-47b0-a0d3-51b170608e65/",
+      "location": "/accounts/login/?next=/drafts/469356f4-ff84-4c62-be54-cda9148568f0/",
       "status": "PASS"
     },
     {
@@ -3293,7 +3293,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/f0ac9051-7f52-47b0-a0d3-51b170608e65/",
+      "location": "/drafts/469356f4-ff84-4c62-be54-cda9148568f0/",
       "status": "PASS"
     },
     {
@@ -3303,7 +3303,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/f0ac9051-7f52-47b0-a0d3-51b170608e65/",
+      "location": "/drafts/469356f4-ff84-4c62-be54-cda9148568f0/",
       "status": "PASS"
     },
     {
@@ -3373,7 +3373,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/0afc3ca1-f88b-4096-8cdf-c76e7e0bd2e5/",
+      "location": "/drafts/110d4741-ba1c-446f-84c9-b77f4a3aea36/",
       "status": "PASS"
     },
     {
@@ -3523,7 +3523,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/ce290023-8194-49f4-89c8-c759f1c21b95/",
+      "location": "/drafts/2fc82d09-42a1-4b52-bf34-45cf3210840e/",
       "status": "PASS"
     },
     {
@@ -3543,7 +3543,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/c82fe190-cd27-4eac-a485-138f6bf45575/",
+      "location": "/drafts/56587cb0-439d-410e-ae98-4f01de2403e1/",
       "status": "PASS"
     },
     {
@@ -3573,7 +3573,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/bd6c7122-e197-4410-8268-4622b124500a/",
+      "location": "/drafts/22762580-8856-4670-a10b-d4696cde1454/",
       "status": "PASS"
     },
     {
@@ -3593,7 +3593,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/4bc3b899-dfc2-4f69-836e-68c3cef387c5/",
+      "location": "/drafts/73284c0d-8b16-4764-b533-20b12e2b8f8d/",
       "status": "PASS"
     },
     {
@@ -3613,7 +3613,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/4eed0bc5-02ad-4b08-b6e6-1af95cae1130/",
+      "location": "/drafts/82d1da59-e08a-4aef-87b4-35c46062b0c0/",
       "status": "PASS"
     },
     {
@@ -3633,7 +3633,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/10570ceb-3b75-437a-a5c1-778d258ff798/",
+      "location": "/drafts/6f78f5a5-cfc6-49e6-b2b6-f37b6dfeae5f/",
       "status": "PASS"
     },
     {
@@ -3673,7 +3673,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/c5e3642e-27ea-485d-9e7a-b25cc499e3d7/",
+      "location": "/drafts/53aa135d-413f-45a0-a01b-b0a2c4d3ea5d/",
       "status": "PASS"
     },
     {
@@ -3703,7 +3703,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/c86c952e-f486-4054-9c08-64a835d51ebe/",
+      "location": "/drafts/b6034974-f004-414e-b3d7-a530b2e0de53/",
       "status": "PASS"
     },
     {
@@ -3733,7 +3733,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/6edda2c6-7425-4a41-a436-8abe5969586b/",
+      "location": "/drafts/b0c774e3-87b1-46ac-b9a3-43418da72a05/",
       "status": "PASS"
     },
     {
@@ -3753,7 +3753,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/5569a5d4-9d3b-46f0-8205-73f4b55e63a5/",
+      "location": "/drafts/0e3aafd6-4908-439c-9cb1-f3b40f102fcf/",
       "status": "PASS"
     },
     {
@@ -3773,7 +3773,7 @@
       "expected_status": 302,
       "actual_status": 302,
       "content_type": "text/html; charset=utf-8",
-      "location": "/drafts/66c15897-2771-4e7c-80e2-61fa88c0b815/",
+      "location": "/drafts/454736d2-a791-4ca1-a1a3-03404d5d4ad7/",
       "status": "PASS"
     },
     {
@@ -3787,7 +3787,7 @@
       "status": "PASS"
     },
     {
-      "id": "v2-invalid-da536891-aacd-4cd4-8f1e-7564a7418814",
+      "id": "v2-invalid-21ae7572-f45d-4f33-bd26-b475ca63faa3",
       "method": "GET",
       "route": "/api/v1/drafts/{pk}",
       "expected_status": 404,
@@ -5847,5 +5847,5 @@
     "covered": 111,
     "total": 111
   },
-  "completed_at": "2026-10-11T22:10:05.122240+00:00"
+  "completed_at": "2026-10-11T22:12:07.099326+00:00"
 }
