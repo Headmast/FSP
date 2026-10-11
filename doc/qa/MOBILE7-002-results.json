@@ -2,8 +2,8 @@
   "task": "MOBILE7-002",
   "status": "PASS",
   "branch": "mobile7",
-  "base_commit": "9e2c7cc",
-  "source_state": "tested working tree; code SHA to be recorded after commit",
+  "base_commit": "9e2c7cc26e6bb9f955deccfbf4b673a8f306dc9e",
+  "source_state": "committed code; all source fingerprints verified against code_commit",
   "checked_at": "2026-10-11T20:47:10.712843+00:00",
   "tracks": {
     "ios": "ios-learning-1",
@@ -32,7 +32,8 @@
     "worktree_isolation": "PASS",
     "documentation_links": "PASS",
     "git_diff_check": "PASS",
-    "final_assessments_regression": "PASS"
+    "final_assessments_regression": "PASS",
+    "committed_source_fingerprints": "PASS"
   },
   "source_sha256": {
     "app/assessments/learning.py": "15578a8029115f625656b20d48726259283ecf08d782815f1ebdb73a55909e57",
@@ -72,5 +73,6 @@
     "platform SDK snippet compilation",
     "VoiceOver audit"
   ],
-  "final_affected_test_count": 47
+  "final_affected_test_count": 47,
+  "code_commit": "0733d0165112e8b0dc7a54902b6261e150a82862"
 }
