@@ -46,6 +46,7 @@ def integrations(request):
         else:
             status = 400
     response = render(request, 'accounts/integrations.html', {'form': form, 'secret': secret,
+        'client_version': __import__('api.views',fromlist=['client_version']).client_version(),
         'tokens': ApiToken.objects.filter(user=request.user).order_by('-pk')}, status=status)
     response['Cache-Control'] = 'no-store'
     response['Referrer-Policy'] = 'no-referrer'

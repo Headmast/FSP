@@ -68,3 +68,7 @@ SECURE_HSTS_SECONDS = 3600 if not DEBUG else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 X_FRAME_OPTIONS = "DENY"
+
+LOGGING = {"version": 1, "disable_existing_loggers": False,
+           "handlers": {"api_console": {"class": "logging.StreamHandler", "stream": "ext://sys.stderr"}},
+           "loggers": {"fsp.api": {"handlers": ["api_console"], "level": "INFO", "propagate": False}}}

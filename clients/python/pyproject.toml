@@ -3,7 +3,7 @@ name = "fsp-client"
 version = "0.1.0"
 description = "FSP candidate and employer CLI and local MCP bridge"
 requires-python = ">=3.13,<3.14"
-dependencies = ["httpx>=0.28,<1", "keyring>=25,<26", "mcp>=2,<3"]
+dependencies = ["httpx==0.28.1", "keyring==25.7.0", "mcp==2.3.0"]
 
 [project.scripts]
 fsp = "fsp_client.cli:main"

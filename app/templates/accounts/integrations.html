@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% block content %}
-<h1>Подключения CLI и MCP</h1><p>Создавайте отдельный токен для каждого подключения. Срок действия — 30 дней. Отзыв прекращает доступ сразу.</p>
+<h1>Подключения CLI и MCP</h1><p><a href="/downloads/fsp_client-{{ client_version }}-py3-none-any.whl">Скачать CLI {{ client_version }}</a> · <a href="/downloads/manifest.json">Контрольные суммы</a></p><p>Создавайте отдельный токен для каждого подключения. Срок действия — 30 дней. Отзыв прекращает доступ сразу.</p>
 {% if secret %}<div class="notice"><strong>Скопируйте токен сейчас: он показан один раз.</strong><pre>{{ secret }}</pre></div>{% endif %}
 <form method="post">{% csrf_token %}<input type="hidden" name="action" value="create">{{ form.as_p }}<button>Создать токен</button></form>
 <h2>Ваши подключения</h2>{% for token in tokens %}<section><h3>{{ token.name }} · {{ token.kind }}</h3><p>Права: {{ token.scopes|join:', ' }}. Действует до {{ token.expires_at }}. {% if token.revoked_at %}Отозван.{% endif %}</p>

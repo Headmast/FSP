@@ -61,6 +61,8 @@ if (shared/'db.sqlite3').exists():
     with sqlite3.connect(shared/'db.sqlite3') as source,sqlite3.connect(shared/'backups'/f'{time.time_ns()}.sqlite3') as target:source.backup(target)
 run('app/manage.py','migrate','--noinput');run('app/manage.py','collectstatic','--noinput')
 run('app/manage.py','check','--deploy');run('app/manage.py','seed_demo')
+env['FSP_UV']=str(uv)
+run('scripts/build_client_release.py')
 current=root/'current';pending=root/'.current-next'
 if current.exists() and not current.is_symlink():raise RuntimeError('current is not managed symlink')
 if pending.is_symlink():pending.unlink()

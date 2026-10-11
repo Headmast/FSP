@@ -30,7 +30,7 @@ def owned_profile(request):
 @endpoint()
 def catalog(request):
     return reply(request, {'specializations':['ios_swift'],'grades':['Junior','Middle'],'skills':list(SKILLS),
-        'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'features':['read','drafts'],'fsp_source':'mock'})
+        'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'features':['read'],'fsp_source':'mock'})
 
 
 @endpoint('candidate')
@@ -192,3 +192,35 @@ def candidate_private(request,pk):
 def candidate_pdf(request,pk):
     obj,grant=visible_profile(company_read(request.user),parse_identifier(pk))
     return pdf_response(request,obj,grant)
+
+
+@endpoint()
+def openapi(request):
+    from .schema import document
+    from django.http import JsonResponse
+    return JsonResponse(document())
+
+
+@endpoint()
+def not_found(request,unknown=""):
+    raise ApiError(404,"NOT_FOUND","Маршрут не найден.")
+
+
+def client_version():
+    import tomllib
+    from django.conf import settings
+    return tomllib.loads((settings.ROOT/'clients/python/pyproject.toml').read_text())['project']['version']
+
+
+def download_client(request,filename):
+    from django.conf import settings
+    from django.http import Http404
+    version=client_version()
+    allowed={f'fsp_client-{version}-py3-none-any.whl',f'fsp_client-{version}.tar.gz','manifest.json'}
+    if request.method not in {'GET','HEAD'} or filename not in allowed:
+        raise Http404
+    path=settings.ROOT/'.runtime/downloads'/filename
+    if not path.is_file():raise Http404
+    response=FileResponse(path.open('rb'),as_attachment=True,filename=filename)
+    response['Cache-Control']='no-cache'
+    return response

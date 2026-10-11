@@ -110,6 +110,9 @@ def endpoint(role=None, private=False, methods=('GET',)):
                 response = failure(request, 400, 'VALIDATION_ERROR', 'Проверьте параметры запроса.')
             except DatabaseError:
                 response = failure(request, 503, 'UNAVAILABLE', 'Сервис временно недоступен.')
+            except Exception as exc:
+                log.error('internal_error request=%s type=%s',request.api_request_id,type(exc).__name__)
+                response = failure(request,500,'INTERNAL_ERROR','Сервис временно недоступен.')
             if response.status_code == 429:
                 response['Retry-After'] = '60'
             if response.status_code == 401:

@@ -36,8 +36,10 @@ def proof_snapshot(value):
     def version(v):
         return v if isinstance(v,str) and re.fullmatch(r'[A-Za-z0-9_-]{1,40}',v) else 'unknown'
     areas=value.get('areas',{})
+    if not isinstance(areas,dict):areas={}
     criteria=value.get('criteria',{})
-    return {'attempt_id':value.get('attempt_id'), 'specialization':'iOS / Swift',
+    if not isinstance(criteria,dict):criteria={}
+    return {'attempt_id':value.get('attempt_id') if type(value.get('attempt_id')) is int and 0<value['attempt_id']<2**63 else None, 'specialization':'iOS / Swift',
         'grade':value.get('grade') if value.get('grade') in {'Junior','Middle'} else '',
         'finished_at':value.get('finished_at') if isinstance(value.get('finished_at'),str) and re.fullmatch(r'[0-9T:.+Z-]+',value['finished_at']) else None,
         'bank_version':version(value.get('bank_version')), 'rules_version':version(value.get('rules_version')),

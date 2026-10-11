@@ -138,9 +138,9 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "httpx", specifier = ">=0.28,<1" },
-    { name = "keyring", specifier = ">=25,<26" },
-    { name = "mcp", specifier = ">=2,<3" },
+    { name = "httpx", specifier = "==0.28.1" },
+    { name = "keyring", specifier = "==25.7.0" },
+    { name = "mcp", specifier = "==2.3.0" },
 ]
 
 [[package]]
