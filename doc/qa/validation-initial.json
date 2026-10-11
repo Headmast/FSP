@@ -1,0 +1,5320 @@
+{
+  "status": "PASS",
+  "bank_version": "ios-swift-1",
+  "checked_at": "2026-10-11T17:15:50.982111+00:00",
+  "fixture_sha256": "f230320b83b6eb6c7449f5c2058a1268e70037194c6ec1624be43b40dbccb904",
+  "protocol_sha256": "7e618c2e10aa15499d41af1b8ba273a0885659b35c8842f87cd644f2ea8cb420",
+  "annotations_sha256": null,
+  "grader_sha256": "e5e33ba27e70ace10b01aa95ad3cccf750952fe4b96199e324580bc34bc9b5ed",
+  "criteria": {
+    "label_accuracy_min": 0.9,
+    "test_retest_agreement_min": 0.9,
+    "ab_grade_agreement_min": 0.9,
+    "mean_abs_ab_score_gap_max": 1.0,
+    "oracle_mismatches_max": 0
+  },
+  "isolation": "temporary SQLite; independent Profile for each trial; no production DB",
+  "synthetic_profiles": 40,
+  "attempts": 320,
+  "oracle_attempts": 4,
+  "oracle": [
+    {
+      "grade": "Junior",
+      "variant": "A",
+      "semantic_answer_mismatches": 0
+    },
+    {
+      "grade": "Junior",
+      "variant": "B",
+      "semantic_answer_mismatches": 0
+    },
+    {
+      "grade": "Middle",
+      "variant": "A",
+      "semantic_answer_mismatches": 0
+    },
+    {
+      "grade": "Middle",
+      "variant": "B",
+      "semantic_answer_mismatches": 0
+    }
+  ],
+  "metrics": {
+    "anchors": {
+      "subjects": 24,
+      "grade_decisions": 96,
+      "label_accuracy": 0.9895833333333334,
+      "test_retest_agreement": 0.9791666666666666,
+      "ab_grade_agreement": 0.9791666666666666,
+      "mean_abs_ab_score_gap": 0.75,
+      "confusion_matrix": [
+        {
+          "expected": "Junior",
+          "actual": "Junior",
+          "count": 32
+        },
+        {
+          "expected": "Middle",
+          "actual": "Junior",
+          "count": 1
+        },
+        {
+          "expected": "Middle",
+          "actual": "Middle",
+          "count": 31
+        },
+        {
+          "expected": "unconfirmed",
+          "actual": "unconfirmed",
+          "count": 32
+        }
+      ],
+      "misclassifications": [
+        {
+          "subject": "anchor-Middle-2",
+          "variant": "B",
+          "occasion": 1,
+          "expected": "Middle",
+          "actual": "Junior"
+        }
+      ],
+      "score_separation": [
+        {
+          "expected": "unconfirmed",
+          "test": "Junior",
+          "mean_correct": 3.4375,
+          "pass_rate": 0.0
+        },
+        {
+          "expected": "unconfirmed",
+          "test": "Middle",
+          "mean_correct": 0.6875,
+          "pass_rate": 0.0
+        },
+        {
+          "expected": "Junior",
+          "test": "Junior",
+          "mean_correct": 7.1875,
+          "pass_rate": 1.0
+        },
+        {
+          "expected": "Junior",
+          "test": "Middle",
+          "mean_correct": 2.40625,
+          "pass_rate": 0.0
+        },
+        {
+          "expected": "Middle",
+          "test": "Junior",
+          "mean_correct": 7.5,
+          "pass_rate": 1.0
+        },
+        {
+          "expected": "Middle",
+          "test": "Middle",
+          "mean_correct": 6.84375,
+          "pass_rate": 0.96875
+        }
+      ]
+    },
+    "holdout": {
+      "subjects": 12,
+      "grade_decisions": 48,
+      "label_accuracy": 1.0,
+      "test_retest_agreement": 1.0,
+      "ab_grade_agreement": 1.0,
+      "mean_abs_ab_score_gap": 0.7291666666666666,
+      "confusion_matrix": [
+        {
+          "expected": "Junior",
+          "actual": "Junior",
+          "count": 16
+        },
+        {
+          "expected": "Middle",
+          "actual": "Middle",
+          "count": 16
+        },
+        {
+          "expected": "unconfirmed",
+          "actual": "unconfirmed",
+          "count": 16
+        }
+      ],
+      "misclassifications": [],
+      "score_separation": [
+        {
+          "expected": "unconfirmed",
+          "test": "Junior",
+          "mean_correct": 4.5,
+          "pass_rate": 0.0
+        },
+        {
+          "expected": "unconfirmed",
+          "test": "Middle",
+          "mean_correct": 0.875,
+          "pass_rate": 0.0
+        },
+        {
+          "expected": "Junior",
+          "test": "Junior",
+          "mean_correct": 7.0,
+          "pass_rate": 1.0
+        },
+        {
+          "expected": "Junior",
+          "test": "Middle",
+          "mean_correct": 2.1875,
+          "pass_rate": 0.0
+        },
+        {
+          "expected": "Middle",
+          "test": "Junior",
+          "mean_correct": 7.5,
+          "pass_rate": 1.0
+        },
+        {
+          "expected": "Middle",
+          "test": "Middle",
+          "mean_correct": 7.0,
+          "pass_rate": 1.0
+        }
+      ]
+    },
+    "boundary": {
+      "subjects": 4,
+      "grade_decisions": 16,
+      "label_accuracy": null,
+      "test_retest_agreement": 0.25,
+      "ab_grade_agreement": 0.75,
+      "mean_abs_ab_score_gap": 1.0,
+      "confusion_matrix": [],
+      "misclassifications": [],
+      "score_separation": []
+    }
+  },
+  "violations": [],
+  "rows": [
+    {
+      "subject": "anchor-unconfirmed-1",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-1",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-1",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-1",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-1",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-1",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-1",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-1",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-2",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-2",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 1,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-2",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-2",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 1,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-2",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-2",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-2",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-2",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-3",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-3",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-3",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-3",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-3",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-3",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-3",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-3",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-4",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 0,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-4",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 0,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-4",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 0,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-4",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 0,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-4",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-4",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-4",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-4",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-5",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-5",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-5",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-5",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-5",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-5",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-5",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-5",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-6",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-6",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-6",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-6",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-6",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-6",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-6",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-6",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-7",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-7",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-7",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-7",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-7",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-7",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-7",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-7",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-8",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 0,
+        "Async": 1,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-8",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 1,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 1,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-8",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 0,
+        "Async": 1,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-8",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 1,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 1,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-8",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-8",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-8",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-unconfirmed-8",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-1",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-1",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-1",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-1",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-1",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-1",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-1",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-1",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-2",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-2",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-2",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-2",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-2",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-2",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-2",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-2",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-3",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-3",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-3",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-3",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-3",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-3",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-3",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-3",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-4",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-4",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-4",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-4",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-4",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-4",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-4",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-4",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-5",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-5",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-5",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-5",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-5",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-5",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-5",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-5",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-6",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-6",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-6",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-6",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-6",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 4,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-6",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 4,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-6",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-6",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-7",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-7",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-7",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-7",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-7",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-7",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-7",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 4,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-7",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 4,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-8",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-8",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-8",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-8",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Junior-8",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-8",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 1,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "anchor-Junior-8",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Junior-8",
+      "split": "anchors",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Middle-1",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-1",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-1",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-1",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-1",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-1",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-1",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-1",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-2",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-2",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-2",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-2",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-2",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-2",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-2",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-2",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-3",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-3",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-3",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-3",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-3",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-3",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-3",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-3",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-4",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-4",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-4",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-4",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-4",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Middle-4",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Middle-4",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Middle-4",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Middle-5",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-5",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-5",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-5",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-5",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-5",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-5",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-5",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-6",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-6",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-6",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-6",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-6",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-6",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-6",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-6",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-7",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-7",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-7",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-7",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-7",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Middle-7",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "anchor-Middle-7",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-7",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-8",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-8",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-8",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-8",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-8",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-8",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-8",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "anchor-Middle-8",
+      "split": "anchors",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-1",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 1,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-1",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 1,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-1",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 1,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-1",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 1,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-1",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-1",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-1",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-1",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-2",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-2",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 4,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-2",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-2",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 4,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-2",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-2",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-2",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-2",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-3",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-3",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-3",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-3",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-3",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-3",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-3",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-3",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-4",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-4",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-4",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-4",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-4",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-4",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-4",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-unconfirmed-4",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-1",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Junior-1",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-1",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Junior-1",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-1",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-1",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-1",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-1",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-2",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Junior-2",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-2",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Junior-2",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-2",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-2",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-2",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-2",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-3",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Junior-3",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-3",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Junior-3",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-3",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-3",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 2,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-3",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Junior-3",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-4",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Junior-4",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-4",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Junior-4",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-4",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-4",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Junior-4",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Junior-4",
+      "split": "holdout",
+      "expected": "Junior",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "holdout-Middle-1",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-1",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-1",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-1",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-1",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-1",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-1",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-1",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-2",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-2",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-2",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-2",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-2",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-2",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-2",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-2",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-3",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-3",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-3",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-3",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-3",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-3",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-3",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-3",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-4",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-4",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-4",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-4",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-4",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-4",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "holdout-Middle-4",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "holdout-Middle-4",
+      "split": "holdout",
+      "expected": "Middle",
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-1",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-1",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-1",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-1",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-1",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "boundary-1",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "boundary-1",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-1",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "boundary-2",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-2",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 1,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-2",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-2",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 1,
+        "Async": 1,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-2",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "boundary-2",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 0,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 0,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "boundary-2",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 3,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-2",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 2,
+      "passed": false,
+      "area_scores": {
+        "Swift": 0,
+        "ARC": 2,
+        "Async": 0,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "boundary-3",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-3",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-3",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-3",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-3",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-3",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 1,
+        "ARC": 1,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-3",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-3",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-4",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-4",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-4",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 8,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-4",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Junior",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 2,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-4",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 0,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 1
+      }
+    },
+    {
+      "subject": "boundary-4",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "A",
+      "occasion": 1,
+      "correct_count": 5,
+      "passed": false,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 0
+      }
+    },
+    {
+      "subject": "boundary-4",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 0,
+      "correct_count": 7,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 2
+      }
+    },
+    {
+      "subject": "boundary-4",
+      "split": "boundary",
+      "expected": null,
+      "grade": "Middle",
+      "variant": "B",
+      "occasion": 1,
+      "correct_count": 6,
+      "passed": true,
+      "area_scores": {
+        "Swift": 2,
+        "ARC": 2,
+        "Async": 1,
+        "UI/Data": 1
+      }
+    }
+  ],
+  "limits": "Synthetic knowledge model, Codex authored. Not human psychometric evidence. Boundary instability reported separately. Highest passed level is an analysis label from two independent grade tests, not an automatic production upgrade."
+}

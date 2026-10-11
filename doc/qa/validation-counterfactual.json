@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "experiment": "Deliberately wrong Junior A key",
+  "validator_status": "FAIL",
+  "exit_code": 1,
+  "oracle_mismatches": 1,
+  "violations": [
+    "holdout:mean_abs_ab_score_gap",
+    "semantic_oracle_mismatch"
+  ],
+  "conclusion": "Answer annotations do not derive from mutable bank keys; validator detects corruption"
+}

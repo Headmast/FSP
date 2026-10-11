@@ -1,0 +1,1235 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-11T17:13:48.892618+00:00",
+  "author": "Codex semantic annotations; not independent human panel",
+  "basis": "Declared topic knowledge and explicit answer texts; no import of BANK.correct or grading formula",
+  "items": {
+    "Junior-A-1": {
+      "topic": "optional",
+      "answer_text": "7",
+      "misconception_text": "nil"
+    },
+    "Junior-A-2": {
+      "topic": "value",
+      "answer_text": "1",
+      "misconception_text": "2"
+    },
+    "Junior-A-3": {
+      "topic": "arc",
+      "answer_text": "weak",
+      "misconception_text": "strong"
+    },
+    "Junior-A-4": {
+      "topic": "capture",
+      "answer_text": "Цикл сильных ссылок",
+      "misconception_text": "Отмена Task"
+    },
+    "Junior-A-5": {
+      "topic": "async_basic",
+      "answer_text": "С await",
+      "misconception_text": "С weak"
+    },
+    "Junior-A-6": {
+      "topic": "main_actor",
+      "answer_text": "На главном исполнителе / потоке",
+      "misconception_text": "В любом concurrent queue"
+    },
+    "Junior-A-7": {
+      "topic": "identity",
+      "answer_text": "Стабильным уникальным ID элемента",
+      "misconception_text": "Индексом текущей позиции"
+    },
+    "Junior-A-8": {
+      "topic": "decode",
+      "answer_text": "JSONDecoder и Decodable",
+      "misconception_text": "NSLock и weak"
+    },
+    "Junior-B-1": {
+      "topic": "optional",
+      "answer_text": "Разворачивает значение, иначе выходит из области",
+      "misconception_text": "Создаёт фоновый поток"
+    },
+    "Junior-B-2": {
+      "topic": "value",
+      "answer_text": "Изменённое свойство общего объекта",
+      "misconception_text": "Независимую копию"
+    },
+    "Junior-B-3": {
+      "topic": "arc",
+      "answer_text": "Когда не осталось сильных ссылок",
+      "misconception_text": "После каждого await"
+    },
+    "Junior-B-4": {
+      "topic": "capture",
+      "answer_text": "[weak self]",
+      "misconception_text": "[strong self]"
+    },
+    "Junior-B-5": {
+      "topic": "cancel",
+      "answer_text": "Ставится флаг отмены; код должен сотрудничать",
+      "misconception_text": "Любой код немедленно принудительно прерывается"
+    },
+    "Junior-B-6": {
+      "topic": "main_actor",
+      "answer_text": "Через MainActor",
+      "misconception_text": "Через произвольный новый Thread"
+    },
+    "Junior-B-7": {
+      "topic": "state",
+      "answer_text": "@State",
+      "misconception_text": "weak var body"
+    },
+    "Junior-B-8": {
+      "topic": "decode",
+      "answer_text": "Обработать ошибку и показать понятное состояние",
+      "misconception_text": "Использовать try! во всех случаях"
+    },
+    "Middle-A-1": {
+      "topic": "cow",
+      "answer_text": "Из-за семантики copy-on-write",
+      "misconception_text": "Каждый read всегда копирует Array"
+    },
+    "Middle-A-2": {
+      "topic": "hashable",
+      "answer_text": "Одинаковые hash значения в данном процессе",
+      "misconception_text": "Одинаковый hash во всех запусках и версиях"
+    },
+    "Middle-A-3": {
+      "topic": "unowned",
+      "answer_text": "Возможна runtime ошибка",
+      "misconception_text": "Автоматически получится nil"
+    },
+    "Middle-A-4": {
+      "topic": "task_lifetime",
+      "answer_text": "Нет: важны длительность задачи и граф удержания",
+      "misconception_text": "Да, любой Task — утечка"
+    },
+    "Middle-A-5": {
+      "topic": "actor",
+      "answer_text": "Другой вызов мог изменить состояние во время приостановки",
+      "misconception_text": "await всегда блокирует actor навсегда"
+    },
+    "Middle-A-6": {
+      "topic": "structured",
+      "answer_text": "Дочерняя задача структурирована и не должна пережить область",
+      "misconception_text": "Никак, обе задачи всегда detached"
+    },
+    "Middle-A-7": {
+      "topic": "freshness",
+      "answer_text": "Использовать идентификатор актуального запроса / проверку версии",
+      "misconception_text": "Всегда показывать последний пришедший ответ"
+    },
+    "Middle-A-8": {
+      "topic": "observable",
+      "answer_text": "@StateObject",
+      "misconception_text": "Создавать в body каждый раз"
+    },
+    "Middle-B-1": {
+      "topic": "protocol",
+      "answer_text": "Реализация extension по статическому контексту P",
+      "misconception_text": "Всегда одноимённый метод конкретного типа"
+    },
+    "Middle-B-2": {
+      "topic": "sendable",
+      "answer_text": "Допустимость передачи значения между изолированными контекстами",
+      "misconception_text": "Автоматическое выполнение на главном потоке"
+    },
+    "Middle-B-3": {
+      "topic": "delegate",
+      "answer_text": "Протокол с ограничением AnyObject",
+      "misconception_text": "Протокол только для struct"
+    },
+    "Middle-B-4": {
+      "topic": "diagnostics",
+      "answer_text": "Memory Graph и проверка ожидаемого deinit",
+      "misconception_text": "Только увеличить RAM"
+    },
+    "Middle-B-5": {
+      "topic": "actor",
+      "answer_text": "Повторную проверку состояния после await",
+      "misconception_text": "Все actor методы исполняются до конца без приостановок"
+    },
+    "Middle-B-6": {
+      "topic": "structured",
+      "answer_text": "Структурированное завершение дочерних задач; отмена кооперативна",
+      "misconception_text": "Любой Thread немедленно уничтожен"
+    },
+    "Middle-B-7": {
+      "topic": "identity",
+      "answer_text": "Уникальная стабильная идентичность элементов",
+      "misconception_text": "Новый UUID для того же элемента на каждом обновлении"
+    },
+    "Middle-B-8": {
+      "topic": "freshness",
+      "answer_text": "Явная политика свежести / версии данных",
+      "misconception_text": "Всегда принимать последний ответ"
+    }
+  },
+  "profiles": [
+    {
+      "id": "anchor-unconfirmed-1",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "mastered_topics": [],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-unconfirmed-2",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "optional",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-unconfirmed-3",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "arc",
+        "capture"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-unconfirmed-4",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "async_basic",
+        "cancel",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "optional",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-unconfirmed-5",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "state"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-unconfirmed-6",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "delegate",
+        "diagnostics",
+        "main_actor",
+        "optional",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-unconfirmed-7",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "arc",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "optional",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-unconfirmed-8",
+      "split": "anchors",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "main_actor",
+        "optional"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Junior-1",
+      "split": "anchors",
+      "expected": "Junior",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "optional",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Junior-2",
+      "split": "anchors",
+      "expected": "Junior",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "main_actor",
+        "optional",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Junior-3",
+      "split": "anchors",
+      "expected": "Junior",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "optional",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Junior-4",
+      "split": "anchors",
+      "expected": "Junior",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Junior-5",
+      "split": "anchors",
+      "expected": "Junior",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "identity",
+        "main_actor",
+        "optional",
+        "state",
+        "structured",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Junior-6",
+      "split": "anchors",
+      "expected": "Junior",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "identity",
+        "main_actor",
+        "optional",
+        "state",
+        "structured",
+        "task_lifetime",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Junior-7",
+      "split": "anchors",
+      "expected": "Junior",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "optional",
+        "sendable",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Junior-8",
+      "split": "anchors",
+      "expected": "Junior",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "hashable",
+        "identity",
+        "main_actor",
+        "optional",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Middle-1",
+      "split": "anchors",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Middle-2",
+      "split": "anchors",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "state",
+        "structured",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Middle-3",
+      "split": "anchors",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Middle-4",
+      "split": "anchors",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Middle-5",
+      "split": "anchors",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Middle-6",
+      "split": "anchors",
+      "expected": "Middle",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Middle-7",
+      "split": "anchors",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "anchor-Middle-8",
+      "split": "anchors",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "holdout-unconfirmed-1",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "arc",
+        "main_actor"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-unconfirmed-2",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "state"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-unconfirmed-3",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "delegate",
+        "diagnostics",
+        "main_actor",
+        "optional",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-unconfirmed-4",
+      "split": "holdout",
+      "expected": "unconfirmed",
+      "mastered_topics": [
+        "arc",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "optional",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-Junior-1",
+      "split": "holdout",
+      "expected": "Junior",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "optional",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-Junior-2",
+      "split": "holdout",
+      "expected": "Junior",
+      "mastered_topics": [
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "optional",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-Junior-3",
+      "split": "holdout",
+      "expected": "Junior",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "identity",
+        "main_actor",
+        "optional",
+        "state",
+        "structured",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-Junior-4",
+      "split": "holdout",
+      "expected": "Junior",
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "optional",
+        "state",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-Middle-1",
+      "split": "holdout",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-Middle-2",
+      "split": "holdout",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-Middle-3",
+      "split": "holdout",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "holdout-Middle-4",
+      "split": "holdout",
+      "expected": "Middle",
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "boundary-1",
+      "split": "boundary",
+      "expected": null,
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "main_actor",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "boundary-2",
+      "split": "boundary",
+      "expected": null,
+      "mastered_topics": [
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "identity",
+        "optional",
+        "state",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "boundary-3",
+      "split": "boundary",
+      "expected": null,
+      "mastered_topics": [
+        "actor",
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "observable",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "id": "boundary-4",
+      "split": "boundary",
+      "expected": null,
+      "mastered_topics": [
+        "arc",
+        "async_basic",
+        "cancel",
+        "capture",
+        "cow",
+        "decode",
+        "delegate",
+        "diagnostics",
+        "freshness",
+        "hashable",
+        "identity",
+        "main_actor",
+        "optional",
+        "protocol",
+        "sendable",
+        "state",
+        "structured",
+        "task_lifetime",
+        "unowned",
+        "value"
+      ],
+      "lapse_positions": [
+        [],
+        [
+          7
+        ]
+      ]
+    }
+  ],
+  "criteria": {
+    "label_accuracy_min": 0.9,
+    "test_retest_agreement_min": 0.9,
+    "ab_grade_agreement_min": 0.9,
+    "mean_abs_ab_score_gap_max": 1.0,
+    "oracle_mismatches_max": 0
+  },
+  "boundary_in_primary_metrics": false
+}

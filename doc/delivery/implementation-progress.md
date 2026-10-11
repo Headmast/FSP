@@ -53,3 +53,7 @@ SHA 462ed45: 70 тестов приложения (14.232 с), 23 теста и�
 Повторить live check на host из current/: `FSP_ENV_FILE=<shared/.env> .venv/bin/python <путь-к-check_live_checkpoint.py> --release-config <shared/release.json>`. [Статус cron на сервере](../qa/implementation-watchdog-live.json) подтверждает available=true и публикацию актуального релиза.
 
 Скрипт обращается к реальному HTTPS и создаёт/удаляет только два собственных вымышленных аккаунта; существующие аккаунты не сбрасывает.
+
+## QA-001
+
+[Синтетическая валидация](../qa/validation-results.md) закрыта отдельным этапом: 40 профилей, 320 измерений, oracle/counterfactual, все ошибки опубликованы. Теперь 11 из 27 задач закрыты, 16 остаются. C3 проходит фиксированные synthetic критерии, QA-002 на людях остаётся открытой.
