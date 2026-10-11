@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404,render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from assessments.models import Attempt
+from accounts.identifiers import parse_identifier
 from profiles.models import Profile
 from hiring.models import Need
 from .models import Usage
@@ -18,8 +19,7 @@ def assistant(request):
     if not request.user.email_confirmed:raise PermissionDenied
     mode=request.POST.get('mode',request.GET.get('mode','profile' if request.user.role=='candidate' else 'need'))
     identifier=request.POST.get('identifier',request.GET.get('attempt',request.GET.get('need','')))
-    if identifier and not identifier.isdigit():
-        raise Http404
+    identifier=parse_identifier(identifier,required=False)
     data={'mode':mode,'identifier':identifier,'text':None,'error':None}
     if request.method=='GET':return render(request,'assistant/helper.html',data)
     if request.user.role=='candidate' and Attempt.objects.filter(candidate__user=request.user,status='active').exists():

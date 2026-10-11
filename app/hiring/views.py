@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods,require_POST
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from accounts.access import role_required
+from accounts.identifiers import parse_identifier
 from profiles.models import Profile
 from profiles.views import build_pdf
 from .models import Company,Need,Invitation
@@ -15,10 +16,7 @@ from .forms import NeedForm,SearchForm
 from .services import search,contacts_allowed,invite,decide
 
 def posted_id(request, key):
-    try:
-        return int(request.POST.get(key, ""))
-    except (ValueError, TypeError):
-        raise Http404
+    return parse_identifier(request.POST.get(key))
 
 def company_for(user):
     return Company.objects.get_or_create(user=user)[0]
@@ -41,7 +39,8 @@ def candidates(request):
     company=company_for(request.user);data=request.GET.copy()
     default=Need.objects.filter(company=company).order_by('pk').first()
     if not data.get('need') and default:data['need']=str(default.pk)
-    chosen=Need.objects.filter(company=company,pk=data.get('need')).first() if data.get('need','').isdigit() else None
+    identifier=parse_identifier(data.get('need'),required=False)
+    chosen=get_object_or_404(Need,company=company,pk=identifier) if identifier else None
     if not data.get('grade'):data['grade']=chosen.grade if chosen else 'Junior'
     form=SearchForm(data,company=company);results=[]
     if form.is_valid():results=search(**form.cleaned_data)

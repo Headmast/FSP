@@ -91,3 +91,21 @@ class HiringTests(TestCase):
         obj=invite(self.company,self.need.pk,self.profile.pk)
         self.client.force_login(self.candidate);self.client.get('/invitations/')
         obj.refresh_from_db();self.assertIsNotNone(obj.viewed_at)
+
+    def test_malformed_ids_never_reach_orm_or_create_invitation(self):
+        for value in ['²', '١', '-1', '0', '9'*198, str(2**63), 'abc']:
+            with self.subTest(value=value):
+                self.assertEqual(self.client.get('/candidates/', {'need':value}).status_code,404)
+                self.assertEqual(self.client.post('/invitations/send/',
+                    {'need':value, 'candidate':self.profile.pk}).status_code,404)
+                self.assertEqual(self.client.post('/invitations/send/',
+                    {'need':self.need.pk, 'candidate':value}).status_code,404)
+        self.assertEqual(Invitation.objects.count(),0)
+
+    def test_optional_empty_need_keeps_default_and_foreign_need_denied(self):
+        self.assertContains(self.client.get('/candidates/',{'need':''}),self.profile.name)
+        self.assertEqual(self.client.get('/candidates/',{'need':self.other_need.pk}).status_code,404)
+        for field in ['need','candidate']:
+            data={'need':self.need.pk,'candidate':self.profile.pk}
+            data[field]=''
+            self.assertEqual(self.client.post('/invitations/send/',data).status_code,404)

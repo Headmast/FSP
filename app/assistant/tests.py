@@ -60,4 +60,22 @@ class AssistantTests(TestCase):
         with patch('assistant.provider.generate',return_value='Мок') as generate:
             response=self.client.post('/assistant/',{'mode':'need','identifier':need.pk});self.assertEqual(response.status_code,200)
             self.assertEqual(generate.call_args.args,('need',{'grade':'Junior','skills':'Swift'}))
+            for value in ['²','١','9'*198,str(2**63),'-1']:
+                self.assertEqual(self.client.post('/assistant/',
+                    {'mode':'need','identifier':value}).status_code,404)
+            self.assertEqual(generate.call_count,1)
         self.assertEqual(self.client.post('/assistant/',{'mode':'profile'}).status_code,403)
+
+    def test_malformed_context_ids_return_404_without_provider_calls(self):
+        with patch('assistant.provider.generate') as generate:
+            for value in ['²', '١', '-1', '0', '9'*198, str(2**63), 'abc']:
+                with self.subTest(value=value):
+                    self.assertEqual(self.client.post('/assistant/',
+                        {'mode':'result','identifier':value}).status_code,404)
+                    self.assertEqual(self.client.get('/assistant/',{'attempt':value}).status_code,404)
+            generate.assert_not_called()
+
+    def test_empty_optional_identifier_preserves_latest_own_result(self):
+        obj=start_attempt(self.profile,'Junior')
+        save_answers(self.profile,obj.pk,{q['id']:q['correct'] for q in obj.tasks},finish=True)
+        self.assertEqual(self.client.post('/assistant/',{'mode':'result','identifier':''}).status_code,200)

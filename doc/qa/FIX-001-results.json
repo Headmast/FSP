@@ -1,0 +1,30 @@
+{
+  "task": "FIX-001",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:24:41.973668+00:00",
+  "base_commit": "a6280eaf501cbc9b7cfd18519739b332b9a90b76",
+  "checked_sources": {
+    "app/accounts/identifiers.py": "c215a9d59555f8d369d469165f54e901cfbca6b8fb3955fbd6a8d3ed23e0cff4",
+    "app/hiring/views.py": "185ddde25a5ffb9b7844468434d2bcd333d7f31f1887776952aab57bbf5a5275",
+    "app/hiring/tests.py": "ff4b78780c63d32d78e6bd6412b15a31837a71cb48902e117ef4f74a1d17b920",
+    "app/assistant/views.py": "54f31d139ae2183ca41ddd380645151e00172fce01f526554a29e4edb3fadcd6",
+    "app/assistant/tests.py": "3949acd9bcef7b879f2acbe0e258a4097db5f6ee1fed90905bcbf6aab68db039"
+  },
+  "tests": {
+    "command": "python app/manage.py test hiring assistant --verbosity 0",
+    "count": 20,
+    "failures": 0,
+    "seconds": 1.47
+  },
+  "http_cases": {
+    "unicode_search": 404,
+    "unicode_assistant_need": 404,
+    "oversized_search": 404,
+    "oversized_assistant": 404,
+    "invalid_ascii_search": 404,
+    "negative_search": 404,
+    "valid_own_need": 200,
+    "exceptions": 0
+  },
+  "isolation": "worktree test database / temporary SQLite; no production changes"
+}
