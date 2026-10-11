@@ -58,6 +58,16 @@ def build_pdf(profile, include_contacts=False):
     for event in profile.achievement_events:
         texts.append(f"{event.event_name}: {event.occurred_on}, {event.discipline}, {event.result}, "
                      f"{'команда' if event.team else 'личное участие'} (источник: мок)")
+    from assessments.models import Attempt
+    from assessments.proofs import witness
+    result=Attempt.objects.filter(candidate=profile,status='finished',passed=True,grade=profile.confirmed_grade).order_by('-finished_at','-pk').first()
+    if result:
+        proof=witness(result)
+        texts.extend([f"Свидетельство: {proof['finished_at']}, банк {proof['bank_version']}, правила {proof['rules_version']}, вариант {proof['variant']}",
+            'Области (верных ответов): '+', '.join(f'{area}: {count}' for area,count in proof['areas'].items()),
+            f"Критерии: {proof['criteria']['min_correct']}/8, минимум {proof['criteria']['min_per_area']} в каждой области; 15 минут.",
+            proof['limitations']])
+    else:texts.append('Свидетельство завершённого успешного теста этой категории отсутствует.')
     if include_contacts:
         texts.extend(["О себе (самоописание):", profile.description or 'Не заполнено', "Опыт (самоописание):"])
         for item in profile.experiences.order_by('pk'):

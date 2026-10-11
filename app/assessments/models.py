@@ -6,6 +6,7 @@ class Attempt(models.Model):
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
     grade = models.CharField(max_length=8)
     bank_version = models.CharField(max_length=40)
+    rules_version = models.CharField(max_length=40,default='rules-v1')
     variant = models.CharField(max_length=1)
     tasks = models.JSONField()
     answers = models.JSONField(default=dict)

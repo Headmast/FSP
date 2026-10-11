@@ -6,6 +6,7 @@ from django.utils import timezone
 from profiles.models import Profile
 from .bank import BANK, VERSION
 from .models import Attempt
+from .proofs import RULES
 
 
 def validate_answers(attempt, submitted):
@@ -35,7 +36,8 @@ def finalize(attempt, now):
         areas[task['area']] = areas.get(task['area'], 0) + int(correct)
     attempt.correct_count = count
     attempt.area_scores = areas
-    attempt.passed = count >= 6 and all(score >= 1 for score in areas.values())
+    rules=RULES[attempt.rules_version]
+    attempt.passed = count >= rules['min_correct'] and all(score >= rules['min_per_area'] for score in areas.values())
     attempt.expired = now > attempt.expires_at
     attempt.status = 'finished'
     attempt.finished_at = now

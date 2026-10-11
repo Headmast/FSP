@@ -13,7 +13,9 @@ from profiles.models import Profile
 from profiles.views import build_pdf
 from .models import Company,Need,Invitation
 from .forms import NeedForm,SearchForm,CompanyForm
-from .services import search,contacts_allowed,invite,decide
+from .services import search,contacts_allowed,invite,decide,InvalidProof
+from assessments.models import Attempt
+from assessments.proofs import witness
 
 def posted_id(request, key):
     return parse_identifier(request.POST.get(key))
@@ -66,7 +68,8 @@ def visible_profile(company,pk):
 def candidate(request,pk):
     company=company_for(request.user);profile,grant=visible_profile(company,pk)
     return render(request,'hiring/candidate.html',{'profile':profile,'grant':grant,
-        'needs':Need.objects.filter(company=company,grade=profile.confirmed_grade),'query':request.GET.urlencode()})
+        'needs':Need.objects.filter(company=company,grade=profile.confirmed_grade),'query':request.GET.urlencode(),
+        'proofs':[witness(item) for item in Attempt.objects.filter(candidate=profile,status='finished',grade=profile.confirmed_grade).order_by('-finished_at')]})
 
 @role_required('employer')
 def resume(request,pk):
@@ -79,13 +82,19 @@ def send(request):
     company=company_for(request.user)
     need=get_object_or_404(Need,pk=posted_id(request,'need'),company=company)
     profile=get_object_or_404(Profile,pk=posted_id(request,'candidate'),published=True,confirmed_grade=need.grade)
+    accepted=request.POST.getlist('accepted_attempts')
+    if len(accepted)>20:raise Http404
+    ids=[parse_identifier(value) for value in accepted]
     try:
-        invite(company,need.pk,profile.pk)
+        invite(company,need.pk,profile.pk,ids,request.POST.get('discussion',''))
     except (Need.DoesNotExist, Profile.DoesNotExist):
         raise Http404
     except ValidationError:
         messages.error(request,'Перед отправкой заполните корректный email компании для связи.')
         return redirect('company-profile')
+    except InvalidProof as exc:
+        messages.error(request,str(exc))
+        return redirect('candidate',pk=profile.pk)
     messages.success(request,'Предложение отправлено. Повторная отправка не создаёт дубликат.')
     return redirect('invitations')
 

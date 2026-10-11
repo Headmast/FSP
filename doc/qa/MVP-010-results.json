@@ -1,0 +1,41 @@
+{
+  "task": "MVP-010",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:54:15.917670+00:00",
+  "base_commit": "5e1febffc9056bda3cd843a9ec2bac0ec315d7e6",
+  "checked_sources": {
+    "app/assessments/models.py": "4131e3c7218870c9f586f6e9564b98bbe526868bf7cb0fa7c4daa2ec083fbbc2",
+    "app/assessments/services.py": "e02451fdda1b44336702f0f0fa64fc343d9377de863261b839cebc4b5cc6bd18",
+    "app/assessments/tests.py": "e2117c7e370017e6e37a0424d3ce0f3c5c7dce45e968ff169f4b364a9a141466",
+    "app/assessments/views.py": "c6e0dbce6ec6d41c76156476a74ff3fe680da29c57373f1452e63245d35f1ddc",
+    "app/config/urls.py": "08774b45ec0bf0487236ce20688330920ecba923d019a87c8a999d15ee700fc1",
+    "app/hiring/services.py": "0404b2484044c8b92de5a61ca105edd236f9f70ec231588c4dff73c4180f4ecb",
+    "app/hiring/tests.py": "c956958c950370b886038f5fbc7ef0eedb8bdc33ff992c2fe66663b2451cce74",
+    "app/hiring/views.py": "6b0cd0eb34f9f7c45fa9b53d84099d31836abdbe84a42842a028d7f7f2b19e88",
+    "app/profiles/views.py": "92a427a2bfda9b7328bc8ac6120c3d00ab30e041f26647197d95d6f83350cb5b",
+    "app/templates/assessments/dashboard.html": "5e4a3820d687934fe254a02ec79c58a1556804810dc3db0df847f72bbc8a499e",
+    "app/templates/hiring/candidate.html": "43e09bdb5dc71a88fe9680212417e3d2141e418918792d5af31aa3356893ccac",
+    "app/templates/hiring/invitations.html": "127cfaed7cbf61d272e11129ea6228bb0d36eec4376118442371529cdb03f1be",
+    "app/assessments/proofs.py": "4d6bbb229c3c7dbd8bd7e1bb9636a79565c3873d6d17032b778a59fa8b31898e",
+    "app/assessments/migrations/0002_attempt_rules_version.py": "3f68e45fc20ce824ee7a8934d47837fc92501ac79068685983c056a1d353d925",
+    "app/templates/assessments/proof.html": "570e8d0d8bd4135add04acc683ef17169d511232698584d256bbf81ba1683c59",
+    "app/templates/assessments/proof_details.html": "e20ce1a91d196e39023b36855a18598a0a4beb7de21a7a9f0a84187a71ece723"
+  },
+  "tests": {
+    "command": "python app/manage.py test assessments hiring profiles --verbosity 0",
+    "count": 48,
+    "failures": 0,
+    "seconds": 14.454,
+    "additional": "1 focused test after adding wrong-grade subcase: PASS"
+  },
+  "checks": [
+    "active witness denied",
+    "foreign/active/wrong-grade accepted proof denied",
+    "snapshot keeps rule/date/areas/result/criteria without questions or keys",
+    "offer edit cannot mutate accepted selection",
+    "candidate and employer see same snapshot; grade unchanged",
+    "proof permissions track publication/grant"
+  ],
+  "pdf": "Public synthetic proof PDF rendered/inspected and extracted; evidence readable, contacts excluded",
+  "deployment": "NOT_RUN: local stage"
+}

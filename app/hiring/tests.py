@@ -188,3 +188,58 @@ class HiringTests(TestCase):
         self.assertContains(self.client.get(f'/candidates/{self.profile.pk}/'),'private@demo.invalid')
         self.client.force_login(self.other)
         self.assertEqual(self.client.get(f'/candidates/{self.profile.pk}/').status_code,404)
+
+    def complete_attempt(self,profile=None):
+        from assessments.services import start_attempt,save_answers
+        profile=profile or self.profile
+        obj=start_attempt(profile,'Junior')
+        return save_answers(profile,obj.pk,{q['id']:q['correct'] for q in obj.tasks},finish=True)
+
+    def test_invitation_snapshots_selected_proof_and_discussion_without_keys(self):
+        import json
+        proof=self.complete_attempt()
+        response=self.client.post('/invitations/send/',{'candidate':self.profile.pk,'need':self.need.pk,
+            'accepted_attempts':[proof.pk],'discussion':'Обсудить архитектуру экранов'})
+        self.assertEqual(response.status_code,302)
+        obj=Invitation.objects.get();snapshot=obj.snapshot['accepted_results'][0]
+        self.assertEqual(snapshot['attempt_id'],proof.pk)
+        self.assertEqual(snapshot['rules_version'],'rules-v1');self.assertTrue(snapshot['passed'])
+        for secret in ['tasks','answers','correct','contact_email','contact_phone']:
+            self.assertNotIn(secret,snapshot)
+        before=json.dumps(obj.snapshot,sort_keys=True)
+        proof.correct_count=0;proof.bank_version='changed';proof.save()
+        self.need.tasks='Изменённые задачи';self.need.save()
+        self.assertEqual(invite(self.company,self.need.pk,self.profile.pk,[], 'Другие вопросы').pk,obj.pk)
+        obj.refresh_from_db();self.assertEqual(json.dumps(obj.snapshot,sort_keys=True),before)
+        self.client.force_login(self.candidate)
+        self.assertContains(self.client.get('/invitations/'),'Обсудить архитектуру экранов')
+        self.assertContains(self.client.get('/invitations/'),'rules-v1')
+        self.profile.refresh_from_db();self.assertEqual(self.profile.confirmed_grade,'Junior')
+
+    def test_foreign_active_and_wrong_grade_results_cannot_be_accepted(self):
+        from assessments.services import start_attempt
+        from .services import InvalidProof
+        from profiles.models import Profile
+        other=Profile.objects.create(user=self.other,name='Другой')
+        foreign=self.complete_attempt(other)
+        active=start_attempt(self.profile,'Junior')
+        from assessments.models import Attempt
+        wrong=Attempt.objects.create(candidate=self.profile,grade='Middle',variant='A',bank_version='synthetic',tasks=[],status='finished',started_at=timezone.now(),expires_at=timezone.now(),finished_at=timezone.now())
+        for ids in [[foreign.pk],[active.pk],[wrong.pk],[999999]]:
+            with self.assertRaises(InvalidProof):invite(self.company,self.need.pk,self.profile.pk,ids)
+            self.assertEqual(Invitation.objects.count(),0)
+        response=self.client.post('/invitations/send/',{'candidate':self.profile.pk,'need':self.need.pk,'accepted_attempts':['²']})
+        self.assertEqual(response.status_code,404)
+        with self.assertRaises(InvalidProof):invite(self.company,self.need.pk,self.profile.pk,[],'x'*2001)
+
+    def test_proof_visibility_tracks_candidate_publication_and_never_exposes_keys(self):
+        proof=self.complete_attempt();url=f'/assessments/{proof.pk}/proof/'
+        response=self.client.get(url)
+        self.assertContains(response,'Свидетельство проверки')
+        self.assertContains(response,'Короткий тест без прокторинга')
+        for task in proof.tasks:self.assertNotContains(response,task['prompt'])
+        self.assertNotContains(response,'private@demo.invalid')
+        self.profile.published=False;self.profile.save()
+        self.assertEqual(self.client.get(url).status_code,404)
+        self.client.force_login(self.candidate);self.assertEqual(self.client.get(url).status_code,200)
+        self.client.force_login(self.other);self.assertEqual(self.client.get(url).status_code,404)

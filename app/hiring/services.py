@@ -5,6 +5,12 @@ from django.core.exceptions import ValidationError
 from profiles.models import Profile
 from profiles.skills import normalized
 from .models import Company,Need,Invitation
+from assessments.models import Attempt
+from assessments.proofs import witness
+
+
+class InvalidProof(ValueError):
+    pass
 
 def rank(profile,need=None):
     desired=normalized(need.skills) if need else set()
@@ -28,19 +34,25 @@ def search(grade,need=None,skill='',fsp=''):
 def contacts_allowed(company,profile):
     return Invitation.objects.filter(company=company,candidate=profile,status='accepted').exists()
 
-def invite(company,need_id,candidate_id):
+def invite(company,need_id,candidate_id,accepted_ids=(),discussion=''):
     with transaction.atomic():
         need=Need.objects.get(pk=need_id,company=company)
         profile=Profile.objects.get(pk=candidate_id,published=True,confirmed_grade=need.grade)
         existing=Invitation.objects.filter(company=company,need=need,candidate=profile).first()
         if existing:return existing
+        ids=set(accepted_ids)
+        if len(accepted_ids)>20 or len(discussion)>2000:raise InvalidProof('Слишком много результатов или слишком длинный текст.')
+        attempts=list(Attempt.objects.filter(pk__in=ids,candidate=profile,status='finished',grade=need.grade).order_by('pk'))
+        if len(attempts)!=len(ids):raise InvalidProof('Можно зачесть только завершённые результаты этого кандидата и категории.')
         company=Company.objects.get(pk=company.pk)
         if not company.contact_email:raise ValidationError('Укажите контакт компании.')
         validate_email(company.contact_email)
         snapshot={'company':company.name,'company_email':company.contact_email,
             'company_description':company.description,'company_industry':company.industry,'title':need.title,'grade':need.grade,
             'tasks':need.tasks,'salary_min':need.salary_min,'salary_max':need.salary_max,
-            'work_format':need.get_work_format_display(),'next_step':need.next_step}
+            'work_format':need.get_work_format_display(),'next_step':need.next_step,
+            'accepted_results':[witness(attempt) for attempt in attempts],
+            'accepted_at':timezone.now().isoformat(),'discussion':discussion.strip()}
         invitation,_=Invitation.objects.get_or_create(company=company,need=need,candidate=profile,defaults={'snapshot':snapshot})
         return invitation
 

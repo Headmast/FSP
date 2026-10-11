@@ -104,3 +104,9 @@ class AssessmentTests(TestCase):
         self.client.force_login(employer)
         self.assertEqual(self.client.get('/assessments/').status_code,403)
         self.assertEqual(self.client.post('/assessments/start/',{'grade':'Junior'}).status_code,403)
+
+    def test_active_attempt_has_no_public_witness(self):
+        from .proofs import witness
+        obj=start_attempt(self.profile,'Junior')
+        with self.assertRaises(ValueError):witness(obj)
+        self.assertEqual(self.client.get(f'/assessments/{obj.pk}/proof/').status_code,404)
