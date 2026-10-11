@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:8041",
+  "scenarios": [
+    "registration_with_consent",
+    "candidate_edit_apply",
+    "owned_history_resume",
+    "read_only_replay",
+    "new_employer_without_need",
+    "need_edit_salary_company",
+    "need_saved",
+    "foreign_draft_404",
+    "mobile_no_overflow"
+  ],
+  "browserErrors": []
+}

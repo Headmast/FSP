@@ -1,0 +1,11 @@
+<section class="card" data-testid="assistant-draft">
+<h2>Проверка черновика</h2>
+<p>Источник: мок помощника; внешний AI не вызывался. Срок: {{ draft.expires_at }}.</p>
+{% if draft.mode == 'profile' %}<p>Сохраняется только приватное описание профиля. Подробный текст виден вам и компаниям, которым вы уже открыли доступ.</p>
+{% else %}<p>Укажите условия и зарплату самостоятельно. Сохранение создаст новую потребность.</p>{% endif %}
+{% if draft.applied_at %}<div class="notice">Черновик уже применён {{ draft.applied_at }}.</div>
+{% elif draft.expired %}<div class="notice">Срок истёк. Получите новый черновик или заполните основную форму.</div>
+{% else %}<form method="post" action="{% url 'assistant-draft' draft.pk %}">{% csrf_token %}
+{{ draft_form.as_p }}<button class="primary">Проверил черновик — применить</button></form>{% endif %}
+<p><a href="{% url 'assistant-draft' draft.pk %}">Открыть этот черновик отдельно</a> · <a href="{% url 'assistant' %}">Получить другой черновик</a></p>
+</section>

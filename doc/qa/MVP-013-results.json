@@ -1,0 +1,69 @@
+{
+  "task": "MVP-013",
+  "status": "PASS",
+  "checked_at": "2026-10-11T19:58:06.528078+00:00",
+  "base_commit": "dc7187e584f7af357a68f388614306cabcaf970e",
+  "checked_sources": {
+    "app/assistant/models.py": "5a5a1ca5b4caea89c5af0812dc22698fec1efdf7f0a4f38e8393949d0f3dc969",
+    "app/assistant/tests.py": "43496d915ab7b74ef2a9d0edd35480e29e8b44c183cac76271480ead90a31e8f",
+    "app/assistant/views.py": "ccb3f2ca3a759dd96a911acffef67cd3d10aeb10538e2ca2d693f41388fbe764",
+    "app/config/urls.py": "f10ca18f6d5cdaca1f514a2a31b1377342c0be35f85692b4cb397482a9cc4bb1",
+    "app/static/app.css": "84adcf40ae7721030b78a6d4e6ceac635b397a243a2cfadbea005fce84a804b8",
+    "app/templates/assistant/helper.html": "480f549201fb19f8c322ed9afda0d928df2fa6629f7feb800b6685f7c002663c",
+    "app/assistant/drafts.py": "12b0c1ea0d3d90eab5f1880edf665af0e479f2456eebd2cedcb67a22cecf2af2",
+    "app/assistant/forms.py": "2c6fe2cd0c34701f7b9e152170667e5bba5235feace91086c5567aef1df83d58",
+    "app/assistant/migrations/0002_draft.py": "a3184d656c3ee0c2ee5e561101f74783f1752e6db0fd76bdc93b447da4f456af",
+    "app/templates/assistant/draft.html": "cea77838450cb471cec4c31c2fbc1bf3426df61ee2c69e201a110ccc9e1ec594",
+    "app/templates/assistant/draft_form.html": "236ddc58c8d6187a1876e36483cb2bf2f6511d88e583cb25b7091d495046a180",
+    "scripts/check_assistant_drafts.cjs": "4fd1ebfde70c354c161b6ca30c73c5b6fec66769eb507d5717620f062c1dff41",
+    "scripts/check_draft_concurrency.py": "884ad02f4a30904f537b055984cadb7035a63e49e4bf27e083445a3407de4106"
+  },
+  "checks": [
+    {
+      "id": "application",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": "app/manage.py test accounts profiles assessments hiring assistant --verbosity 1",
+      "output": "Found 82 test(s).\nSystem check identified no issues (0 silenced).\nCreating test database for alias 'default'...\n..................................................................................\n----------------------------------------------------------------------\nRan 82 tests in 9.588s\n\nOK\nDestroying test database for alias 'default'...\n"
+    },
+    {
+      "id": "migration_drift",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": "app/manage.py makemigrations --check --dry-run",
+      "output": "No changes detected\n"
+    },
+    {
+      "id": "concurrency",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": "scripts/check_draft_concurrency.py",
+      "output": "{\n  \"status\": \"PASS\",\n  \"isolation\": \"temporary SQLite, no production data\",\n  \"calls_per_scenario\": 8,\n  \"need_rows\": 1,\n  \"same_need_for_replays\": true,\n  \"description_drafts_applied\": 1,\n  \"competing_description_conflicts\": 4\n}\n"
+    }
+  ],
+  "initial_test_failure": "One expected skill string had incorrect order/separators; existing canonical normalizer returns Swift, CoreData. Corrected expectation; normalizer unchanged.",
+  "deployment": "NOT_RUN: local stage; full C2 still requires AI-001",
+  "browser": {
+    "status": "PASS",
+    "url": "http://127.0.0.1:8041",
+    "scenarios": [
+      "registration_with_consent",
+      "candidate_edit_apply",
+      "owned_history_resume",
+      "read_only_replay",
+      "new_employer_without_need",
+      "need_edit_salary_company",
+      "need_saved",
+      "foreign_draft_404",
+      "mobile_no_overflow"
+    ],
+    "browserErrors": []
+  },
+  "visual_review": "PASS: 390px employer draft, editable fields and apply button readable; no horizontal overflow",
+  "documentation_checks": {
+    "markdown_documents": 78,
+    "links_and_gate_metadata": "PASS",
+    "backlog_consistency": "PASS: 12 DONE, 15 open of 27",
+    "diff_check": "PASS"
+  }
+}

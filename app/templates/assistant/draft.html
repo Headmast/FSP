@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Черновик помощника</h1>
+{% if error %}<div class="notice">{{ error }}</div>{% endif %}
+{% include 'assistant/draft_form.html' %}
+{% if draft.mode == 'profile' %}<p><a href="{% url 'profile' %}">Заполнить профиль вручную</a></p>
+{% else %}<p><a href="{% url 'needs' %}">Заполнить потребность вручную</a></p>{% endif %}
+{% endblock %}
