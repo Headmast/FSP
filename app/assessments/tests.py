@@ -110,3 +110,22 @@ class AssessmentTests(TestCase):
         obj=start_attempt(self.profile,'Junior')
         with self.assertRaises(ValueError):witness(obj)
         self.assertEqual(self.client.get(f'/assessments/{obj.pk}/proof/').status_code,404)
+
+    def test_new_candidate_cohort_gets_both_variants_without_mutating_active_snapshot(self):
+        first=start_attempt(self.profile,'Junior')
+        snapshot=first.tasks
+        variants=[first.variant]
+        for index in range(19):
+            user=User.objects.create_user(username=f'cohort-{index}@demo.invalid',role='candidate')
+            profile=Profile.objects.create(user=user)
+            obj=start_attempt(profile,'Junior');variants.append(obj.variant)
+            self.assertEqual({q['id'] for q in obj.tasks},{q['id'] for q in BANK[('Junior',obj.variant)]})
+            self.assertEqual(Counter(q['area'] for q in obj.tasks),{'Swift':2,'ARC':2,'Async':2,'UI/Data':2})
+        self.assertEqual(Counter(variants),{'A':10,'B':10})
+        resumed=start_attempt(self.profile,'Junior')
+        self.assertEqual(resumed.pk,first.pk);self.assertEqual(resumed.tasks,snapshot)
+        save_answers(self.profile,first.pk,self.answers(first),finish=True)
+        first.refresh_from_db();first.finished_at=timezone.now()-timedelta(days=8);first.save()
+        retry=start_attempt(self.profile,'Junior')
+        self.assertNotEqual(retry.variant,first.variant)
+        self.assertEqual(first.tasks,snapshot)

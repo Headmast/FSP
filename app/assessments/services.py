@@ -75,7 +75,12 @@ def start_attempt(profile, grade):
         latest = Attempt.objects.filter(candidate=profile, grade=grade, status='finished').order_by('-finished_at').first()
         if latest and latest.finished_at > now - timedelta(days=7):
             raise ValueError('Повтор этой категории доступен через семь дней.')
-        variant = 'AB'[Attempt.objects.filter(candidate=profile, grade=grade).count() % 2]
+        if latest:
+            variant = 'B' if latest.variant == 'A' else 'A'
+        else:
+            # SQLite IMMEDIATE serializes this allocation with creation of the attempt.
+            first_candidates=Attempt.objects.filter(grade=grade,bank_version=VERSION).values('candidate').distinct().count()
+            variant = 'AB'[first_candidates % 2]
         tasks = copy.deepcopy(BANK[(grade, variant)])
         for task in tasks:
             order = list(range(4))

@@ -1,0 +1,28 @@
+{
+  "task": "MVP-012",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:58:22.290275+00:00",
+  "base_commit": "6fc36fc66ca25a249f5f21e1d63209a30c74f01a",
+  "checked_sources": {
+    "app/assessments/services.py": "e5e33ba27e70ace10b01aa95ad3cccf750952fe4b96199e324580bc34bc9b5ed",
+    "app/assessments/tests.py": "62be854012ba7ee627412af637ec07ea8913c461a3376d3a14ef6649ad77fdc9",
+    "scripts/check_assessment_concurrency.py": "ec24f69120e9469d6eae74bf4d1c9a0a277b478d0b1cd432f79798e2ff3cbedf"
+  },
+  "tests": {
+    "command": "python app/manage.py test assessments --verbosity 0",
+    "count": 15,
+    "failures": 0,
+    "seconds": 0.228
+  },
+  "cohort": {
+    "new_candidates": 20,
+    "A": 10,
+    "B": 10,
+    "active_snapshot_unchanged": true,
+    "retry_uses_other_variant": true
+  },
+  "concurrency": "8 distinct candidates -> 4 A/4 B; 8 same-user calls -> one attempt; 8 finalizations -> consistent result",
+  "database": "SQLite IMMEDIATE allocation; not a PostgreSQL concurrency claim",
+  "limitations": "Only 2 question sets per grade, no proctoring, questions can repeat after A/B rotation",
+  "deployment": "NOT_RUN: local stage"
+}

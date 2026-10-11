@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "concurrent_calls": 8,
+  "attempts_created": 1,
+  "final_results": [
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8
+  ],
+  "distinct_new_candidates": 8,
+  "new_candidate_variants": {
+    "B": 4,
+    "A": 4
+  }
+}
