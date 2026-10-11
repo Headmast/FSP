@@ -2,13 +2,15 @@ const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 (async()=>{
+  const base=process.argv[2] || 'http://127.0.0.1:8067';
+  assert.ok(['localhost','127.0.0.1'].includes(new URL(base).hostname));
   const browser=await chromium.launch({headless:true});
   const page=await browser.newPage({viewport:{width:1440,height:1000}});
   const errors=[],external=[];
   page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
-  page.on('request',r=>{if(!r.url().startsWith('http://127.0.0.1:8067/')&&!r.url().startsWith('data:'))external.push(r.url());});
-  await page.goto('http://127.0.0.1:8067/');
+  page.on('request',r=>{if(!r.url().startsWith(base+'/')&&!r.url().startsWith('data:'))external.push(r.url());});
+  await page.goto(base+'/');
   const click=async name=>page.getByRole('button',{name,exact:true}).last().click();
   const input=page.getByRole('textbox',{name:'Сообщение боту'});
   const send=async text=>{await input.fill(text);await input.press('Enter');};
