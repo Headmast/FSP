@@ -1,0 +1,361 @@
+{
+  "task": "DOC-009",
+  "checked_at": "2026-10-11T23:37:09.932254+00:00",
+  "code_commit": "a0da48b5553467c6a3a6391ce40b10119d6893e7",
+  "route_count": 69,
+  "routes": [
+    "/learning/",
+    "/learning/lessons/<str:grade>/<slug:topic>/",
+    "/learning/lessons/<str:grade>/<slug:topic>/complete/",
+    "/learning/tracks/<slug:track>/lessons/<str:grade>/<slug:topic>/",
+    "/learning/tracks/<slug:track>/lessons/<str:grade>/<slug:topic>/complete/",
+    "/learning/start/",
+    "/learning/sessions/<int:pk>/",
+    "/learning/sessions/<int:pk>/answer/",
+    "/drafts/",
+    "/drafts/<uuid:pk>/",
+    "/downloads/<str:filename>",
+    "/api/v1/me",
+    "/api/v1/catalog",
+    "/api/v1/me/profile",
+    "/api/v1/me/profile/private",
+    "/api/v1/me/profile/resume.pdf",
+    "/api/v1/me/assessments",
+    "/api/v1/me/assessments/<str:pk>/result",
+    "/api/v1/me/achievements",
+    "/api/v1/invitations",
+    "/api/v1/invitations/<str:pk>",
+    "/api/v1/invitations/<str:pk>/contacts",
+    "/api/v1/me/company",
+    "/api/v1/needs",
+    "/api/v1/needs/<str:pk>",
+    "/api/v1/candidates",
+    "/api/v1/candidates/<str:pk>",
+    "/api/v1/candidates/<str:pk>/proofs",
+    "/api/v1/candidates/<str:pk>/private",
+    "/api/v1/candidates/<str:pk>/resume.pdf",
+    "/api/v1/openapi.json",
+    "/api/v1/drafts",
+    "/api/v1/drafts/<str:pk>",
+    "/api/v1/drafts/<str:pk>/cancel",
+    "/api/v1/",
+    "/api/v1/<path:unknown>",
+    "/accounts/integrations/",
+    "/company/",
+    "/company/dashboard/",
+    "/company/team/",
+    "/company/needs/",
+    "/candidates/",
+    "/candidates/<int:pk>/",
+    "/candidates/<int:pk>/resume.pdf",
+    "/invitations/",
+    "/invitations/send/",
+    "/invitations/<int:pk>/accept/",
+    "/invitations/<int:pk>/decline/",
+    "/assistant/",
+    "/assistant/drafts/<int:pk>/",
+    "/assessments/",
+    "/assessments/start/",
+    "/assessments/<int:pk>/",
+    "/assessments/<int:pk>/proof/",
+    "/assessments/<int:pk>/answer/",
+    "/assessments/<int:pk>/finish/",
+    "/",
+    "/accounts/register/",
+    "/accounts/consent/",
+    "/accounts/privacy/",
+    "/accounts/login/",
+    "/accounts/logout/",
+    "/accounts/confirm/",
+    "/profile/",
+    "/profile/resume.pdf",
+    "/profile/fsp/",
+    "/profile/fsp/link/",
+    "/health/",
+    "/version/"
+  ],
+  "model_fields": {
+    "Profile": [
+      "user",
+      "name",
+      "city",
+      "skills",
+      "specialization",
+      "experience_months",
+      "roles",
+      "soft_skills",
+      "description",
+      "contact_email",
+      "contact_phone",
+      "published",
+      "publication_consented_at",
+      "publication_consent_version",
+      "desired_grade",
+      "confirmed_grade",
+      "test_score",
+      "grade_changed_at",
+      "fsp_status",
+      "fsp_prize"
+    ],
+    "Need": [
+      "company",
+      "recruiter",
+      "title",
+      "grade",
+      "skills",
+      "tasks",
+      "salary_min",
+      "salary_max",
+      "work_format",
+      "next_step"
+    ],
+    "Company": [
+      "user",
+      "name",
+      "contact_email",
+      "description",
+      "industry"
+    ],
+    "Invitation": [
+      "candidate",
+      "need",
+      "company",
+      "recruiter",
+      "snapshot",
+      "status",
+      "created_at",
+      "viewed_at",
+      "responded_at"
+    ]
+  },
+  "invitation_states": [
+    [
+      "sent",
+      "Ожидает решения"
+    ],
+    [
+      "accepted",
+      "Принято"
+    ],
+    [
+      "declined",
+      "Отклонено"
+    ]
+  ],
+  "tracked_mobile": [],
+  "tracked_analytics": [],
+  "source_sha256": {
+    "app/profiles/models.py": "95bc5e41a911581f50b9eb533bd759a92b561d45e039fce44113e74a37999da9",
+    "app/profiles/forms.py": "e45a18308c487488f165ae3b023da21ac3b9d56046dc895f329e5c0a23a806f1",
+    "app/hiring/models.py": "48836c3072b91b4cd9fac1bc0d0f7c8caadcfd8e1dfef07aad46dd92e42556c7",
+    "app/hiring/services.py": "d2307cd5f5a280f35d60aa53ff7fcb6632e4b13b766d4d262971f97d316ce896",
+    "app/hiring/access.py": "482ca5b2e78369923110c806d5f8f9e6bd6293f8934b872e45baf07decbc06af",
+    "app/accounts/forms.py": "8587d99467f8098c31b0c5d75b5ce6345f1b8164ab6d444f019eb34467d1b266",
+    "app/assistant/provider.py": "88547d340c6de0189fa479ce6b9202b0d10afa8e27ac702281580579f19a9559",
+    "app/config/urls.py": "cb2f55a26962c850dd734c94e57d4aa829215c5b4d5776a77c7f25c75eadee1c",
+    "app/api/urls.py": "66ecdca6c1c1d2e5d61edd894641cacd3c698cb08be46c5f8c20f3ce23bd3949",
+    "doc/plan/mcp-cli.md": "26dcb61132f00041accf03735e182d448dbb8f66b442d3d30e09146b83739759",
+    "doc/qa/accessibility.md": "bfac24aeb46f7e772813e9a8160a6eb44d3bf7924a12a5e47862ce16df693013",
+    "scripts/maintain_demo.py": "c9a2999637dd6534062c629ad552f65c7e4e2c1119524ab295786b977bc6d185",
+    "scripts/worktree.py": "c52088604f85f68b7328eefb60e35abd55a87949dcced2e707b3e5c58ecfee46"
+  },
+  "live_status": {
+    "http_status": 200,
+    "data": {
+      "schema_version": 1,
+      "available": true,
+      "url": "https://ynfcs-194-226-126-123.run.pinggy-free.link",
+      "prototype_url": "https://ynfcs-194-226-126-123.run.pinggy-free.link/static/prototype/index.html",
+      "commit": "100431a865192202b87ea203cd317a862a987517",
+      "checked_at": "2026-10-11T23:36:02.670084+00:00",
+      "message": "Демо доступно",
+      "assistant": "mock"
+    }
+  },
+  "live_checks": {
+    "/health/": {
+      "http_status": 200,
+      "data": {
+        "status": "ok"
+      }
+    },
+    "/version/": {
+      "http_status": 200,
+      "data": {
+        "commit": "100431a865192202b87ea203cd317a862a987517",
+        "assistant_mode": "mock"
+      }
+    }
+  },
+  "status": "PASS",
+  "task_status": "DONE",
+  "finished_at": "2026-10-11T23:40:25.332117+00:00",
+  "original_scope": {
+    "total": 27,
+    "done": 15,
+    "open": 12,
+    "open_ids": [
+      "PROD-001",
+      "PROD-002",
+      "PROD-003",
+      "PROD-004",
+      "PROD-005",
+      "OPS-003",
+      "OPS-004",
+      "INT-001",
+      "INT-002",
+      "INT-003",
+      "QA-002",
+      "FUT-001"
+    ]
+  },
+  "additional_open_items": [
+    "MCLI-013",
+    "mobile-source-portability",
+    "manual-screen-reader-acceptance",
+    "ANALYTICS-001",
+    "DEV-001-transfer-unconfirmed"
+  ],
+  "checks": {
+    "django_regression": {
+      "status": "PASS",
+      "count": 148,
+      "seconds": 15.046,
+      "command": "uv run python app/manage.py test accounts profiles assessments hiring assistant api --verbosity 0"
+    },
+    "tools": {
+      "status": "PASS",
+      "count": 23,
+      "seconds": 3.594,
+      "command": "python3 -m unittest discover -s scripts/tests -v"
+    },
+    "contract_freshness": {
+      "status": "PASS",
+      "paths": 69,
+      "operations": 111,
+      "command": "uv run python scripts/build_http_spec.py --check"
+    },
+    "worktree_isolation": {
+      "status": "PASS",
+      "port": 8041
+    },
+    "documentation_links": {
+      "status": "PASS",
+      "documents": 144,
+      "command": "python3 scripts/check_docs.py"
+    },
+    "diff_check": {
+      "status": "PASS",
+      "command": "git diff --check"
+    },
+    "semantic_list_consistency": "PASS: 27 original rows/15 DONE, all 12 open IDs exactly once, nine FUT subtasks, app/client/script bytes unchanged",
+    "source_fingerprints": "PASS"
+  },
+  "previous_audit": {
+    "task": "DOC-008",
+    "code_commit": "7cb4db07fcb75c1ac87045358a120a4606627b20",
+    "done": 13,
+    "open": 14
+  },
+  "snapshot": {
+    "path": ".project-brief/snapshots/2026-10-12-DOC-009.tsv",
+    "added": 74,
+    "changed_metadata_or_content": 449,
+    "changed_content_hash": 22,
+    "removed": 0,
+    "limitation": "Tracked git archive only. Timestamp/metadata changes are not feature changes; large binaries metadata only."
+  },
+  "chats": [
+    {
+      "id": "01a12cbf-d021-7fd3-9ba2-0580d8962387",
+      "title": "Добавь аналитику переходов",
+      "status": {
+        "type": "idle"
+      },
+      "read_turns": 1,
+      "turn_statuses": [
+        "interrupted"
+      ],
+      "scope": "User requests and final messages from two latest turns; commands/raw outputs/secrets omitted"
+    },
+    {
+      "id": "01a12cc3-0c4a-7292-809d-cf755a2474bd",
+      "title": "Проверь и добавь изменения в dev",
+      "status": {
+        "type": "idle"
+      },
+      "read_turns": 1,
+      "turn_statuses": [
+        "interrupted"
+      ],
+      "scope": "User requests and final messages from two latest turns; commands/raw outputs/secrets omitted"
+    },
+    {
+      "id": "01a12c8f-c20e-74c3-8257-a72961513c23",
+      "title": "Создай папки Android и Flutter",
+      "status": {
+        "type": "notLoaded"
+      },
+      "read_turns": 2,
+      "turn_statuses": [
+        "completed",
+        "completed"
+      ],
+      "scope": "User requests and final messages from two latest turns; commands/raw outputs/secrets omitted"
+    },
+    {
+      "id": "01a12c8f-ae0f-75f3-b467-6d536ff97737",
+      "title": "Составить план внедрения МСП и CLI",
+      "status": {
+        "type": "idle"
+      },
+      "read_turns": 2,
+      "turn_statuses": [
+        "interrupted",
+        "completed"
+      ],
+      "scope": "User requests and final messages from two latest turns; commands/raw outputs/secrets omitted"
+    },
+    {
+      "id": "01a12c90-e382-73e3-94bc-cd6594a78d00",
+      "title": "Добавить версию сайта для незрячих",
+      "status": {
+        "type": "notLoaded"
+      },
+      "read_turns": 1,
+      "turn_statuses": [
+        "completed"
+      ],
+      "scope": "User requests and final messages from two latest turns; commands/raw outputs/secrets omitted"
+    }
+  ],
+  "not_run": [
+    "Full 577-case HTTP rerun",
+    "New full browser/V2 acceptance",
+    "Mobile builds",
+    "VoiceOver/NVDA",
+    "Authenticated analytics event review",
+    "Server reboot",
+    "Backup restore",
+    "Live SMTP/FSP/Yandex",
+    "Human pilot",
+    "Human presenter and official timing acceptance"
+  ],
+  "failures_corrected": [
+    {
+      "step": "First model inventory",
+      "error": "System python3 lacked Django; repeated using locked uv Python",
+      "result": "PASS after correction"
+    },
+    {
+      "step": "Documentation links",
+      "error": "Archived DOC-008 moved from plan/ to qa/; mcp-cli.md needed relative link rebase",
+      "result": "Link corrected; validator rerun"
+    },
+    {
+      "step": "Staged diff whitespace",
+      "error": "Skill snapshot CSV writer used CRLF and empty terminal TSV columns; detected only after staging new file",
+      "result": "Normalized LF and explicit zero file/dir counts on plain file records; restaged and rerun"
+    }
+  ]
+}
