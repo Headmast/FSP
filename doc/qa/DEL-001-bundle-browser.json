@@ -1,0 +1,124 @@
+{
+  "task": "DEL-001",
+  "code_commit": "0ffa816f6b88d032168fb172e2220f6d01de5b9e",
+  "status": "PASS",
+  "checks": [
+    "clean local clone",
+    "isolated worktree/env/database",
+    "locked installation",
+    "fresh migrations/static/system/drift",
+    "synthetic fixtures",
+    "packaged client",
+    "Gunicorn health/version actual SHA",
+    "browser journey and privacy",
+    "actual Chromium recording",
+    "screenshots"
+  ],
+  "browser": {
+    "status": "PASS",
+    "engine": "Chromium",
+    "code_commit": "0ffa816f6b88d032168fb172e2220f6d01de5b9e",
+    "automated": true,
+    "fixture_answers": "read only from private disposable synthetic DB; not exported",
+    "duration_seconds": 20.92,
+    "phases": [
+      {
+        "label": "Демо текущего приложения",
+        "seconds": 1.5,
+        "path": "/"
+      },
+      {
+        "label": "Регистрация и demo email",
+        "seconds": 2.478,
+        "path": "/profile/"
+      },
+      {
+        "label": "Профиль и отдельная публикация",
+        "seconds": 3.209,
+        "path": "/profile/"
+      },
+      {
+        "label": "Мок помощника: проверяемый черновик",
+        "seconds": 3.854,
+        "path": "/assistant/"
+      },
+      {
+        "label": "Тест категории: восемь вопросов",
+        "seconds": 4.688,
+        "path": "/assessments/41/"
+      },
+      {
+        "label": "Результат категории Junior",
+        "seconds": 10.23,
+        "path": "/assessments/41/"
+      },
+      {
+        "label": "Переносимое свидетельство",
+        "seconds": 10.789,
+        "path": "/assessments/41/proof/"
+      },
+      {
+        "label": "Работодатель: условия и выдача",
+        "seconds": 11.969,
+        "path": "/candidates/"
+      },
+      {
+        "label": "До согласия контакты закрыты",
+        "seconds": 12.638,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Приглашение с вилкой и зачтённым результатом",
+        "seconds": 13.595,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Явное согласие кандидата",
+        "seconds": 14.231,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Контакты открыты только отправителю",
+        "seconds": 15.104,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Другая компания контакты не получает",
+        "seconds": 15.955,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Учебный трек Android",
+        "seconds": 16.784,
+        "path": "/learning/"
+      },
+      {
+        "label": "Сохранение практики без изменения категории",
+        "seconds": 17.521,
+        "path": "/learning/"
+      },
+      {
+        "label": "Подключения MCP/CLI: персональные права",
+        "seconds": 18.083,
+        "path": "/accounts/integrations/"
+      },
+      {
+        "label": "Дашборд владельца и результаты HR",
+        "seconds": 18.967,
+        "path": "/company/dashboard/"
+      },
+      {
+        "label": "Режим доступности",
+        "seconds": 19.596,
+        "path": "/company/dashboard/"
+      },
+      {
+        "label": "Версия проверенного кода",
+        "seconds": 20.167,
+        "path": "/version/"
+      }
+    ],
+    "browser_errors": [],
+    "raw_video": "raw-video/page@e6429a8ac0ce9d56f92c811e2433264e.webm"
+  }
+}

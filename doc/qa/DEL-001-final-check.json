@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "files": 30,
+  "pdf_pages": {
+    "mvp-handbook.pdf": 9,
+    "current-mvp-slides.pdf": 8
+  },
+  "pptx_slides": 8,
+  "embedded_images": 6,
+  "video_decode": "PASS",
+  "missing_artifact_counterfactual": "PASS: rejected"
+}

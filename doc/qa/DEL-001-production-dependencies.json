@@ -1,0 +1,5 @@
+{
+  "status": "PASS",
+  "check": "locked --no-dev export excludes PDF authoring parser",
+  "pypdf_in_runtime": false
+}

@@ -1,0 +1,75 @@
+{
+  "task": "DEL-001",
+  "status": "PASS",
+  "task_status": "DONE",
+  "checked_at": "2026-10-11T23:30:10.958406+00:00",
+  "source_code_commit": "34942b532e0ad1643db37e957ccfec30f6d77a6b",
+  "bundle_commit": "100431a865192202b87ea203cd317a862a987517",
+  "stage_commit": "0ffa816f6b88d032168fb172e2220f6d01de5b9e",
+  "public_url": "https://llmlove.ru/dreamwork/doc/delivery/index.html",
+  "application_source_match": "PASS: git diff 34942b5..bundle -- app clients empty",
+  "criteria": {
+    "DELIVERY-01": "PASS: locked clean clone/worktree, migrations/static/Gunicorn and 19 browser phases",
+    "DELIVERY-02": "PASS: 9 handbook pages, 8 editable slides/visual PDF and all full-size previews reviewed",
+    "DELIVERY-03": "PASS: 30 manifest entries, PDF/PPTX/MP4 checks, missing-artifact counterfactual, source/version/mock disclosures",
+    "DELIVERY-04": "PASS for stated working 10-minute slot: 268.141s assembled rehearsal, actual realtime 266.993s; 19-phase true browser recording"
+  },
+  "additional_checks": {
+    "fresh_final_bundle_clone": "PASS on 100431a",
+    "tool_tests": "23 PASS in 3.575s",
+    "production_pypdf_exclusion": "PASS",
+    "public_checks": "8 HTTPS endpoints 200; non-HTML byte match; gallery 8 PNGs loaded",
+    "existing_accounts": "Server own synthetic test accounts removed; no existing account reset"
+  },
+  "evidence": [
+    "DEL-001-final-clone.json",
+    "DEL-001-bundle-browser.json",
+    "DEL-001-final-check.json",
+    "DEL-001-browser.json",
+    "DEL-001-rehearsal.json",
+    "DEL-001-live.json",
+    "DEL-001-public.json",
+    "DEL-001-public-browser.json"
+  ],
+  "limits": [
+    "10-minute working slot from prior presentation; organizer timing not supplied",
+    "Automated local speech and real browser; human presenter NOT_RUN",
+    "Manual VoiceOver/NVDA, real pilot and live SMTP/FSP/Yandex remain outside this stage"
+  ],
+  "failures_retained": [
+    {
+      "id": "recording-1",
+      "reason": "Hidden global accessibility fieldset selected; scoped to visible main question inputs and repeated on new clean clone"
+    },
+    {
+      "id": "deck-font",
+      "reason": "fontFamily ignored by API; corrected documented typeface setter"
+    },
+    {
+      "id": "deck-runtime",
+      "reason": "runtime import env/receipt locations omitted; set runtime and separate final output/unique receipt"
+    },
+    {
+      "id": "deck-empty-assets",
+      "reason": "Path image input produced zero-byte PNGs; used explicit bytes and independent media verifier"
+    },
+    {
+      "id": "deck-pdf",
+      "reason": "Bundled PDF export missing standard-fonts module; kept validated editable PPTX and made exact raster-preview PDF via ReportLab"
+    },
+    {
+      "id": "pdf-parser",
+      "reason": "pdftotext unavailable; pinned pypdf 6.10.0 in repository dev lock"
+    },
+    {
+      "id": "pdf-git-classification",
+      "reason": "ASCII PDF treated as text by Git diff; declare binary artifact attributes without modifying valid PDF bytes"
+    }
+  ],
+  "scope_after": {
+    "total": 27,
+    "done": 15,
+    "open": 12
+  },
+  "C4": "PASS for current technical demo package and stated automated working-format rehearsal; not organizer/human acceptance"
+}

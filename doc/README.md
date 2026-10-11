@@ -52,3 +52,6 @@
 
 
 [Полный HTTP/OpenAPI контракт DOC-003](responses/DOC-003-contracts.md) закрыт: 69 маршрутов/111 операций. 14/27 задач DONE, 13 открыты; полный комплект DEL-001 ещё требует завершения.
+
+
+[Актуальный комплект сдачи DEL-001](delivery/README.md): руководство PDF, PPTX/HTML/PDF, карта требований, реальные записи и manifest. [Открыть публично](https://llmlove.ru/dreamwork/doc/delivery/index.html). Текущий прогресс: 15/27 DONE, 12 открыты; следующая PROD-001.

@@ -299,3 +299,6 @@ python3 -m unittest discover -s scripts/tests -v
 
 
 DOC-003 завершена: [полный HTTP/OpenAPI контракт и проверки](doc/responses/DOC-003-contracts.md). Текущий прогресс — 14/27 DONE, 13 открыты; DEL-001 следующая P1.
+
+
+[Актуальный комплект сдачи DEL-001](doc/delivery/README.md): руководство PDF, PPTX/HTML/PDF, карта требований, реальные записи и manifest. [Открыть публично](https://llmlove.ru/dreamwork/doc/delivery/index.html). Текущий прогресс: 15/27 DONE, 12 открыты; следующая PROD-001.

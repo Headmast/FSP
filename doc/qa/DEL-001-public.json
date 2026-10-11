@@ -1,0 +1,61 @@
+{
+  "checked_at": "2026-10-11T23:26:34.398024+00:00",
+  "release_commit": "100431a865192202b87ea203cd317a862a987517",
+  "status": "PASS",
+  "checks": [
+    {
+      "path": "doc/delivery/index.html",
+      "status": 200,
+      "bytes": 2741,
+      "content_type": "text/html"
+    },
+    {
+      "path": "doc/delivery/current-mvp-slides.html",
+      "status": 200,
+      "bytes": 11729,
+      "content_type": "text/html"
+    },
+    {
+      "path": "doc/delivery/mvp-handbook.pdf",
+      "status": 200,
+      "bytes": 52927,
+      "content_type": "application/pdf",
+      "matches_local_bytes": true
+    },
+    {
+      "path": "doc/delivery/current-mvp.pptx",
+      "status": 200,
+      "bytes": 517552,
+      "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "matches_local_bytes": true
+    },
+    {
+      "path": "doc/delivery/current-mvp-slides.pdf",
+      "status": 200,
+      "bytes": 775299,
+      "content_type": "application/pdf",
+      "matches_local_bytes": true
+    },
+    {
+      "path": "doc/delivery/package-manifest.json",
+      "status": 200,
+      "bytes": 5463,
+      "content_type": "application/json",
+      "matches_local_bytes": true
+    },
+    {
+      "path": "doc/delivery/assets/current-demo.mp4",
+      "status": 200,
+      "bytes": 2282975,
+      "content_type": "video/mp4",
+      "matches_local_bytes": true
+    },
+    {
+      "path": "doc/delivery/assets/timed-rehearsal.mp4",
+      "status": 200,
+      "bytes": 6183876,
+      "content_type": "video/mp4",
+      "matches_local_bytes": true
+    }
+  ]
+}

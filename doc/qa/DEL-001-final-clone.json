@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "files": 30,
+  "pdf_pages": {
+    "mvp-handbook.pdf": 9,
+    "current-mvp-slides.pdf": 8
+  },
+  "pptx_slides": 8,
+  "embedded_images": 6,
+  "video_decode": "PASS",
+  "missing_artifact_counterfactual": "PASS: rejected",
+  "bundle_commit": "100431a865192202b87ea203cd317a862a987517",
+  "clean_clone": "PASS",
+  "locked_install": "PASS",
+  "documentation": "PASS"
+}
