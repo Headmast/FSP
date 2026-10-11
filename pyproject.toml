@@ -1,0 +1,9 @@
+[project]
+name = "fsp-reverse-hiring"
+version = "0.1.0"
+description = "Demo reverse hiring for iOS developers"
+requires-python = ">=3.13,<3.14"
+dependencies = ["Django>=5.2,<5.3", "gunicorn>=23,<24", "reportlab>=4,<5", "whitenoise>=6,<7"]
+
+[tool.uv]
+package = false
