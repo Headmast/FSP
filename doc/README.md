@@ -31,6 +31,7 @@
 - [Результаты подготовки документации и worktree](qa/preparation-results.md)
 - [Результаты аккаунтов и профиля](qa/accounts-results.md)
 - [Результаты оценивания](qa/assessment-results.md)
+- [Учебный модуль mobile7](architecture/learning-mobile7.md): уроки, самопроверка, повтор ошибок; [QA](qa/learning-mobile7.md)
 - [Cron и постоянная страница демо](deployment/watchdog.md), [результаты](qa/watchdog-results.md)
 - [Публикация и откат](deployment/runbook.md)
 - [Отчёт о выпуске](delivery/mvp-release.md)

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-10-11T20:43:33.382646+00:00",
+  "database": "temporary SQLite; deleted after check",
+  "workers": 4,
+  "scenarios": [
+    "one_active_session_on_parallel_start",
+    "parallel_answers_no_lost_update",
+    "parallel_finalization_idempotent",
+    "parallel_lesson_completion_unique",
+    "profile_grade_unchanged",
+    "parallel_starts_one_active_per_track",
+    "parallel_track_scoring_independent",
+    "parallel_track_lesson_progress_independent"
+  ]
+}

@@ -10,7 +10,8 @@ from assessments import views as assessments
 from hiring import views as hiring
 from hiring.dashboard import dashboard, team
 from assistant import views as assistant
-urlpatterns = [path("downloads/<str:filename>", download_client),
+urlpatterns = [path("learning/", include("assessments.learning_urls")),
+path("downloads/<str:filename>", download_client),
 path("api/v1/", include("api.urls")),
 path("accounts/integrations/", integrations, name="integrations"),
 path("company/", hiring.company_profile, name="company-profile"),
