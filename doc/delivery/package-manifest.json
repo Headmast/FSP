@@ -112,8 +112,8 @@
     },
     {
       "path": "doc/delivery/current-mvp-slides.html",
-      "bytes": 11728,
-      "sha256": "1cad73e9cbd9345e8c1727ebe2af27890110c93185fcd63fa9accc24e09d8185"
+      "bytes": 11729,
+      "sha256": "f05b456dd4457e70e6abd180c8b2bb037e019f5c1a3a254d7d9880a9b7203531"
     },
     {
       "path": "doc/delivery/current-mvp-slides.md",
@@ -139,6 +139,11 @@
       "path": "doc/delivery/demo-script.md",
       "bytes": 6984,
       "sha256": "f89bd8847748b80a9e20ef13012340adb57a3acad9e836a24a6d5cd3772d0847"
+    },
+    {
+      "path": "doc/delivery/index.html",
+      "bytes": 2741,
+      "sha256": "303f13aa3f84f1777056dde8483eef0b43d22096045419e62bb63e0a03553956"
     },
     {
       "path": "doc/delivery/mvp-handbook.pdf",

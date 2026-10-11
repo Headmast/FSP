@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--ref', default='HEAD')
+parser.add_argument('--delivery-only',action='store_true',help='Publish the committed current delivery bundle without reuploading unchanged landing/video assets')
 args = parser.parse_args()
 sha = subprocess.check_output(['git', 'rev-parse', args.ref + '^{commit}'], cwd=ROOT, text=True).strip()
 files = ['index.html', 'style.css', 'robots.txt', 'strategy-71c4.html',
@@ -27,6 +28,22 @@ files = ['index.html', 'style.css', 'robots.txt', 'strategy-71c4.html',
          'doc/presentation/trudyazhki-fsp.md',
          'doc/research/competitor-analysis-2026-10-11.html']
 tracked = set(subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', sha], cwd=ROOT, text=True).splitlines())
+delivery=[]
+if 'doc/delivery/package-manifest.json' in tracked:
+    manifest=json.loads(subprocess.check_output(['git','show',sha+':doc/delivery/package-manifest.json'],cwd=ROOT,text=True))
+    fixed={'doc/delivery/index.html','doc/delivery/README.md','doc/delivery/current-mvp.md','doc/delivery/requirements-coverage.md',
+        'doc/delivery/mvp-handbook.pdf','doc/delivery/current-mvp.pptx','doc/delivery/current-mvp-slides.md',
+        'doc/delivery/current-mvp-slides.html','doc/delivery/current-mvp-slides.pdf','doc/delivery/demo-script.md'}
+    for artifact in manifest['files']:
+        name=artifact['path'];path=Path(name)
+        assert not path.is_absolute() and '..' not in path.parts
+        assert name in fixed or name.startswith('doc/delivery/assets/') and path.suffix in {'.png','.mp4'},'Unexpected delivery export'
+        delivery.append(name)
+    delivery.append('doc/delivery/package-manifest.json')
+if args.delivery_only:
+    assert delivery,'Selected commit has no delivery bundle'
+    files=delivery
+else:files+=delivery
 assert set(files) <= tracked, 'All published assets must exist in the committed release'
 remote = r'''
 import base64, fcntl, hashlib, json, ssl, sys
