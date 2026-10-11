@@ -1,0 +1,92 @@
+{
+  "task": "DEL-001",
+  "task_status": "IN_PROGRESS",
+  "stage_status": "PASS",
+  "checked_at": "2026-10-11T23:11:06.472712+00:00",
+  "source_code_commit": "34942b532e0ad1643db37e957ccfec30f6d77a6b",
+  "scope": "Current handbook, requirement matrix, editable deck, actual browser recording, timed rehearsal and source checks",
+  "artifacts": {
+    "handbook_pages": 9,
+    "slides": 8,
+    "embedded_pngs": 6,
+    "bundle_files": 29
+  },
+  "checks": {
+    "pdf_pages_visual": "PASS: all 9, changed table page rechecked",
+    "slides_visual": "PASS: each 8 full-size",
+    "pptx_package": {
+      "chart_count": 0,
+      "claim_boundary": "Structural package checks only; no slide text, notes, formulas, chart values, or native PowerPoint execution were inspected.",
+      "finding_count": 0,
+      "findings": [],
+      "notes_parts_skipped": 8,
+      "relationship_part_count": 26,
+      "slide_count": 8,
+      "status": "pass",
+      "exitCode": 0,
+      "findingCount": 0,
+      "warnings": []
+    },
+    "pptx_layout": {
+      "findings": 0,
+      "warnings": 0
+    },
+    "pptx_font_policy": {
+      "checked_text_script_count": 56,
+      "native_font_rendering_verified": false,
+      "observed_font_families": [
+        "Verdana"
+      ],
+      "observed_font_use_counts": {
+        "Verdana": 56
+      },
+      "passed": true,
+      "performed": true
+    },
+    "first_party_import": {
+      "passed": true,
+      "slides": 8
+    },
+    "nonempty_embedded_media": "PASS",
+    "offline_html": "PASS",
+    "actual_browser_clean_clone": "PASS: 19 phases; synthetic data",
+    "actual_timed_rehearsal": "PASS: 268.141 seconds; realtime 266.993 seconds",
+    "live_https": "PASS on 34942b5; own synthetic accounts removed",
+    "package_files_decode_and_counterfactual": "PASS"
+  },
+  "pending": [
+    "Fresh clone containing the committed package and its verifier",
+    "Final task metadata, integration and public delivery links"
+  ],
+  "limits": [
+    "10-minute working slot from prior presentation; organizer timing not supplied",
+    "Automated local speech and real browser; human presenter NOT_RUN",
+    "Manual VoiceOver/NVDA, real pilot and live SMTP/FSP/Yandex remain outside this stage"
+  ],
+  "failures_retained": [
+    {
+      "id": "recording-1",
+      "reason": "Hidden global accessibility fieldset selected; scoped to visible main question inputs and repeated on new clean clone"
+    },
+    {
+      "id": "deck-font",
+      "reason": "fontFamily ignored by API; corrected documented typeface setter"
+    },
+    {
+      "id": "deck-runtime",
+      "reason": "runtime import env/receipt locations omitted; set runtime and separate final output/unique receipt"
+    },
+    {
+      "id": "deck-empty-assets",
+      "reason": "Path image input produced zero-byte PNGs; used explicit bytes and independent media verifier"
+    },
+    {
+      "id": "deck-pdf",
+      "reason": "Bundled PDF export missing standard-fonts module; kept validated editable PPTX and made exact raster-preview PDF via ReportLab"
+    },
+    {
+      "id": "pdf-parser",
+      "reason": "pdftotext unavailable; pinned pypdf 6.10.0 in repository dev lock"
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "status": "PASS",
+  "engine": "Chromium",
+  "code_commit": "34942b532e0ad1643db37e957ccfec30f6d77a6b",
+  "automated": true,
+  "fixture_answers": "read only from private disposable synthetic DB; not exported",
+  "duration_seconds": 77.987,
+  "phases": [
+    {
+      "label": "Демо текущего приложения",
+      "seconds": 1.205,
+      "path": "/"
+    },
+    {
+      "label": "Регистрация и demo email",
+      "seconds": 5.159,
+      "path": "/profile/"
+    },
+    {
+      "label": "Профиль и отдельная публикация",
+      "seconds": 8.887,
+      "path": "/profile/"
+    },
+    {
+      "label": "Мок помощника: проверяемый черновик",
+      "seconds": 12.533,
+      "path": "/assistant/"
+    },
+    {
+      "label": "Тест категории: восемь вопросов",
+      "seconds": 16.374,
+      "path": "/assessments/41/"
+    },
+    {
+      "label": "Результат категории Junior",
+      "seconds": 24.924,
+      "path": "/assessments/41/"
+    },
+    {
+      "label": "Переносимое свидетельство",
+      "seconds": 28.486,
+      "path": "/assessments/41/proof/"
+    },
+    {
+      "label": "Работодатель: условия и выдача",
+      "seconds": 32.65,
+      "path": "/candidates/"
+    },
+    {
+      "label": "До согласия контакты закрыты",
+      "seconds": 36.315,
+      "path": "/candidates/45/"
+    },
+    {
+      "label": "Приглашение с вилкой и зачтённым результатом",
+      "seconds": 40.279,
+      "path": "/invitations/"
+    },
+    {
+      "label": "Явное согласие кандидата",
+      "seconds": 43.926,
+      "path": "/invitations/"
+    },
+    {
+      "label": "Контакты открыты только отправителю",
+      "seconds": 47.799,
+      "path": "/candidates/45/"
+    },
+    {
+      "label": "Другая компания контакты не получает",
+      "seconds": 51.656,
+      "path": "/candidates/45/"
+    },
+    {
+      "label": "Учебный трек Android",
+      "seconds": 55.482,
+      "path": "/learning/"
+    },
+    {
+      "label": "Сохранение практики без изменения категории",
+      "seconds": 59.233,
+      "path": "/learning/"
+    },
+    {
+      "label": "Подключения MCP/CLI: персональные права",
+      "seconds": 62.818,
+      "path": "/accounts/integrations/"
+    },
+    {
+      "label": "Дашборд владельца и результаты HR",
+      "seconds": 66.685,
+      "path": "/company/dashboard/"
+    },
+    {
+      "label": "Режим доступности",
+      "seconds": 70.308,
+      "path": "/company/dashboard/"
+    },
+    {
+      "label": "Версия проверенного кода",
+      "seconds": 73.878,
+      "path": "/version/"
+    }
+  ],
+  "browser_errors": [],
+  "raw_video": "raw-video/page@18166cb719ec1ff4b0ca6c323f1e97a7.webm"
+}

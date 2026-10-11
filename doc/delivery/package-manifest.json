@@ -1,0 +1,154 @@
+{
+  "task": "DEL-001",
+  "source_code_commit": "34942b532e0ad1643db37e957ccfec30f6d77a6b",
+  "verified_contract_commit": "3013085d18686eb7687dc92621ca23db82638248",
+  "created_at": "2026-10-11T23:01:57.302870+00:00",
+  "scope": "Current Django demo; same application bytes as source_code_commit, documentation and export files added separately",
+  "files": [
+    {
+      "path": "doc/delivery/README.md",
+      "bytes": 6061,
+      "sha256": "a487c1bb33bd60e7f2a9cf91bfb7f602ccff5e4d4ed3f7fd2b3d21f5f03fce4d"
+    },
+    {
+      "path": "doc/delivery/assets/current-demo.mp4",
+      "bytes": 2282975,
+      "sha256": "f4b492ce684e586212ea6f0a812b32ab01b47c1f2fa401985b109bd2f4bd7473"
+    },
+    {
+      "path": "doc/delivery/assets/dashboard.png",
+      "bytes": 88000,
+      "sha256": "39452b9769967704952fff410aa5420dc6dffad48977f9f0a91d0d857716f9f7"
+    },
+    {
+      "path": "doc/delivery/assets/integrations.png",
+      "bytes": 66945,
+      "sha256": "6491f24f4541d395593b4b1a02efe10628078eb36ed8c901afb5c2289b9dca4d"
+    },
+    {
+      "path": "doc/delivery/assets/invitation.png",
+      "bytes": 73461,
+      "sha256": "b4831bfad95542605485fba7141dad1bf77fd7d02195d914f2e0f029922dad38"
+    },
+    {
+      "path": "doc/delivery/assets/learning.png",
+      "bytes": 78086,
+      "sha256": "1c969ae48c7937910509ea282349c9b7a324930d3a14e2c6f10d78715bd2a5bf"
+    },
+    {
+      "path": "doc/delivery/assets/offer-after.png",
+      "bytes": 96324,
+      "sha256": "bf6102e1148ddd086246c712f94315eaa7c955dfc3bd0a9fb282349f65f97687"
+    },
+    {
+      "path": "doc/delivery/assets/offer-before.png",
+      "bytes": 117247,
+      "sha256": "164c28752322b0877048092c3968d18fda19495b581f22ed3b03f661c0cb2bb7"
+    },
+    {
+      "path": "doc/delivery/assets/profile.png",
+      "bytes": 69979,
+      "sha256": "69f67408d044458ff022fa939f5c438dbf0a91247734160add216c775d2651a1"
+    },
+    {
+      "path": "doc/delivery/assets/proof.png",
+      "bytes": 83438,
+      "sha256": "7ce9b5c5d9709210ab83f4e89cb56b1b49c0f12e5cb7d1fc7937de206e975124"
+    },
+    {
+      "path": "doc/delivery/assets/result.png",
+      "bytes": 52085,
+      "sha256": "68a1d2770c5ee4250cd489c7125aca61586d49429d39558ca04cb2e60f852471"
+    },
+    {
+      "path": "doc/delivery/assets/search.png",
+      "bytes": 63509,
+      "sha256": "760476ab5aac1e1a1d61449c9064dc42a2d54a714cec4487a50b6f6f9a1c4085"
+    },
+    {
+      "path": "doc/delivery/assets/slides/slide-01.png",
+      "bytes": 56579,
+      "sha256": "4e930054f55879b2d72257684b17a7b5781bb2ced15fd301ee4918a2fca4bdea"
+    },
+    {
+      "path": "doc/delivery/assets/slides/slide-02.png",
+      "bytes": 98129,
+      "sha256": "da0d695386be9a353885045f2284ca826163247c5a66252b246694539b1afea0"
+    },
+    {
+      "path": "doc/delivery/assets/slides/slide-03.png",
+      "bytes": 141465,
+      "sha256": "93f4fc2998e0e01a18778c5d410a4fdcb4fbf2169668e4ec42ab18996ed191bc"
+    },
+    {
+      "path": "doc/delivery/assets/slides/slide-04.png",
+      "bytes": 123899,
+      "sha256": "15f069f304893cd158e9798b3f61d8579021bd6c6f07350b4a4aaaa706b31444"
+    },
+    {
+      "path": "doc/delivery/assets/slides/slide-05.png",
+      "bytes": 117351,
+      "sha256": "cee0304538a653457ec3044fd910be236bf9d6e9f06ad9745f23159714dd98da"
+    },
+    {
+      "path": "doc/delivery/assets/slides/slide-06.png",
+      "bytes": 111112,
+      "sha256": "af20686c0acf92d771bc3262a2bc650a4f2d47b0b584a2a0fb2f0a0acba9f667"
+    },
+    {
+      "path": "doc/delivery/assets/slides/slide-07.png",
+      "bytes": 124662,
+      "sha256": "c9baa96e99871ed5c8fd11d470b8f3b70e4a6c08d91b45b17b2573a084293c47"
+    },
+    {
+      "path": "doc/delivery/assets/slides/slide-08.png",
+      "bytes": 95919,
+      "sha256": "46171d2c198d2518f36690545d81ad8272d856634c183320771db3119b3eec7f"
+    },
+    {
+      "path": "doc/delivery/assets/timed-rehearsal.mp4",
+      "bytes": 6183876,
+      "sha256": "dab2c56b9c3da5725f8d7f2774984c950b62f47dbdba8c6470e97410605f8ef7"
+    },
+    {
+      "path": "doc/delivery/current-mvp-slides.html",
+      "bytes": 11728,
+      "sha256": "1cad73e9cbd9345e8c1727ebe2af27890110c93185fcd63fa9accc24e09d8185"
+    },
+    {
+      "path": "doc/delivery/current-mvp-slides.md",
+      "bytes": 8341,
+      "sha256": "f6aec990d01b96d194d5e9a62513c7bdb140246bde1390eee724585f8db53671"
+    },
+    {
+      "path": "doc/delivery/current-mvp-slides.pdf",
+      "bytes": 775299,
+      "sha256": "57522c17e456827b50026f9c0c8889ee52afe32ab3a9c6fcf8796a45c9a693c3"
+    },
+    {
+      "path": "doc/delivery/current-mvp.md",
+      "bytes": 13320,
+      "sha256": "3747794728f2f4068da9d9ef3d45e47f6a50c5e0e17a2965f6bf26e584172962"
+    },
+    {
+      "path": "doc/delivery/current-mvp.pptx",
+      "bytes": 517552,
+      "sha256": "1678713e7ef4ff1f6f2cf83ecbe4d4f9830e653c1860d86a88df98cfde9ea36a"
+    },
+    {
+      "path": "doc/delivery/demo-script.md",
+      "bytes": 6984,
+      "sha256": "f89bd8847748b80a9e20ef13012340adb57a3acad9e836a24a6d5cd3772d0847"
+    },
+    {
+      "path": "doc/delivery/mvp-handbook.pdf",
+      "bytes": 52927,
+      "sha256": "3dbb6c837e99f28ec36c98fc91e3c97993def57f86cc78fee16d215e50474324"
+    },
+    {
+      "path": "doc/delivery/requirements-coverage.md",
+      "bytes": 7975,
+      "sha256": "d32ef028096bf830c61099bc82be4d8b2ba93cdc57efc67a1ee0d476b26ad1e7"
+    }
+  ]
+}

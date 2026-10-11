@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "commit": "34942b532e0ad1643db37e957ccfec30f6d77a6b",
+  "url": "https://nimxa-194-226-126-123.free.pinggy.net",
+  "checked_at": "2026-10-11T22:34:50.060733+00:00",
+  "checks": [
+    "public version and database readiness",
+    "two HTTPS registrations with CSRF, explicit consent and session-bound demo confirmation",
+    "full profile persistence and distinct publication consent",
+    "candidate edits and applies private draft; replay and foreign draft protected",
+    "own mock FSP binding and achievement",
+    "assessment completion and versioned safe witness over HTTPS",
+    "fresh employer reviews draft before company/need exists; one paid need on replay",
+    "company profile and concrete paid need",
+    "employer sees explanation and proof while private text and contacts stay hidden",
+    "safe mock matching and invitation preview do not send automatically",
+    "selected result and company details visible to candidate before acceptance",
+    "candidate conversation uses snapshot and preserves pending decision",
+    "acceptance opens HTML and PDF access for invitation sender",
+    "employer conversation after explicit acceptance",
+    "publication withdrawal removes search while preserving documented prior grant"
+  ],
+  "failure_type": null,
+  "synthetic_accounts_removed": true,
+  "scope": "HTTPS journey; no existing account reset; perfect-answer synthetic fixture is not QA-001 validation"
+}

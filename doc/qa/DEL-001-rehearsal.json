@@ -1,0 +1,79 @@
+{
+  "task": "DEL-001",
+  "status": "PASS",
+  "kind": "automated timed presentation rehearsal; local synthetic speech, real browser recording",
+  "voice": "Milena local macOS TTS, 175 words/minute",
+  "code_commit": "34942b532e0ad1643db37e957ccfec30f6d77a6b",
+  "limit_seconds": 600.0,
+  "limit_source": "working 10-minute slot from existing presentation (9-10 minutes); official organizer timing not supplied",
+  "actual_media_seconds": 268.141328,
+  "timeline": [
+    {
+      "kind": "slide",
+      "slide": 1,
+      "title": "Трудяжки · ФСП",
+      "start_seconds": 0.0,
+      "duration_seconds": 21.828571
+    },
+    {
+      "kind": "slide",
+      "slide": 2,
+      "title": "Профиль и подтверждённая категория",
+      "start_seconds": 21.828571,
+      "duration_seconds": 17.043129
+    },
+    {
+      "kind": "slide",
+      "slide": 3,
+      "title": "Подбор и условия до общения",
+      "start_seconds": 38.871700000000004,
+      "duration_seconds": 19.177007
+    },
+    {
+      "kind": "slide",
+      "slide": 4,
+      "title": "Контакты после адресного согласия",
+      "start_seconds": 58.04870700000001,
+      "duration_seconds": 24.40458
+    },
+    {
+      "kind": "actual browser demo",
+      "start_seconds": 82.453287,
+      "duration_seconds": 80.88
+    },
+    {
+      "kind": "slide",
+      "slide": 5,
+      "title": "Обучение четырёх платформ",
+      "start_seconds": 163.33328699999998,
+      "duration_seconds": 17.287891
+    },
+    {
+      "kind": "slide",
+      "slide": 6,
+      "title": "MCP, CLI и проверяемые изменения",
+      "start_seconds": 180.621178,
+      "duration_seconds": 30.122177
+    },
+    {
+      "kind": "slide",
+      "slide": 7,
+      "title": "Кабинет владельца и доступность",
+      "start_seconds": 210.74335499999998,
+      "duration_seconds": 18.899093
+    },
+    {
+      "kind": "slide",
+      "slide": 8,
+      "title": "Проверки и границы демо",
+      "start_seconds": 229.64244799999997,
+      "duration_seconds": 38.530839
+    }
+  ],
+  "complete_decode": "PASS",
+  "human_presenter_run": "NOT_RUN",
+  "realtime_playback": {
+    "status": "PASS",
+    "elapsed_seconds": 266.99306066695135
+  }
+}
