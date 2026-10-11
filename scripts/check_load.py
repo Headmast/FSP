@@ -9,7 +9,10 @@ def actor(i):
     jar=http.cookiejar.CookieJar();client=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
     def request(path,data=None):
         body=urllib.parse.urlencode(data).encode() if data else None
-        return client.open(urllib.request.Request(base+path,data=body,headers={'Referer':base+path}),timeout=25)
+        response=client.open(urllib.request.Request(base+path,data=body,headers={'Referer':base+path,**({'X-Forwarded-Proto':'https'} if base.startswith('http://127.0.0.1:') else {})}),timeout=25)
+        if base.startswith('http://127.0.0.1:'):
+            for cookie in jar:cookie.secure=False
+        return response
     def csrf():return next(c.value for c in jar if c.name=='csrftoken')
     request('/accounts/login/').close()
     request('/accounts/login/',{'username':('fixture-junior-01' if candidate else 'fixture-company-alpha')+'@demo.invalid','password':'Fsp-demo-2026!','csrfmiddlewaretoken':csrf()}).close()
