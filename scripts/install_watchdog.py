@@ -13,7 +13,9 @@ payload=json.load(sys.stdin);root=Path.home()/'fsp-mvp';shared=root/'shared'
 with (shared/'maintenance.lock').open('a') as lock:
  fcntl.flock(lock,fcntl.LOCK_EX)
  tools=shared/'tools';tools.mkdir(exist_ok=True)
- for name,text in payload['files'].items():(tools/Path(name).name).write_text(text)
+ for name,text in payload['files'].items():
+  target=tools/Path(name).name;temporary=target.with_suffix(target.suffix+'.next')
+  temporary.write_text(text);temporary.replace(target)
  (shared/'watchdog-code.json').write_text(json.dumps({'commit':payload['commit']})+'\n')
  result=subprocess.run(['crontab','-l'],capture_output=True,text=True)
  if result.returncode not in (0,1):raise RuntimeError('Unable to read crontab')

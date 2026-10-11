@@ -135,6 +135,8 @@ def start_server(root):
     if root / 'releases' not in release.parents:
         raise RuntimeError('Release is outside managed directory')
     env = os.environ.copy()
+    for key in ('DEBUG', 'DJANGO_SECRET_KEY', 'ALLOWED_HOSTS', 'CSRF_TRUSTED_ORIGINS', 'APP_PORT', 'DATABASE_PATH', 'ASSISTANT_MODE'):
+        env.pop(key, None)
     env['FSP_ENV_FILE'] = str(root / 'shared/.env')
     launch(root, 'mvp-server', [str(release / '.venv/bin/python'), 'scripts/run_app.py'], cwd=release, env=env)
     for _ in range(30):

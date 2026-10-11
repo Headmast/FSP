@@ -14,7 +14,7 @@ NEW='https://new.run.pinggy-free.link'
 
 class WatchdogTests(unittest.TestCase):
     def setUp(self):
-        self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
+        self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name).resolve()
         (self.root/'shared/pids').mkdir(parents=True)
         (self.root/'releases'/SHA).mkdir(parents=True)
         (self.root/'releases'/SHA/'REVISION').write_text(SHA)
@@ -54,11 +54,22 @@ class WatchdogTests(unittest.TestCase):
     def test_publisher_failure_retries_without_restarting_healthy_services(self):
         with patch.object(m,'owned_pid',return_value=123),patch.object(m,'get_version',return_value=SHA),patch.object(m,'publish',side_effect=OSError('hosting down')),patch.object(m,'start_tunnel') as tunnel:
             self.assertFalse(m.maintain(self.root));tunnel.assert_not_called()
+    def test_global_cron_environment_does_not_override_shared_config(self):
+        with patch.dict(m.os.environ,{'DEBUG':'1','APP_PORT':'9999'}),patch.object(m,'stop_owned'),patch.object(m,'launch') as launch,patch.object(m,'get_version',return_value=SHA):
+            m.start_server(self.root)
+        env=launch.call_args.kwargs['env']
+        self.assertNotIn('DEBUG',env);self.assertNotIn('APP_PORT',env)
+        self.assertEqual(env['FSP_ENV_FILE'],str(self.root/'shared/.env'))
     def test_foreign_pid_is_not_killed(self):
         (self.root/'shared/pids/mvp-pinggy.pid').write_text('12345')
         with patch.object(Path,'read_bytes',return_value=b'ssh\0free.pinggy.io\0-R\00:127.0.0.1:9999'),patch.object(m.os,'kill') as kill:
             with self.assertRaises(RuntimeError):m.stop_owned(self.root,'mvp-pinggy')
             kill.assert_not_called()
+    def test_deployment_lock_skips_tick_without_running_recovery(self):
+        with (self.root/'shared/maintenance.lock').open('a') as lock:
+            m.fcntl.flock(lock,m.fcntl.LOCK_EX|m.fcntl.LOCK_NB)
+            with patch('sys.argv',['maintain_demo.py','--root',str(self.root)]),patch.object(m,'maintain') as maintain:
+                self.assertEqual(m.main(),0);maintain.assert_not_called()
     def test_cron_install_is_idempotent_and_preserves_other_jobs(self):
         existing='MAILTO=owner@example.invalid\n0 4 * * * /usr/bin/backup\n'
         first=m.cron_content(existing,'* * * * * /usr/bin/watchdog')
