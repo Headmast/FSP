@@ -109,3 +109,31 @@ class HiringTests(TestCase):
             data={'need':self.need.pk,'candidate':self.profile.pk}
             data[field]=''
             self.assertEqual(self.client.post('/invitations/send/',data).status_code,404)
+
+    def test_skill_aliases_have_identical_filter_and_rank_without_double_weight(self):
+        self.profile.skills='Core Data, CoreData';self.profile.save()
+        self.need.skills='Core Data, CoreData';self.need.save()
+        canonical=search('Junior',self.need,skill='CoreData')
+        alias=search('Junior',self.need,skill='Core Data')
+        self.assertEqual(canonical,alias);self.assertEqual(len(alias),1)
+        self.assertEqual(alias[0]['parts']['skills'],10)
+        self.assertContains(self.client.get('/candidates/',{'need':self.need.pk,'grade':'Junior','skill':'Core Data'}),self.profile.name)
+        data={'company_name':'Демо','title':'iOS','grade':'Junior','skills':'Core Data, CoreData',
+            'tasks':'Задачи','salary_min':100,'salary_max':200,'work_format':'remote','next_step':'Встреча'}
+        form=NeedForm(data);self.assertTrue(form.is_valid(),form.errors)
+        self.assertEqual(form.cleaned_data['skills'],'CoreData')
+
+    def test_existing_skill_alias_data_is_migrated_without_losing_other_fields(self):
+        from django.apps import apps
+        from django.db import connection
+        from importlib import import_module
+        from types import SimpleNamespace
+        self.profile.skills='Core Data, CoreData, Swift';self.profile.save()
+        self.need.skills='Core Data, CoreData';self.need.save()
+        import_module('profiles.migrations.0002_canonical_skills').canonicalize(
+            apps,SimpleNamespace(connection=connection))
+        self.profile.refresh_from_db();self.need.refresh_from_db()
+        self.assertEqual(self.profile.skills,'CoreData, Swift')
+        self.assertEqual(self.need.skills,'CoreData')
+        self.assertEqual(self.profile.contact_email,'private@demo.invalid')
+        self.assertEqual(self.profile.confirmed_grade,'Junior')

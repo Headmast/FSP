@@ -17,7 +17,7 @@ def search(grade,need=None,skill='',fsp=''):
     elif fsp=='no_history':profiles=profiles.exclude(fsp_status='demo_history')
     results=[]
     for p in profiles:
-        if skill and skill.casefold() not in normalized(p.skills):continue
+        if skill and not normalized(skill).issubset(normalized(p.skills)):continue
         score,parts=rank(p,need)
         results.append({'id':p.pk,'name':p.name,'city':p.city,'skills':p.skills,'grade':p.confirmed_grade,
             'test_score':p.test_score,'fsp_status':p.fsp_status,'score':score,'parts':parts})

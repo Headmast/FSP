@@ -2,6 +2,8 @@ from django.test import TestCase
 from accounts.models import User
 from .models import Profile
 from .views import build_pdf
+from .skills import normalized,validate_skills
+from django.core.exceptions import ValidationError
 
 class ProfileTests(TestCase):
     def setUp(self):
@@ -42,3 +44,11 @@ class ProfileTests(TestCase):
         response=self.client.get('/profile/resume.pdf');self.assertEqual(response.status_code,200)
         self.assertTrue(b''.join(response.streaming_content).startswith(b'%PDF'))
         self.assertEqual(self.client.get('/profile/fsp/').json(),{'source':'mock','status':'not_connected','changes_grade':False})
+
+    def test_skill_aliases_save_one_canonical_value_and_unknown_is_rejected(self):
+        self.assertEqual(normalized('CoreData, Core Data, CORE DATA'),{'coredata'})
+        self.assertEqual(validate_skills('Core Data, CoreData, swift'),'Swift, CoreData')
+        self.assertEqual(self.client.post('/profile/',{'name':'Алексей','city':'Москва',
+            'skills':'Core Data, CoreData','desired_grade':'Junior'}).status_code,302)
+        self.profile.refresh_from_db();self.assertEqual(self.profile.skills,'CoreData')
+        with self.assertRaises(ValidationError):validate_skills('Unknown skill')

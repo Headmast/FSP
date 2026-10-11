@@ -1,0 +1,23 @@
+{
+  "task": "FIX-002",
+  "status": "PASS",
+  "checked_at": "2026-10-11T16:36:28.508114+00:00",
+  "base_commit": "ba3d270dd5a75d2ab2374a9e7baf5aed998a42fd",
+  "checked_sources": {
+    "app/profiles/skills.py": "3f99a0f26bdb5811bac252d1bee2d50cb8ea9062dda8494fbac7cf5e62910336",
+    "app/profiles/migrations/0002_canonical_skills.py": "c2952654fa9489e069dd9aab2d077ac3209f6a5eb02bcfc5bd30b87ccf0e8bad",
+    "app/profiles/tests.py": "e447eab1ca2c1b53990a7fd469d073aa7aa34aeb19573de78a6cddc31fc795b5",
+    "app/hiring/forms.py": "4566d50b8a339d441b0ca45b10cf4c078f203ac36cda2a7e7536f5ba57515cb1",
+    "app/hiring/services.py": "1d77eed2c6354a0daf2248291686b6f35ac6b2dcefba180ed9d04eaca6f64da4",
+    "app/hiring/tests.py": "b1d671872b9acd5fbdc9890479e825da3149802e5f67ea453cd7e1554123e3b3"
+  },
+  "tests": {
+    "count": 20,
+    "failures": 0,
+    "command": "python app/manage.py test profiles hiring --verbosity 0",
+    "seconds": 2.713
+  },
+  "migration": "Historical Profile and Need alias values canonicalized; grade and contacts preserved",
+  "benchmark": "Fresh isolated SQLite; 24 synthetic candidates; mean P@5=1.0, baseline=0.733333; violations=0",
+  "isolation": "worktree test DB; production untouched"
+}

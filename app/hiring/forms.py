@@ -1,5 +1,5 @@
 from django import forms
-from profiles.skills import SKILLS,validate_skills
+from profiles.skills import SKILLS,validate_skills,canonical_skill
 from .models import Need
 
 class NeedForm(forms.ModelForm):
@@ -18,10 +18,14 @@ class NeedForm(forms.ModelForm):
             raise forms.ValidationError('Нижняя граница зарплаты не должна превышать верхнюю.')
         return data
 
+class SkillChoiceField(forms.ChoiceField):
+    def to_python(self,value):
+        return canonical_skill(super().to_python(value))
+
 class SearchForm(forms.Form):
     need=forms.ModelChoiceField(queryset=Need.objects.none(),required=False,label='Потребность')
     grade=forms.ChoiceField(choices=[('Junior','Junior'),('Middle','Middle')],label='Категория')
-    skill=forms.ChoiceField(choices=[('','Любой навык')]+[(s,s) for s in SKILLS],required=False,label='Навык')
+    skill=SkillChoiceField(choices=[('','Любой навык')]+[(s,s) for s in SKILLS],required=False,label='Навык')
     fsp=forms.ChoiceField(choices=[('','Любая история ФСП'),('no_history','Без истории'),('demo_history','Демо история')],required=False,label='ФСП')
     def __init__(self,*args,company,**kwargs):
         super().__init__(*args,**kwargs)
