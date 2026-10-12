@@ -1,0 +1,16 @@
+{
+  "task": "PROD-004",
+  "stage": "privacy error presentation correction",
+  "status": "PASS",
+  "privacy_tests": {
+    "count": 20,
+    "status": "PASS"
+  },
+  "checks": [
+    "real template compiled with password error",
+    "Russian label instead of technical field key",
+    "one error list for shared accessibility focus/announcement"
+  ],
+  "template_sha256": "fa72bb2e3e88e730f644d183c47dd4a3dca1b6602aefdc5dc75bad697e07a9ca",
+  "browser_acceptance": "PENDING on new commit"
+}
