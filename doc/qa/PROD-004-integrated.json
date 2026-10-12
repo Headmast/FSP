@@ -1,0 +1,112 @@
+{
+  "task": "PROD-004",
+  "stage": "integrated acceptance",
+  "status": "PASS",
+  "task_status": "IN_PROGRESS",
+  "checked_at": "2026-10-12T02:12:55.560159+00:00",
+  "code_commit": "b3b2c35bd0687447073c8a9c9ec4b6e27c9dfa43",
+  "server_tests": {
+    "count": 182,
+    "seconds": 25.894,
+    "status": "PASS"
+  },
+  "client_tests": {
+    "count": 13,
+    "seconds": 0.551,
+    "status": "PASS"
+  },
+  "tool_tests": {
+    "count": 23,
+    "seconds": 3.832,
+    "status": "PASS"
+  },
+  "http": {
+    "runtime": 602,
+    "paths": 71,
+    "operations": 114,
+    "examples": 118,
+    "status": "PASS",
+    "source_hashes": {
+      "app/config/urls.py": "b528914dcc42cab080833a920d3443f3231d1484942f18d0805db845e01adaf5",
+      "app/accounts/views.py": "b5b6c6867e9d3af811a26b2291f0fd63a824ed9c2174c42d8fde3b67483f71fa",
+      "app/profiles/views.py": "7c71b519340fe0176219978893223a7e47ab356d69742d8b142d7656f17a6b52",
+      "app/assessments/views.py": "cbd285e1c26d4b3dda0a14e9433d8a8a3e284009c6019c2d559e60ef5c7e447a",
+      "app/hiring/views.py": "eddc6e28b6d5ddd91b0284fbfa0b4bc4ce03761de65ff0c01a32af3fbfc76487",
+      "app/assistant/views.py": "3273011cadfaa2f38b82c439c8ac609af78bec786d66de4c5ea0a51c2ed42d35",
+      "app/accounts/forms.py": "8587d99467f8098c31b0c5d75b5ce6345f1b8164ab6d444f019eb34467d1b266",
+      "app/profiles/forms.py": "f3038cb091bc65b2e36e3ef1e270a37a2dea608312b50a1e0e2c27f8043e87d4",
+      "app/profiles/models.py": "50775cc1aad0a043919e7181c55bc01ad0d13e5efa5714f7e6791d1696f30a19",
+      "app/assessments/models.py": "f805ff96b4584e686206adddc909f835543d37945ddf484395432021ff00447f",
+      "app/assessments/learning_tracks.py": "ea42347b6d12cca26f04217f2ba6a7842e22d6c6efe58f4b9ce8b082c0536f85",
+      "app/accounts/integrations.py": "ba5885ab6d7a7f3b98627c9d28b967ad6c363b91fd2c20e6b74bc9027671803d",
+      "app/api/tests.py": "607de4e3b267e54f9eb3dd41f3aae588bb4fab1d82851e5ed9f3b4bcdb03abe3",
+      "app/api/drafts.py": "8771cbf0204fe9f190340abdb1c27a5d448d0a0d3adf2513a76e238a0e43daff",
+      "app/api/web.py": "edc3383d77df1fbec4c852671028823967b9b54772573474dc19fd41b05926e7",
+      "app/api/models.py": "f7e7e0120f45693c6ada58e70771381e7f4ef72d4f6b9458233dccde83b387f7",
+      "app/assessments/learning_views.py": "789e95fa7d6d30edc37b2e51c363113041d682484e55a386e6a3272dc4fdce3e",
+      "app/assessments/learning.py": "15578a8029115f625656b20d48726259283ecf08d782815f1ebdb73a55909e57",
+      "app/assessments/learning_urls.py": "9983cf31d62ca87ef534f26d9a8a530de6395369fd7941f1d9851d3f4bae734f",
+      "app/hiring/dashboard.py": "68a366e87bf51120d49406a4dc214cd2778dbb7bc59fb0041abce1cd8f6819f7",
+      "app/hiring/forms.py": "322d4482be1f7730a6e5babe185cc14eb1c0293d1dbedcfea844dd9fdc3079f7",
+      "app/api/urls.py": "c6d60bc7507f4e13ae38b932d9c492202bb80150728c58e433d6e189671da4d7",
+      "app/api/core.py": "9d8248b832f48e0e981e0f9428fad2684311fb391a3c16093fa13622b9597303",
+      "app/api/schema.py": "7c442e077ed31f65408b4945ed6ce45bf4fdf5dd2f658671a2b07a9cccbac90a",
+      "app/api/views.py": "b5a4983d26d141fc26abadd865c3637e6351f5574eaca5a2ae5987129986162f",
+      "app/api/serializers.py": "48b75cfe92fbeef0e6e3086e969c2cd608cb8ae4892863120722b257f588b7c7",
+      "app/accounts/models.py": "e7af466193cc1fcbc088c062e18fa7050d9a055eb7680de76451365f27993a1f",
+      "app/config/settings.py": "d8fbd528686fea67d68c8444c208af21393267e9f2c342291bdb8855ddac93c0",
+      "app/profiles/apps.py": "d029ba08d69774c4f88f0da694009350ed151a44c045a273c5e1caa6145ccdf0",
+      "app/profiles/privacy.py": "c0fd8c1fa145e2e1e36b5e591db54f83e110873de7363f50f47468b8475d3461",
+      "app/profiles/privacy_views.py": "84103044f0a9134eae8e42cdf00abe3f2d28ae993d3c93f4152e39f4281d5e95",
+      "app/profiles/privacy_middleware.py": "e072ada36a3181873f7c1d59f4dae9ef6acd7ced77900763d24e3381c8b94180",
+      "app/profiles/management/commands/privacy_maintenance.py": "fdfa39f30764aa88c8274d8c55b715a402b3a9e99215a92c2457d407ebb8941b",
+      "app/profiles/conditions.py": "ccf504dcba8ca99486a6cac9d125fe63f4dca1b57f7d873ecd10a31a031dba02",
+      "app/hiring/models.py": "104a27dbefed24f1d2c46702243902fd30e21f9ed3164607347b318155644a2c",
+      "app/hiring/services.py": "e41e3174cf92a2b0c485baa03adc364927670314846b67d10c625a03131188cf",
+      "scripts/http_privacy_scenarios.py": "b65d59ff3138b9cad294ee448c078dc5c1bf95c12f494a8c1bb309e51a7e25ee",
+      "scripts/check_privacy_restore.py": "b2f32598c280cd760feb603c5f020d6cd12724367a7d0c11526262c34b9b90ed",
+      "scripts/run_app.py": "2616aca83e0363c4822b7d69cd16277e57b1cf28876ed8c2277ba3e419324afc",
+      "scripts/deploy_mvp_remote.py": "479276f3b753229ead6ad3e88b346b399e41fa2728b1f5cf0b1f4223cf7be3ae",
+      "scripts/maintain_demo.py": "27e2fbe5ca873379cbd50cfe3978db03a86358edf1335d28058b3edaf6e2ca9d",
+      "scripts/http_contracts.py": "f90be3f22699a78cefd0a8d5c7f952a9b93916cc93f39e80024742587ceaa06a",
+      "scripts/http_contract_scenarios.py": "8c3192b5c3a373621c5d38639e583dd84ba80420b02b74c87c047f0d2f3f2a5b",
+      "scripts/build_http_spec.py": "6842d8e4095bbde741a349a9f166b8711fadce2826f96c0e9f9b90bd6ea05e41",
+      "scripts/check_http_contracts.py": "3ef210f53e322a833a6893e30370e8303308128259a98600188fe1037f45dcd9",
+      "doc/api/openapi.json": "e2d331efef34cdc92f3467e39283712f36a2f5932ba4c3b8fe69f17026b1342e"
+    }
+  },
+  "restore": {
+    "task": "PROD-004",
+    "status": "PASS",
+    "checks": [
+      "actual pre-clear SQLite backup restores old data, fence erases it before serving",
+      "actual account-delete backup fenced; prior applied clear does not erase new profile data",
+      "180-day anonymous history/ledger expiry, 7-day owned backup expiry, unrelated files preserved, floor survives",
+      "secure_delete plus successful WAL truncate remove canaries from current SQLite bytes"
+    ],
+    "database": "owned disposable SQLite/ledger/backups removed; production untouched"
+  },
+  "browser_binding": {
+    "status": "PASS",
+    "source": "84eeb7a64b6b5830021d41942d00fecca620dd26",
+    "app_and_client_bytes_unchanged": true,
+    "driver_hashes_match_committed_bytes": true,
+    "phases": 26
+  },
+  "old_schema_upgrade": "PASS",
+  "schema_freshness": "PASS 71/114",
+  "migration_drift": "PASS",
+  "static_client_packaging": "PASS",
+  "worktree": "PASS port8011",
+  "docs": "PASS 154",
+  "diff": "PASS",
+  "not_run": [
+    "Production privacy HTTPS acceptance",
+    "Installed daily sweep",
+    "Actual server downgrade preflight"
+  ],
+  "goal_counts": {
+    "done": 16,
+    "open": 11
+  }
+}
