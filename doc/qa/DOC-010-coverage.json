@@ -1,0 +1,507 @@
+{
+  "task": "DOC-010",
+  "status": "PASS",
+  "functional_tasks_closed": 0,
+  "goal_status": "active",
+  "checked_at": "2026-10-12T04:56:31.079265+03:00",
+  "source_commit": "fdd6f9f072fc082c2c2b008f4a3dfcc4ca37e02d",
+  "main_commit": "b3a10b5d38d9da1d20a14ff420d9b8101b697025",
+  "local_origin_main_commit": "b3a10b5d38d9da1d20a14ff420d9b8101b697025",
+  "source_sha256": {
+    "app/hiring/models.py": "104a27dbefed24f1d2c46702243902fd30e21f9ed3164607347b318155644a2c",
+    "app/hiring/services.py": "e41e3174cf92a2b0c485baa03adc364927670314846b67d10c625a03131188cf",
+    "app/hiring/access.py": "482ca5b2e78369923110c806d5f8f9e6bd6293f8934b872e45baf07decbc06af",
+    "app/accounts/forms.py": "8587d99467f8098c31b0c5d75b5ce6345f1b8164ab6d444f019eb34467d1b266",
+    "app/assistant/provider.py": "63de9db6302ca1044678bcd4ab1510504259b1aa928e170d3dca24f9ab01efa6",
+    "app/api/core.py": "9d8248b832f48e0e981e0f9428fad2684311fb391a3c16093fa13622b9597303",
+    "app/profiles/privacy.py": "c0fd8c1fa145e2e1e36b5e591db54f83e110873de7363f50f47468b8475d3461",
+    "app/profiles/privacy_views.py": "84103044f0a9134eae8e42cdf00abe3f2d28ae993d3c93f4152e39f4281d5e95",
+    "scripts/deploy_mvp_remote.py": "479276f3b753229ead6ad3e88b346b399e41fa2728b1f5cf0b1f4223cf7be3ae",
+    "scripts/maintain_demo.py": "27e2fbe5ca873379cbd50cfe3978db03a86358edf1335d28058b3edaf6e2ca9d"
+  },
+  "snapshot": {
+    "source_commit": "fdd6f9f072fc082c2c2b008f4a3dfcc4ca37e02d",
+    "added": 48,
+    "removed": 0,
+    "content_changed": 49,
+    "content_changed_paths": [
+      "README.md",
+      "app/accounts/models.py",
+      "app/accounts/views.py",
+      "app/api/drafts.py",
+      "app/api/schema.py",
+      "app/api/serializers.py",
+      "app/api/urls.py",
+      "app/api/views.py",
+      "app/assessments/services.py",
+      "app/assessments/views.py",
+      "app/assistant/contexts.py",
+      "app/assistant/provider.py",
+      "app/config/settings.py",
+      "app/config/urls.py",
+      "app/hiring/dashboard.py",
+      "app/hiring/forms.py",
+      "app/hiring/models.py",
+      "app/hiring/services.py",
+      "app/hiring/views.py",
+      "app/profiles/forms.py",
+      "app/profiles/models.py",
+      "app/profiles/views.py",
+      "app/templates/accounts/privacy.html",
+      "app/templates/hiring/candidate.html",
+      "app/templates/hiring/dashboard.html",
+      "app/templates/hiring/explanation.html",
+      "app/templates/hiring/invitations.html",
+      "app/templates/profiles/profile.html",
+      "clients/python/src/fsp_client/cli.py",
+      "clients/python/src/fsp_client/draft_types.py",
+      "clients/python/src/fsp_client/mcp.py",
+      "clients/python/tests/test_client.py",
+      "clients/python/tests/test_mcp.py",
+      "doc/README.md",
+      "doc/api/contracts.md",
+      "doc/api/openapi.json",
+      "doc/goal.md",
+      "doc/plan/backlog.md",
+      "doc/plan/implementation-gaps-2026-10-12.md",
+      "doc/plan/remaining-work.md",
+      "scripts/check_http_contracts.py",
+      "scripts/check_live_checkpoint.py",
+      "scripts/check_mcp_cli.py",
+      "scripts/deploy_mvp_remote.py",
+      "scripts/http_contracts.py",
+      "scripts/maintain_demo.py",
+      "scripts/record_delivery.cjs",
+      "scripts/run_app.py",
+      "scripts/setup_mcli_fixture.py"
+    ],
+    "metadata_warning": "Git archive mtime differs between commits; metadata differences are not feature changes",
+    "snapshot": "doc/qa/.project-brief/snapshots/2026-10-12-DOC-010.tsv"
+  },
+  "original_27": {
+    "done": 16,
+    "open": 11,
+    "todo": [
+      "PROD-002",
+      "PROD-003",
+      "PROD-005",
+      "OPS-004",
+      "INT-001",
+      "INT-002",
+      "INT-003",
+      "QA-002",
+      "FUT-001"
+    ],
+    "in_progress": [
+      "PROD-004"
+    ],
+    "not_run": [
+      "OPS-003"
+    ]
+  },
+  "additional_acceptance": [
+    "MCLI-013 full V2 and Linux native keyring",
+    "Mobile sources and reproducible builds in Git",
+    "Actual screen reader and audible speech",
+    "ANALYTICS-001 commit integration and API events",
+    "Separate user-requested dev transfer"
+  ],
+  "checks": {
+    "collectstatic": {
+      "status": "PASS",
+      "command": "uv run python app/manage.py collectstatic --noinput --verbosity 0"
+    },
+    "server_regression": {
+      "status": "PASS",
+      "command": "uv run python app/manage.py test accounts profiles assessments hiring assistant api --verbosity 0",
+      "count": 182,
+      "seconds": 25.602,
+      "exit_code": 0
+    },
+    "tool_regression": {
+      "status": "PASS",
+      "command": "uv run python -m unittest discover -s scripts/tests -q",
+      "count": 23,
+      "seconds": 3.603,
+      "exit_code": 0
+    },
+    "contract_freshness": {
+      "status": "PASS",
+      "command": "uv run python scripts/build_http_spec.py --check",
+      "paths": 71,
+      "operations": 114
+    },
+    "migration_drift": {
+      "status": "PASS",
+      "command": "uv run python app/manage.py makemigrations --check --dry-run",
+      "result": "No changes detected"
+    },
+    "worktree": {
+      "status": "PASS",
+      "command": "python3 scripts/worktree.py check",
+      "port": 8041
+    },
+    "docs": {
+      "status": "PASS",
+      "command": "python3 scripts/check_docs.py",
+      "markdown_documents": 154,
+      "scope": "Local links and existing gate metadata; application gates not run by docs check"
+    },
+    "diff_review": {
+      "status": "PASS",
+      "commands": [
+        "git diff --check",
+        "git diff --cached --check",
+        "Manual staged doc-only review"
+      ],
+      "scope": "Reviewed changed documentation and evidence; no app, runtime or secret files staged"
+    },
+    "backlog_consistency": {
+      "status": "PASS",
+      "original_task_count": 27,
+      "counts": {
+        "DONE": 16,
+        "TODO": 9,
+        "IN_PROGRESS": 1,
+        "NOT_RUN": 1
+      },
+      "excluded_documentation_tasks": [
+        "DOC-002",
+        "DOC-004"
+      ]
+    }
+  },
+  "source_binding": {
+    "status": "PASS",
+    "compared_commit": "fdd6f9f072fc082c2c2b008f4a3dfcc4ca37e02d",
+    "matching_files": 43,
+    "mismatches": [],
+    "evidence": "doc/qa/PROD-004-stage.json",
+    "scope": "43 source_sha256 values match git show fdd6f9f; prior runtime outcomes not rerun"
+  },
+  "prior_evidence_not_rerun": {
+    "server_stage": "doc/qa/PROD-004-stage.json",
+    "http": {
+      "path": "doc/qa/PROD-004-http-stage.json",
+      "runtime_cases": 602,
+      "paths": 71,
+      "operations": 114,
+      "examples": 118
+    },
+    "privacy_restore": {
+      "path": "doc/qa/PROD-004-restore-stage.json",
+      "assertions": 4
+    },
+    "accepted_conditions": "doc/qa/PROD-001-complete.json",
+    "delivery_snapshot": "doc/qa/DEL-001-complete.json"
+  },
+  "model_inventory": {
+    "models": [
+      "auth.Permission",
+      "auth.Group",
+      "contenttypes.ContentType",
+      "sessions.Session",
+      "accounts.User",
+      "accounts.ConsentEvent",
+      "accounts.DemoConfirmation",
+      "accounts.ApiToken",
+      "profiles.Profile",
+      "profiles.Experience",
+      "profiles.FspLink",
+      "profiles.Achievement",
+      "profiles.PrivacyReceipt",
+      "assessments.Attempt",
+      "assessments.LessonProgress",
+      "assessments.PracticeSession",
+      "hiring.Company",
+      "hiring.Recruiter",
+      "hiring.Need",
+      "hiring.Invitation",
+      "assistant.Usage",
+      "assistant.Draft",
+      "api.ActionDraft"
+    ],
+    "fields": {
+      "hiring.Company": [
+        "id",
+        "user",
+        "name",
+        "contact_email",
+        "description",
+        "industry"
+      ],
+      "hiring.Need": [
+        "id",
+        "company",
+        "recruiter",
+        "title",
+        "grade",
+        "skills",
+        "tasks",
+        "salary_min",
+        "salary_max",
+        "work_format",
+        "employment_type",
+        "task_types",
+        "next_step"
+      ],
+      "hiring.Invitation": [
+        "id",
+        "candidate",
+        "need",
+        "company",
+        "recruiter",
+        "snapshot",
+        "status",
+        "created_at",
+        "viewed_at",
+        "responded_at",
+        "contact_revoked_at",
+        "candidate_erased_at"
+      ]
+    },
+    "invitation_states": [
+      "sent",
+      "accepted",
+      "declined"
+    ]
+  },
+  "public_readiness": [
+    {
+      "checked_at": "2026-10-12T01:51:21.547800+00:00",
+      "status_http": 200,
+      "public_status": {
+        "available": true,
+        "url": "https://yeuxo-194-226-126-123.run.pinggy-free.link",
+        "commit": "57bfe063e5f399fc6b16abb52d274e82fb4483db",
+        "assistant": "mock"
+      }
+    },
+    {
+      "path": "/health/",
+      "http_status": 200,
+      "data": {
+        "status": "ok"
+      }
+    },
+    {
+      "path": "/version/",
+      "http_status": 200,
+      "data": {
+        "commit": "57bfe063e5f399fc6b16abb52d274e82fb4483db"
+      }
+    }
+  ],
+  "git_inventory": {
+    "main_clean": true,
+    "implementation_clean_before_audit": true,
+    "mobile_sources_tracked": false,
+    "mobile_folders_present": [
+      "../../../Android",
+      "../../../Flutter"
+    ],
+    "analytics_branch": "mvp/link-analytics",
+    "analytics_head": "b82b455",
+    "analytics_uncommitted": [
+      "README.md",
+      "doc/plan/backlog.md",
+      "doc/deployment/analytics.md",
+      "portal/analytics/"
+    ],
+    "local_dev_branch_exists": false,
+    "scope": "Local refs/worktrees only; no remote branch fetch or visitor log access"
+  },
+  "related_threads": [
+    {
+      "id": "01a12cc3-0c4a-7292-809d-cf755a2474bd",
+      "title": "Проверь и добавь изменения в dev",
+      "turns": [
+        {
+          "id": "01a12cc3-7e0f-78a3-a6f3-1a1b888e727c",
+          "status": "interrupted",
+          "completed_at_unix": 1791752414,
+          "user_requests_read": 1,
+          "final_messages_read": 0
+        }
+      ],
+      "older_turns_not_read": false,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    },
+    {
+      "id": "01a12cbf-d021-7fd3-9ba2-0580d8962387",
+      "title": "Добавь аналитику переходов",
+      "turns": [
+        {
+          "id": "01a12cc0-be1d-7f30-a3e2-8074adb5fd59",
+          "status": "interrupted",
+          "completed_at_unix": 1791752420,
+          "user_requests_read": 1,
+          "final_messages_read": 0
+        }
+      ],
+      "older_turns_not_read": false,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    },
+    {
+      "id": "01a12cbf-1350-72b2-88a3-3b19c43bbbd6",
+      "title": "Обнови деплой на LLM Love",
+      "turns": [
+        {
+          "id": "01a12cbf-1858-75c3-9455-8385d5a619cc",
+          "status": "interrupted",
+          "completed_at_unix": 1791752335,
+          "user_requests_read": 1,
+          "final_messages_read": 0
+        }
+      ],
+      "older_turns_not_read": false,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    },
+    {
+      "id": "01a12c8f-c20e-74c3-8257-a72961513c23",
+      "title": "Создай папки Android и Flutter",
+      "turns": [
+        {
+          "id": "01a12cb4-f8f3-7f72-9423-71195e8e3ed0",
+          "status": "completed",
+          "completed_at_unix": 1791751503,
+          "user_requests_read": 1,
+          "final_messages_read": 1
+        },
+        {
+          "id": "01a12c90-66b6-7f50-b3a0-2fe7a33b0d4a",
+          "status": "completed",
+          "completed_at_unix": 1791750110,
+          "user_requests_read": 1,
+          "final_messages_read": 2
+        }
+      ],
+      "older_turns_not_read": false,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    },
+    {
+      "id": "01a12c8f-ae0f-75f3-b467-6d536ff97737",
+      "title": "Составить план внедрения МСП и CLI",
+      "turns": [
+        {
+          "id": "01a12c9a-d3fb-78d2-807e-a72b14881309",
+          "status": "interrupted",
+          "completed_at_unix": 1791752326,
+          "user_requests_read": 1,
+          "final_messages_read": 0
+        },
+        {
+          "id": "01a12c8f-b2c9-73c2-888d-b5b77514caad",
+          "status": "completed",
+          "completed_at_unix": 1791749543,
+          "user_requests_read": 1,
+          "final_messages_read": 0
+        }
+      ],
+      "older_turns_not_read": false,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    },
+    {
+      "id": "01a12c90-e382-73e3-94bc-cd6594a78d00",
+      "title": "Добавить версию сайта для незрячих",
+      "turns": [
+        {
+          "id": "01a12c91-7bc6-7502-b0dd-f124aadb6789",
+          "status": "completed",
+          "completed_at_unix": 1791752162,
+          "user_requests_read": 1,
+          "final_messages_read": 2
+        }
+      ],
+      "older_turns_not_read": false,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    },
+    {
+      "id": "01a12cb3-b358-7682-b455-fa39b501fb95",
+      "title": "Добавь дашборд для HR",
+      "turns": [
+        {
+          "id": "01a12cb4-5db5-7893-a05f-66d963f3e416",
+          "status": "completed",
+          "completed_at_unix": 1791752077,
+          "user_requests_read": 1,
+          "final_messages_read": 1
+        }
+      ],
+      "older_turns_not_read": false,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    },
+    {
+      "id": "01a12cb9-beba-7620-8a95-21997f1447e4",
+      "title": "Создать бота для соискателей",
+      "turns": [
+        {
+          "id": "01a12cba-4b00-7181-9875-9893345aff29",
+          "status": "completed",
+          "completed_at_unix": 1791752110,
+          "user_requests_read": 1,
+          "final_messages_read": 1
+        }
+      ],
+      "older_turns_not_read": false,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    },
+    {
+      "id": "01a12c91-f587-7003-b9d6-b891c062a0cf",
+      "title": "Разработать модуль для mobile7",
+      "turns": [
+        {
+          "id": "01a12ca6-5f0d-7a11-8b32-c2d2e21c32e1",
+          "status": "completed",
+          "completed_at_unix": 1791751823,
+          "user_requests_read": 1,
+          "final_messages_read": 1
+        }
+      ],
+      "older_turns_not_read": true,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    },
+    {
+      "id": "01a12cbc-999a-7521-a8ef-6655aacc80fc",
+      "title": "Добавь описание возможностей MSP",
+      "turns": [
+        {
+          "id": "01a12cbd-872d-7741-bda1-b85e2175ea1e",
+          "status": "interrupted",
+          "completed_at_unix": 1791752332,
+          "user_requests_read": 1,
+          "final_messages_read": 0
+        }
+      ],
+      "older_turns_not_read": false,
+      "scope": "Only relevant user requests and final messages used; command text/raw outputs and secrets omitted"
+    }
+  ],
+  "not_run": [
+    "New full HTTP runtime run",
+    "New CLI/MCP/V2 acceptance",
+    "New clean clone/browser acceptance for privacy",
+    "Mobile builds and fresh APK emulator checks",
+    "Actual VoiceOver/NVDA/audible speech",
+    "Authenticated visitor analytics review",
+    "OS reboot",
+    "Full operational backup restore/rollback",
+    "Live SMTP/official FSP/Yandex",
+    "Human pilot",
+    "Human presentation and official timing acceptance"
+  ],
+  "limitations": [
+    "No complete reread of all chats or binary requirements; preserved source maps used",
+    "Public HTTP 200 confirms readiness of old release, not PROD-004 deployment",
+    "Archive mtimes vary; content hashes compared independently",
+    "No real user data erased, no application changes, main/deploy unchanged"
+  ],
+  "failures_corrected": [
+    {
+      "step": "Backlog counter crosscheck",
+      "error": "Initial extraction included two documentation-only audits and counted 29 rows",
+      "resolution": "Explicitly excluded DOC-002/DOC-004; original 27 count and statuses verified",
+      "result": "PASS"
+    }
+  ]
+}

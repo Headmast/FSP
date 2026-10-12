@@ -185,3 +185,7 @@ DEL-001: интегратор, mvp/implementation от 34942b5, порт 8041; d
 ## PROD-004 · приватность
 
 Интегратор, mvp/implementation от b3a10b5, порт 8041. Область accounts auth-generation/holds, profiles privacy/receipts/UI/signals/maintenance, hiring grant/snapshot/nullable archive, API DTO/permissions/schema, clients read privacy, config middleware/route, restore/deploy guards и проверки/доки. IN_PROGRESS: отозвать ранее раскрытые гранты; очистить профиль либо удалить аккаунт; минимальная история без персональных полей; durable ledger + restore fence + retention. Внешние пользовательские данные не удалять при QA: только собственные synthetic fixtures.
+
+## Повторная сверка DOC-010
+
+Документационный этап вне исходных 27, интегратор `mvp/implementation`, база `fdd6f9f`, порт 8041; область doc/plan, goal/README, prompts/responses и QA. Проверены код, локальные ветки/worktrees, источники требований и десять связанных чатов. [Список реализации](implementation-gaps-2026-10-12.md), [evidence](../qa/DOC-010-coverage.json), [сравнение с DOC-009](../qa/.project-brief/runs/2026-10-12-DOC-010.md). Счёт **16/27 DONE, 11 открыты**; PROD-004 IN_PROGRESS, девять TODO, OPS-003 NOT_RUN. Свежие 182 серверных/23 инструментальных PASS, schema 71/114, drift/worktree PASS. Функциональные статусы не повышены; main и сервер не менялись.
