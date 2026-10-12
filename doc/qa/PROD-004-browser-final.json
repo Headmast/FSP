@@ -1,0 +1,177 @@
+{
+  "task": "PROD-004",
+  "code_commit": "5d01d3ee4fc451514e254847d091f6ae38a2b4ab",
+  "status": "PASS",
+  "checks": [
+    "clean local clone",
+    "isolated worktree/env/database",
+    "locked installation",
+    "fresh migrations/static/system/drift",
+    "synthetic fixtures",
+    "packaged client",
+    "Gunicorn health/version actual SHA",
+    "browser journey and privacy",
+    "actual Chromium recording",
+    "screenshots"
+  ],
+  "driver_sha256": {
+    "record_delivery.py": "2a704715d390b5776e6059a120012f74989ba8dd039ca8b1fe1ad07e2467dbac",
+    "record_delivery.cjs": "e2936c6b8ac33e7ff0fc28a01a96622d848123e11ff8f19f100dba14914ab556",
+    "record_privacy.cjs": "6f60e600bdb2255837c414740c40cf748943129eb66ff70094bcecb1ad1be3e3"
+  },
+  "browser": {
+    "status": "PASS",
+    "engine": "Chromium",
+    "code_commit": "5d01d3ee4fc451514e254847d091f6ae38a2b4ab",
+    "automated": true,
+    "fixture_answers": "read only from private disposable synthetic DB; not exported",
+    "duration_seconds": 18.802,
+    "phases": [
+      {
+        "label": "Демо текущего приложения",
+        "seconds": 1.265,
+        "path": "/"
+      },
+      {
+        "label": "Регистрация и demo email",
+        "seconds": 1.715,
+        "path": "/profile/"
+      },
+      {
+        "label": "Профиль и отдельная публикация",
+        "seconds": 2.128,
+        "path": "/profile/"
+      },
+      {
+        "label": "Мок помощника: проверяемый черновик",
+        "seconds": 2.237,
+        "path": "/assistant/"
+      },
+      {
+        "label": "Тест категории: восемь вопросов",
+        "seconds": 2.541,
+        "path": "/assessments/41/"
+      },
+      {
+        "label": "Результат категории Junior",
+        "seconds": 7.489,
+        "path": "/assessments/41/"
+      },
+      {
+        "label": "Переносимое свидетельство",
+        "seconds": 7.537,
+        "path": "/assessments/41/proof/"
+      },
+      {
+        "label": "Работодатель: условия и выдача",
+        "seconds": 8.335,
+        "path": "/candidates/"
+      },
+      {
+        "label": "До согласия контакты закрыты",
+        "seconds": 11.355,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Приглашение с вилкой и зачтённым результатом",
+        "seconds": 11.82,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Явное согласие кандидата",
+        "seconds": 12.118,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Контакты открыты только отправителю",
+        "seconds": 12.521,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Другая компания контакты не получает",
+        "seconds": 12.929,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Учебный трек Android",
+        "seconds": 13.239,
+        "path": "/learning/"
+      },
+      {
+        "label": "Сохранение практики без изменения категории",
+        "seconds": 13.438,
+        "path": "/learning/"
+      },
+      {
+        "label": "Подключения MCP/CLI: персональные права",
+        "seconds": 13.495,
+        "path": "/accounts/integrations/"
+      },
+      {
+        "label": "Дашборд владельца и результаты HR",
+        "seconds": 13.826,
+        "path": "/company/dashboard/"
+      },
+      {
+        "label": "Режим доступности",
+        "seconds": 13.915,
+        "path": "/company/dashboard/"
+      },
+      {
+        "label": "Приватность: два независимых доступа",
+        "seconds": 15.998,
+        "path": "/profile/privacy/"
+      },
+      {
+        "label": "Отзыв одной компании: другая сохраняет доступ",
+        "seconds": 16.092,
+        "path": "/profile/privacy/"
+      },
+      {
+        "label": "Отзыв всех компаний",
+        "seconds": 16.249,
+        "path": "/profile/privacy/"
+      },
+      {
+        "label": "Ошибка пароля: данные сохранены",
+        "seconds": 16.867,
+        "path": "/profile/privacy/"
+      },
+      {
+        "label": "Профиль очищен: сессии и токены закрыты",
+        "seconds": 17.327,
+        "path": "/"
+      },
+      {
+        "label": "Компания: обезличенный архив без старых ссылок",
+        "seconds": 17.588,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Аккаунт удалён: повторный вход невозможен",
+        "seconds": 18.601,
+        "path": "/accounts/login/"
+      },
+      {
+        "label": "Версия проверенного кода",
+        "seconds": 18.681,
+        "path": "/version/"
+      }
+    ],
+    "privacy": {
+      "status": "PASS",
+      "checks": [
+        "two independently accepted grants expose own synthetic contact only to their companies",
+        "keyboard single-company revoke denies private/PDF/old invitation and replay; second grant remains",
+        "revoke all closes both companies without unpublishing profile",
+        "wrong clear password returns error and changes no personal data or history",
+        "clear logs out both browser sessions, revokes tokens, erases linked assessment/practice, keeps retry holds and anonymous archives",
+        "clear keeps login; later explicit account delete removes user and prevents login"
+      ],
+      "fixture_scope": "Only own candidate and two own companies in disposable clone",
+      "secrets_exported": false
+    },
+    "browser_errors": []
+  },
+  "visual_acceptance": "PASS desktop/390px/errors/archive; app privacy template unchanged from inspected 84eeb7a; screenshots refreshed"
+}
