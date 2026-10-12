@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-10-12T02:53:05.241725+00:00",
+  "status": "PASS",
+  "watchdog_commit": "11399cc26ea4d0e544d659ed9d984a2daa1764c1",
+  "watchdog_sha256": "27e2fbe5ca873379cbd50cfe3978db03a86358edf1335d28058b3edaf6e2ca9d",
+  "managed_cron_once": true,
+  "privacy_sweep_day": "2026-10-12",
+  "public_available": true,
+  "public_commit": "11399cc26ea4d0e544d659ed9d984a2daa1764c1",
+  "public_checked_at": "2026-10-12T02:53:03.969880+00:00",
+  "floor_version": 1,
+  "ledger_mode": "0o600",
+  "database_mode": "0o600",
+  "backup_dir_mode": "0o700",
+  "scope": "Read-only state after actual cron ticks; no manual sweep"
+}

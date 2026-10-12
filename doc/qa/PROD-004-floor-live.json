@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-12T02:53:05.241725+00:00",
+  "status": "PASS",
+  "current_commit": "11399cc26ea4d0e544d659ed9d984a2daa1764c1",
+  "rejected_commit": "57bfe063e5f399fc6b16abb52d274e82fb4483db",
+  "floor_version": 1,
+  "running_process_unchanged": true,
+  "health_after_rejection": "ok",
+  "scope": "Exact committed deployment preflight only; destructive body never executed",
+  "preflight_sha256": "1ad281355e706063da948ed634b5460ac0b309a3afa96390002a217536484473"
+}

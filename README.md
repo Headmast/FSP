@@ -298,9 +298,11 @@ python3 -m unittest discover -s scripts/tests -v
 [Что ещё реализовать — актуальная сверка 12 октября](doc/plan/implementation-gaps-2026-10-12.md): исходные 14 открытых задач, дополнительные поручения, приоритеты и проверки завершения.
 
 
-DOC-003 завершена: [полный HTTP/OpenAPI контракт и проверки](doc/responses/DOC-003-contracts.md). Текущий прогресс — 14/27 DONE, 13 открыты; DEL-001 следующая P1.
+DOC-003 завершена: [полный HTTP/OpenAPI контракт и проверки](doc/responses/DOC-003-contracts.md). Исторический счёт после DOC-003 — 14/27; DEL-001 впоследствии завершена.
 
 
-[Актуальный комплект сдачи DEL-001](doc/delivery/README.md): руководство PDF, PPTX/HTML/PDF, карта требований, реальные записи и manifest. [Открыть публично](https://llmlove.ru/dreamwork/doc/delivery/index.html). Текущий прогресс: 16/27 DONE, 11 открыты; следующая PROD-004.
+[Актуальный комплект сдачи DEL-001](doc/delivery/README.md): руководство PDF, PPTX/HTML/PDF, карта требований, реальные записи и manifest. [Открыть публично](https://llmlove.ru/dreamwork/doc/delivery/index.html). Текущий прогресс: 17/27 DONE, 10 открыты; следующая PROD-002.
 
 PROD-001 опубликована: [условия кандидата и сравнение до контакта](doc/architecture/conditions.md), [проверки и результат](doc/responses/PROD-001-conditions.md). Прежний комплект DEL-001 сохраняет явный SHA своего проверенного снимка; итоговый сводный экспорт обновляется перед полной сдачей.
+
+PROD-004 опубликована на `11399cc`: [отзыв доступа и удаление](doc/architecture/privacy-controls.md), [результат](doc/responses/PROD-004-privacy.md), [проверки](doc/qa/PROD-004-complete.json). В кабинете кандидата — «Доступ и удаление данных». Общая цель 27 задач остаётся активной.

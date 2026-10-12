@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "commit": "11399cc26ea4d0e544d659ed9d984a2daa1764c1",
+  "url": "https://elrrg-194-226-126-123.run.pinggy-free.link",
+  "checked_at": "2026-10-12T02:34:06.786852+00:00",
+  "checks": [
+    "public version and database readiness",
+    "two HTTPS registrations with CSRF, explicit consent and session-bound demo confirmation",
+    "full profile persistence and distinct publication consent",
+    "optional candidate preferences persist and safe token projection excludes contacts",
+    "candidate edits and applies private draft; replay and foreign draft protected",
+    "own mock FSP binding and achievement",
+    "assessment completion and versioned safe witness over HTTPS",
+    "fresh employer reviews draft before company/need exists; one paid need on replay",
+    "company profile and concrete paid need",
+    "employer sees explanation and proof while private text and contacts stay hidden",
+    "matching condition filter and safe MCP DTO over HTTPS before contact",
+    "safe mock matching and invitation preview do not send automatically",
+    "selected result and company details visible to candidate before acceptance",
+    "candidate conversation uses snapshot and preserves pending decision",
+    "changed preferences create a current conflict while the sent invitation snapshot stays matched",
+    "acceptance opens HTML and PDF access for invitation sender",
+    "employer conversation after explicit acceptance",
+    "publication withdrawal removes search while preserving documented prior grant",
+    "two owned companies have independently accepted contact grants",
+    "single-company revoke closes HTML PDF API and old-invitation replay; other grant stays",
+    "revoke all closes remaining grant and readonly privacy projection confirms no companies",
+    "wrong clear password cannot change owned profile or receipts over HTTPS",
+    "clear erases linked data and tokens, logs out another session, keeps anonymous company archives and retry holds",
+    "clear preserves login; later explicit delete prevents login and old token access without erasing anonymous outcome"
+  ],
+  "failure_type": null,
+  "failure_location": [],
+  "privacy": true,
+  "privacy_artifacts": [
+    {
+      "kind": "public PDF after contact revoke",
+      "sha256": "d3f82bb5b22ff97d84d8082ac1acfdb4d12cbf4183036d293b2b06cdc97f5e3e",
+      "repository_path": "doc/qa/PROD-004-public-after-revoke.pdf",
+      "remote_temporary_file_removed": true
+    }
+  ],
+  "driver_sha256": {
+    "check_live_checkpoint.py": "cd6cf1313ac5d853b6eaab094a6aacff8343f9b9c45a35ea01b626414d221ed3",
+    "live_privacy_checkpoint.py": "672fba2e4355e3a079ab5e746379fd6bec6980f9351d471996730262c0848cd4"
+  },
+  "synthetic_accounts_removed": true,
+  "scope": "HTTPS journey; no existing account reset; perfect-answer synthetic fixture is not QA-001 validation",
+  "pdf_text_acceptance": {
+    "status": "PASS",
+    "pages": 1,
+    "public_name_and_grade_present": true,
+    "contact_and_private_description_absent": true,
+    "current_public_version_notice": true,
+    "parser": "pypdf",
+    "scope": "Actual HTTPS public PDF after revoke, own synthetic fixture only"
+  }
+}
