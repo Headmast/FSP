@@ -1,0 +1,159 @@
+{
+  "task": "DOC-011",
+  "status": "PASS",
+  "checked_at": "2026-10-12T04:38:45Z",
+  "code_commit": "77c629695ba71231a45c58eda92eb97dbb8d0d84",
+  "scope": "documentation completeness audit; no runtime mutation",
+  "goal_counts": {
+    "total": 27,
+    "done": 17,
+    "todo": 8,
+    "in_progress": 1,
+    "not_run": 1,
+    "open": 10
+  },
+  "refs": {
+    "main": "77c629695ba71231a45c58eda92eb97dbb8d0d84",
+    "implementation": "77c629695ba71231a45c58eda92eb97dbb8d0d84",
+    "origin_main_at_audit": "b0b4f0bd708372fc88ff2fee78a5eb59954a2c94",
+    "live": "11399cc26ea4d0e544d659ed9d984a2daa1764c1"
+  },
+  "integration_checks": {
+    "app": {
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "77c629695ba71231a45c58eda92eb97dbb8d0d84",
+      "result": "204 tests in 49.829s"
+    },
+    "http": {
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "77c629695ba71231a45c58eda92eb97dbb8d0d84",
+      "result": "666 runtime cases; 76 paths, 122 operations, 127 examples"
+    },
+    "storage": {
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "77c629695ba71231a45c58eda92eb97dbb8d0d84",
+      "result": "5 actual SQLite assertions"
+    },
+    "client": {
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "77c629695ba71231a45c58eda92eb97dbb8d0d84",
+      "result": "15 tests in 1.187s"
+    },
+    "tools": {
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "77c629695ba71231a45c58eda92eb97dbb8d0d84",
+      "result": "23 tests in 7.878s"
+    },
+    "upgrade": {
+      "exit_code": 0,
+      "status": "PASS",
+      "source_commit": "77c629695ba71231a45c58eda92eb97dbb8d0d84",
+      "result": "old-schema upgrade; 4 privacy restore assertions; contracts current; no migration drift"
+    }
+  },
+  "browser": {
+    "status": "PASS",
+    "phases": 33,
+    "code_commit": "1eddc3cec43e25dec73879ffae0cbfdde9c8278e",
+    "evidence": "doc/qa/PROD-002-browser-stage.json",
+    "app_clients_unchanged_to_integrated_head": true,
+    "drivers_verified": true
+  },
+  "read_only_live": {
+    "status": 200,
+    "available": true,
+    "health": {
+      "status": 200,
+      "result": "ok"
+    },
+    "version": {
+      "status": 200,
+      "assistant_mode": "mock"
+    },
+    "wrong_probe": {
+      "path": "/healthz",
+      "result": "HTTPError",
+      "classification": "audit URL error, correct route /health/ succeeded"
+    }
+  },
+  "sources": [
+    "doc/sources/original-mvp-plan.md",
+    "doc/sources/requirements-map.md",
+    "doc/plan/backlog.md",
+    "doc/goal.md",
+    "doc/qa/PROD-002-stage.json",
+    "doc/qa/PROD-002-browser-stage.json",
+    "app/hiring/models.py",
+    "app/accounts/forms.py",
+    "app/assistant/provider.py"
+  ],
+  "threads": [
+    {
+      "id": "01a12cbf-d021-7fd3-9ba2-0580d8962387",
+      "title": "Добавь аналитику переходов",
+      "status": "interrupted"
+    },
+    {
+      "id": "01a12cc3-0c4a-7292-809d-cf755a2474bd",
+      "title": "Проверь и добавь изменения в dev",
+      "status": "interrupted"
+    },
+    {
+      "id": "01a12c8f-c20e-74c3-8257-a72961513c23",
+      "title": "Создай папки Android и Flutter",
+      "status": "completed; source portability not accepted"
+    },
+    {
+      "id": "01a12c8f-ae0f-75f3-b467-6d536ff97737",
+      "title": "Составить план внедрения МСП и CLI",
+      "status": "implementation turn interrupted; MCLI-013 TODO"
+    }
+  ],
+  "additional_findings": {
+    "mobile_tracked_files": 0,
+    "local_dev_branch": false,
+    "analytics_uncommitted": [
+      "README.md",
+      "doc/plan/backlog.md",
+      "doc/deployment/analytics.md",
+      "portal/analytics/"
+    ],
+    "id_disambiguation": "DEV-001 completed worktree tooling; DEV-TRANSFER-001 pending transfer to dev"
+  },
+  "not_run": [
+    "PROD-002 deployment/HTTPS/cron/floor2",
+    "OS reboot",
+    "complete OPS-004 restore/rollback acceptance",
+    "real SMTP/FSP/AI",
+    "human pilot",
+    "actual screen reader",
+    "Linux native keyring",
+    "full MCLI-013 V2",
+    "mobile clean clone builds"
+  ],
+  "verification_notes": [
+    "Integrated command results consumed from completed same-session executions; not rerun solely for audit",
+    "Browser evidence retained at its own SHA; driver hashes and app/client equality checked",
+    "No raw thread commands, credentials, runtime logs or real user records exported"
+  ],
+  "source_sha256": {
+    "doc/qa/PROD-002-stage.json": "36df6e1c60c49cd1b5147b1b7af0a4326afd1aa56ec84f0520cc04d287d9e3b0",
+    "doc/qa/PROD-002-browser-stage.json": "903b6b70903033facf4b0c6ba07696eb13e198e3e0d12873ed28a062f8c5b84b",
+    "app/hiring/models.py": "9a0a51e00d43dd2c829fc838185b2c1ec61c2fa467b50e3426333f1b26994552",
+    "app/accounts/forms.py": "8587d99467f8098c31b0c5d75b5ce6345f1b8164ab6d444f019eb34467d1b266",
+    "app/assistant/provider.py": "63de9db6302ca1044678bcd4ab1510504259b1aa928e170d3dca24f9ab01efa6"
+  },
+  "document_checks": {
+    "status": "PASS",
+    "markdown_documents": 159,
+    "task_status_counts": "17 DONE, 8 TODO, 1 IN_PROGRESS, 1 NOT_RUN",
+    "worktree_port": 8041,
+    "browser_driver_hashes": "PASS",
+    "app_clients_equal_to_browser_source": "PASS"
+  }
+}

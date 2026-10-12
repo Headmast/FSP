@@ -197,3 +197,7 @@ DEL-001: интегратор, mvp/implementation от 34942b5, порт 8041; d
 ## PROD-002 · адресное задание
 
 Интегратор `mvp/implementation`, база b0b4f0b, порт 8041. Область hiring challenge model/service/forms/views/templates/migration/tests; privacy erase/revoke/retention и version floor; readonly API/CLI/MCP, HTTP схемы/сценарии и docs/QA. IN_PROGRESS: DONE после полного пользовательского пути, прав, таймера/повторов/снимков/зачёта, privacy restore, clean clone/browser и опубликованного HTTPS выпуска. Общий грейд и ранжирование не меняются; ответы/ключи не исполняются на сервере.
+
+## DOC-011 · повторная проверка полноты
+
+Документационный этап вне исходных 27, mvp/implementation от 77c6296, порт 8041. [Результат](../responses/DOC-011-completeness.md), [список реализации](implementation-gaps-2026-10-12.md), [evidence](../qa/DOC-011-coverage.json). Сверены текущие код/main/сервер, результаты интеграции и четыре незавершённых поручения соседних чатов. 17/27 DONE, 10 открыты; browser33 и интеграция PROD-002 PASS, live/floor2 NOT_RUN. DEV-TRANSFER-001 — отдельная передача в dev, существующая завершённая DEV-001 относится к worktree. Аудит не закрывает функциональную задачу.

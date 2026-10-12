@@ -180,7 +180,7 @@ GitHub показывает HTML как исходный код: для прос
 | Валидация оценки | [Протокол](doc/qa/validation-protocol.md), [результаты](doc/qa/validation-results.md), [разбор вопросов](doc/qa/validation-question-review.md) |
 | Выпуск MVP | [Отчёт выпуска](doc/delivery/mvp-release.md), [результаты](doc/qa/release-results.md) |
 | Помощник и черновики | [Checkpoint](doc/delivery/assistant-checkpoint.md), [общий evidence](doc/qa/assistant-checkpoint.json), [HTTPS-сценарий](doc/qa/assistant-checkpoint-live.json) |
-| Аудит полноты | [Актуальная сверка DOC-008](doc/plan/implementation-gaps-2026-10-12.md), [предыдущий срез DOC-006](doc/qa/scope-current.md), [исходный аудит](doc/qa/scope-audit.md), [историческая сверка](doc/qa/scope-recheck.md) |
+| Аудит полноты | [Актуальная сверка DOC-011](doc/plan/implementation-gaps-2026-10-12.md), [предыдущий срез DOC-006](doc/qa/scope-current.md), [исходный аудит](doc/qa/scope-audit.md), [историческая сверка](doc/qa/scope-recheck.md) |
 | Восстановление демо | [Watchdog](doc/qa/watchdog-results.md), [evidence восстановления](doc/qa/watchdog-recovery.json) |
 | Все свидетельства | [Каталог QA](doc/qa/) — отчёты, JSON и скриншоты |
 
@@ -295,7 +295,7 @@ python3 -m unittest discover -s scripts/tests -v
 Публикация статических материалов: `python3 scripts/deploy_public_site.py --ref <SHA>` после выпуска MVP. Передаются только перечисленные публичные файлы коммита, проверяется SHA-256 каждого загруженного файла. Секреты остаются на сервере.
 
 
-[Что ещё реализовать — актуальная сверка 12 октября](doc/plan/implementation-gaps-2026-10-12.md): исходные 14 открытых задач, дополнительные поручения, приоритеты и проверки завершения.
+[Что ещё реализовать — актуальная сверка 12 октября](doc/plan/implementation-gaps-2026-10-12.md): 10 открытых задач исходной цели, дополнительные поручения, приоритеты и проверки завершения.
 
 
 DOC-003 завершена: [полный HTTP/OpenAPI контракт и проверки](doc/responses/DOC-003-contracts.md). Исторический счёт после DOC-003 — 14/27; DEL-001 впоследствии завершена.
@@ -306,3 +306,5 @@ DOC-003 завершена: [полный HTTP/OpenAPI контракт и пр�
 PROD-001 опубликована: [условия кандидата и сравнение до контакта](doc/architecture/conditions.md), [проверки и результат](doc/responses/PROD-001-conditions.md). Прежний комплект DEL-001 сохраняет явный SHA своего проверенного снимка; итоговый сводный экспорт обновляется перед полной сдачей.
 
 PROD-004 опубликована на `11399cc`: [отзыв доступа и удаление](doc/architecture/privacy-controls.md), [результат](doc/responses/PROD-004-privacy.md), [проверки](doc/qa/PROD-004-complete.json). В кабинете кандидата — «Доступ и удаление данных». Общая цель 27 задач остаётся активной.
+
+[Повторная проверка полноты DOC-011](doc/responses/DOC-011-completeness.md): 17/27 DONE, 10 открыты; PROD-002 прошла browser33 и интеграцию, публикация ещё не принята.
