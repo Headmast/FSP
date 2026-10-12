@@ -23,6 +23,7 @@ from pathlib import Path
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--release-config',required=True)
 parser.add_argument('--privacy',action='store_true',help='Accept privacy with only this run\'s candidate and two owned companies')
+parser.add_argument('--challenges',action='store_true',help='Accept scoped task/draft/manual review/credit and answer revoke on own new fixtures')
 args=parser.parse_args()
 base=json.loads(Path(args.release_config).read_text())['url'].rstrip('/')
 parsed=urllib.parse.urlsplit(base)
@@ -33,7 +34,7 @@ import django
 django.setup()
 from accounts.models import User
 from profiles.models import Profile,FspLink
-from hiring.models import Company,Need,Invitation
+from hiring.models import Company,Need,Invitation,GapChallenge
 from assessments.models import Attempt
 from assistant.models import Draft
 from api.core import issue_token
@@ -197,6 +198,9 @@ try:
     assert 'Тестовый Кандидат' not in employer.request(f'/candidates/?need={need.pk}&grade=Junior')
     assert 'private-checkpoint@demo.invalid' in employer.request(f'/candidates/{profile.pk}/')
     passed('publication withdrawal removes search while preserving documented prior grant')
+    if args.challenges:
+        from live_challenge_checkpoint import run as challenge_acceptance
+        challenge_acceptance(candidate,employer,Fields,profile,offer,api_read,passed)
     if args.privacy:
         from live_privacy_checkpoint import run as privacy_acceptance
         privacy_acceptance(candidate,employer,Actor,Fields,profile,company,offer,attempt,data,emails,password,api_read,passed,privacy_artifacts)
@@ -205,16 +209,17 @@ except Exception as exc:
     failure_location=[{'file':Path(frame.filename).name,'line':frame.lineno} for frame in traceback.extract_tb(exc.__traceback__)]
 finally:
     # Only this run's random synthetic accounts; erased invitations remain scoped by their owned companies.
+    GapChallenge.objects.filter(company__user__username__in=emails[1:]).delete()
     Invitation.objects.filter(candidate__user__username=emails[0]).delete()
     Invitation.objects.filter(company__user__username__in=emails[1:]).delete()
     User.objects.filter(username__in=emails).delete()
     cleaned=not User.objects.filter(username__in=emails).exists()
 report={'status':'FAIL' if failure else 'PASS','commit':locals().get('version'),'url':base,
     'checked_at':datetime.now(timezone.utc).isoformat(),'checks':checks,'failure_type':failure,
-    'failure_location':locals().get('failure_location',[]),'privacy':args.privacy,
+    'failure_location':locals().get('failure_location',[]),'privacy':args.privacy,'challenges':args.challenges,
     'privacy_artifacts':privacy_artifacts,
     'driver_sha256':{name:hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()
-        for name in ['check_live_checkpoint.py']+(['live_privacy_checkpoint.py'] if args.privacy else [])},
+        for name in ['check_live_checkpoint.py']+(['live_privacy_checkpoint.py'] if args.privacy else [])+(['live_challenge_checkpoint.py'] if args.challenges else [])},
     'synthetic_accounts_removed':cleaned,'scope':'HTTPS journey; no existing account reset; perfect-answer synthetic fixture is not QA-001 validation'}
 print(json.dumps(report,ensure_ascii=False,indent=2),flush=True)
 raise SystemExit(1 if failure or not cleaned else 0)

@@ -21,12 +21,13 @@ def main():
     parser.add_argument('--pause-ms',type=int,default=4000)
     parser.add_argument('--node',default=os.environ.get('FSP_NODE','node'))
     parser.add_argument('--privacy',action='store_true',help='Also accept revoke/clear/delete with two owned companies and a second browser session')
+    parser.add_argument('--challenges',action='store_true',help='Also accept a real browser company task, private draft, review, credit and answer revoke')
     args=parser.parse_args()
     sha=subprocess.check_output(['git','rev-parse',args.ref],cwd=ROOT,text=True).strip()
     output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
-    result={'task':'PROD-004' if args.privacy else 'DEL-001','code_commit':sha,'status':'FAIL','checks':[],
+    result={'task':'PROD-002' if args.challenges else 'PROD-004' if args.privacy else 'DEL-001','code_commit':sha,'status':'FAIL','checks':[],
         'driver_sha256':{name:hashlib.sha256((ROOT/'scripts'/name).read_bytes()).hexdigest()
-            for name in ['record_delivery.py','record_delivery.cjs']+(['record_privacy.cjs'] if args.privacy else [])}}
+            for name in ['record_delivery.py','record_delivery.cjs']+(['record_privacy.cjs'] if args.privacy else [])+(['record_challenges.cjs'] if args.challenges else [])}}
     def run(command,cwd,env,log):
         subprocess.run(command,cwd=cwd,env=env,check=True,stdout=log,stderr=log)
     with tempfile.TemporaryDirectory(prefix='fsp-delivery-clone-') as tmp, (output/'private-build.log').open('w') as log:
@@ -58,6 +59,7 @@ def main():
             result['checks']+=['Gunicorn health/version actual SHA']
             env.update(FSP_RECORD_ROOT=str(checkout),FSP_RECORD_PYTHON=python,FSP_RECORD_OUTPUT=str(output),FSP_RECORD_URL=url,FSP_RECORD_PAUSE_MS=str(args.pause_ms),PYTHONPATH=str(checkout/'app'))
             env['FSP_RECORD_PRIVACY']='1' if args.privacy else '0'
+            env['FSP_RECORD_CHALLENGES']='1' if args.challenges else '0'
             subprocess.run([args.node,str(ROOT/'scripts/record_delivery.cjs')],cwd=checkout,env=env,check=True)
             browser=json.loads((output/'browser.json').read_text());assert browser['status']=='PASS'
             result['browser']=browser
