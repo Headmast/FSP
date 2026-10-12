@@ -1,0 +1,76 @@
+{
+  "task": "PROD-001",
+  "status": "PASS",
+  "task_status": "DONE",
+  "checked_at": "2026-10-12T00:17:42.129316+00:00",
+  "application_code_commit": "1d2eb6f2058f6ddd11f7c9e18973a26fc605397b",
+  "release_commit": "57bfe063e5f399fc6b16abb52d274e82fb4483db",
+  "app_client_source_match": "PASS: 1d2eb6f..57bfe06 app/clients byte diff empty",
+  "criteria": {
+    "COND-01": "PASS: three optional catalog preferences; employment and task conditions in Need; no mandatory candidate salary",
+    "COND-02": "PASS: three independent dimensions; missing never matches; partial tasks conflict; score/category unchanged",
+    "COND-03": "PASS: own forms, search filters, card and both inboxes before contact; immutable conditions after edits/replay",
+    "COND-04": "PASS: own/recipient PDF, selected owned same-grade need; public PDF has preferences but no contacts",
+    "COND-05": "PASS: API catalog/DTO/schema, CLI flags and typed MCP input, draft approval/scopes/stale and contact redaction",
+    "COND-06": "PASS: fresh and old-schema migrations retain original data and accepted legacy snapshots as unknown",
+    "COND-07": "PASS: 19 real browser phases on clean locked clone; 390px overflow check and visual PNG/PDF review",
+    "COND-08": "PASS: repeated integrated server/HTTP suite, published release and 18 HTTPS checkpoint steps"
+  },
+  "checks": {
+    "app_tests": {
+      "status": "PASS",
+      "count": 162,
+      "seconds": 15.089,
+      "commit": "57bfe063e5f399fc6b16abb52d274e82fb4483db"
+    },
+    "new_tests": 14,
+    "client_tests": 11,
+    "http_cases": 577,
+    "http_paths": 69,
+    "http_operations": 111,
+    "http_examples": 57,
+    "counterfactuals": 4,
+    "native_cli": "PASS macOS protected keychain; both roles search/prepare/cancel, state unchanged before web approval",
+    "mcp_stdio": "PASS both roles modern/legacy; condition search + typed prepare/cancel",
+    "browser": "PASS 19 phases; application/client 1d2eb6f and separately fingerprinted current QA driver",
+    "visual": "PASS five PNGs and two actual PDF pages",
+    "migration_upgrade": "PASS isolated old schema and fresh clone",
+    "live": "PASS 18 HTTPS steps, own synthetic accounts removed; portal status/health/version match 57bfe06",
+    "documentation_links": {
+      "status": "PASS",
+      "documents": 148
+    },
+    "diff": "PASS",
+    "original_scope_consistency": "PASS: 27 task rows, 16 DONE, 11 open; full queue preserved"
+  },
+  "evidence": [
+    "PROD-001-stage.json",
+    "PROD-001-http-complete.json",
+    "PROD-001-clean-clone.json",
+    "PROD-001-browser.json",
+    "PROD-001-live.json",
+    "PROD-001-public.json"
+  ],
+  "failures_corrected": [
+    {
+      "step": "Expanded native CLI verifier",
+      "reason": "Closed httpx client reused; replaced with short-lived verification client and whole native/stdio rerun"
+    },
+    {
+      "step": "Initial main integration regression",
+      "reason": "Missing learning.css in local static manifest; 162 run with 10 errors; collectstatic then full162 PASS. App bytes unchanged."
+    }
+  ],
+  "limits": [
+    "Real participants/manual screen readers/Linux keyring NOT_RUN",
+    "Live SMTP/FSP/Yandex remain separate; allowed mock preserved",
+    "Original delivery PDF/PPTX/videos are explicitly bound to 34942b5/100431a snapshot; this module has separate current documentation and QA",
+    "Revocation/deletion remain PROD-004; no change to legacy accepted grants",
+    "MCLI-013 full all-kind/platform acceptance not closed by this module"
+  ],
+  "scope_after": {
+    "total": 27,
+    "done": 16,
+    "open": 11
+  }
+}

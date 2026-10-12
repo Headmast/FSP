@@ -1,0 +1,43 @@
+{
+  "task": "PROD-001",
+  "release_commit": "57bfe063e5f399fc6b16abb52d274e82fb4483db",
+  "checks": {
+    "entry": {
+      "http_status": 200,
+      "content_type": "text/html"
+    },
+    "status": {
+      "http_status": 200,
+      "content_type": "application/json",
+      "data": {
+        "schema_version": 1,
+        "available": true,
+        "url": "https://wifzj-194-226-126-123.free.pinggy.net",
+        "prototype_url": "https://wifzj-194-226-126-123.free.pinggy.net/static/prototype/index.html",
+        "commit": "57bfe063e5f399fc6b16abb52d274e82fb4483db",
+        "checked_at": "2026-10-12T00:14:02.550839+00:00",
+        "message": "Демо доступно",
+        "assistant": "mock"
+      }
+    },
+    "health": {
+      "http_status": 200,
+      "content_type": "application/json",
+      "data": {
+        "status": "ok"
+      }
+    },
+    "version": {
+      "http_status": 200,
+      "content_type": "application/json",
+      "data": {
+        "commit": "57bfe063e5f399fc6b16abb52d274e82fb4483db",
+        "assistant_mode": "mock"
+      }
+    },
+    "profile-form": {
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8"
+    }
+  }
+}
