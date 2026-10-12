@@ -8,10 +8,11 @@ from accounts.models import User,ApiToken
 from api.core import issue_token
 from profiles.models import Profile,PrivacyReceipt
 from assessments.models import Attempt,LessonProgress,PracticeSession
-from hiring.models import Company,Need,Invitation
+from hiring.models import Company,Need,Invitation,GapChallenge
 
 
 def run(candidate,employer,Actor,Fields,profile,company,offer,attempt,data,emails,password,api_read,passed,artifacts):
+    challenge_ids=list(GapChallenge.objects.filter(candidate=profile).values_list('pk',flat=True))
     # Re-publication is explicit through this owned candidate's form, after the prior test of withdrawal.
     data['published']='on';candidate.request('/profile/',data)
     second=Actor();second.register(emails[2],'employer');second.request('/company/')
@@ -85,6 +86,16 @@ def run(candidate,employer,Actor,Fields,profile,company,offer,attempt,data,email
         assert archived.candidate_id is None and archived.candidate_erased_at and archived.snapshot['privacy_redacted']
         assert archived.snapshot['accepted_results']==[]
     passed('clear erases linked data and tokens, logs out another session, keeps anonymous company archives and retry holds')
+    if challenge_ids:
+        for challenge_id in challenge_ids:
+            archived=GapChallenge.objects.get(pk=challenge_id)
+            assert archived.candidate_id is None and archived.candidate_erased_at and archived.state=='erased'
+            assert not any([archived.instructions,archived.criteria,archived.answer,archived.review_scores,
+                archived.review_note,archived.reviewed_by_id,archived.credited_at])
+            dto=api_read(f'challenges/{challenge_id}',tokens[emails[1]])['data']
+            assert dto['candidate_id'] is None and dto['result'] is None and dto['state']=='erased'
+            assert 'CHALLENGE@demo.invalid' not in employer.request(f'/challenges/{challenge_id}/')
+        passed('HTTPS clear erases task answer/rubric/review/credit, detaches owner and exposes only anonymous company archive')
     candidate.login(emails[0],password)
     assert 'Доступ и удаление данных' in candidate.request('/profile/privacy/')
     privacy('delete_account',{'password':password})
