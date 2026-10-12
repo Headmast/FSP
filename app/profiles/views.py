@@ -90,7 +90,7 @@ def build_pdf(profile, include_contacts=False, need=None):
             texts.extend([f"{item.organization} / {item.role} - {item.months} месяцев", item.description])
         texts.extend([f"Email: {profile.contact_email}", f"Телефон: {profile.contact_phone}"])
     else:
-        texts.append('Подробный опыт, описание и контакты скрыты до принятия предложения этой компании.')
+        texts.append('Публичная версия резюме. Подробный опыт, описание и контакты не включены в этот файл.')
     story = []
     for text in texts:
         story.extend([Paragraph(escape(text).replace('\n', '<br/>'), style), Spacer(1, 8)])
