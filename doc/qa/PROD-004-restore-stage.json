@@ -1,0 +1,11 @@
+{
+  "task": "PROD-004",
+  "status": "PASS",
+  "checks": [
+    "actual pre-clear SQLite backup restores old data, fence erases it before serving",
+    "actual account-delete backup fenced; prior applied clear does not erase new profile data",
+    "180-day anonymous history/ledger expiry, 7-day owned backup expiry, unrelated files preserved, floor survives",
+    "secure_delete plus successful WAL truncate remove canaries from current SQLite bytes"
+  ],
+  "database": "owned disposable SQLite/ledger/backups removed; production untouched"
+}

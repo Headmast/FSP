@@ -276,7 +276,7 @@
           "published": {
             "type": "boolean",
             "x-django-field": "BooleanField",
-            "description": "Separate publication consent. Omitted checkbox is false; accepted invitation grants survive unpublishing."
+            "description": "Separate publication consent. Omitted checkbox is false; Non-revoked accepted grants survive unpublishing; separate privacy actions revoke/erase them."
           },
           "csrfmiddlewaretoken": {
             "type": "string",
@@ -766,6 +766,82 @@
         ],
         "additionalProperties": true,
         "x-form-class": "api.drafts.ExperienceInput"
+      },
+      "PrivacyAction": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "clear_profile",
+              "delete_account",
+              "revoke_all",
+              "revoke_company"
+            ],
+            "minLength": 1,
+            "x-django-field": "ChoiceField"
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "x-django-field": "UUIDField",
+            "format": "uuid",
+            "description": "Idempotency nonce; supplied by own browser form, immutable per action/subject."
+          },
+          "company": {
+            "type": "string",
+            "x-django-field": "CharField"
+          },
+          "acknowledge": {
+            "type": "boolean",
+            "const": true,
+            "x-django-field": "BooleanField"
+          },
+          "password": {
+            "type": "string",
+            "x-django-field": "CharField",
+            "writeOnly": true,
+            "description": "Current password required for clear_profile/delete_account; never stored in the ledger."
+          },
+          "csrfmiddlewaretoken": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 64,
+            "writeOnly": true,
+            "description": "CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field."
+          }
+        },
+        "required": [
+          "action",
+          "request_id",
+          "acknowledge"
+        ],
+        "additionalProperties": true,
+        "x-form-class": "profiles.privacy_views.PrivacyActionForm",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "action": {
+                  "enum": [
+                    "clear_profile",
+                    "delete_account"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "password"
+              ],
+              "properties": {
+                "password": {
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        ]
       },
       "LearningRead": {
         "type": "object",
@@ -2233,7 +2309,10 @@
             "type": "integer"
           },
           "candidate_id": {
-            "type": "integer"
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "need_id": {
             "type": "integer"
@@ -2309,6 +2388,21 @@
           "conditions": {
             "$ref": "#/components/schemas/ApiConditions"
           },
+          "contact_revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "candidate_erased_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "privacy_redacted": {
+            "type": "boolean"
+          },
           "status": {
             "type": "string"
           },
@@ -2360,6 +2454,9 @@
           "employment_type",
           "task_types",
           "conditions",
+          "contact_revoked_at",
+          "candidate_erased_at",
+          "privacy_redacted",
           "status",
           "created_at",
           "responded_at",
@@ -2529,6 +2626,61 @@
           "task_types",
           "features",
           "fsp_source"
+        ],
+        "additionalProperties": false
+      },
+      "ApiPrivacyCompany": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "accepted_grants": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "accepted_grants"
+        ],
+        "additionalProperties": false
+      },
+      "ApiPrivacyStatus": {
+        "type": "object",
+        "properties": {
+          "published": {
+            "type": "boolean"
+          },
+          "companies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiPrivacyCompany"
+            }
+          },
+          "actions_in_browser_only": {
+            "const": true
+          },
+          "archive_retention_days": {
+            "type": "integer"
+          },
+          "backup_retention_days": {
+            "type": "integer"
+          },
+          "saved_copies_revocable": {
+            "const": false
+          }
+        },
+        "required": [
+          "published",
+          "companies",
+          "actions_in_browser_only",
+          "archive_retention_days",
+          "backup_retention_days",
+          "saved_copies_revocable"
         ],
         "additionalProperties": false
       },
@@ -3371,6 +3523,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -3467,6 +3641,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -3614,6 +3810,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -3718,6 +3936,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -3830,6 +4070,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -3930,6 +4192,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -4050,6 +4334,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -4188,6 +4494,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -4344,6 +4672,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
             "content": {
@@ -4462,6 +4812,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -4563,6 +4935,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -4707,6 +5101,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
             "content": {
@@ -4811,6 +5227,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -4923,6 +5361,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -5057,6 +5517,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -5199,6 +5681,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -5246,6 +5750,10 @@
           },
           "404": {
             "description": "Missing/unknown artifact",
+            "headers": {}
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
             "headers": {}
           },
           "405": {
@@ -5305,6 +5813,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -5351,6 +5881,17 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -5383,6 +5924,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -5422,6 +5985,17 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -5454,6 +6028,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -5503,6 +6099,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -5619,6 +6237,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -5675,6 +6315,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -5769,6 +6431,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -5823,6 +6507,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -5918,6 +6624,17 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -5972,6 +6689,23 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable; fail closed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": []
@@ -5999,6 +6733,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -6098,6 +6854,23 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable; fail closed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": []
@@ -6135,6 +6908,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -6185,6 +6980,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -6258,6 +7075,249 @@
         }
       }
     },
+    "/profile/privacy/": {
+      "get": {
+        "operationId": "profile_privacy_get",
+        "summary": "Отзыв доступа и удаление · GET",
+        "description": "Authenticated active candidate; processing consent not required for erasure. revoke_company/revoke_all close contact grants and redact free snapshot text. clear_profile erases candidate data, detaches minimal invitation history, revokes tokens/sessions; keeps login. delete_account also removes User. Clear/delete need current password and unchecked explicit acknowledgement. Durable ledger is recorded before mutation, replayed before reads after restore. Same nonce cannot change subject/action. No destructive bearer endpoint.\nRepeat: Same nonce receipt does not reapply erase; revoked accepted invitation replay never reopens grant.\nRead effects: No business write on GET/HEAD.",
+        "x-django-url-name": "profile-privacy",
+        "x-role": "candidate",
+        "x-repeat": "Same nonce receipt does not reapply erase; revoked accepted invitation replay never reopens grant.",
+        "x-read-effects": "",
+        "security": [
+          {
+            "Session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GET own privacy dashboard",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Unauthenticated -> login; successful revoke -> privacy dashboard; clear/delete -> home/logged out. Processing consent is not required for erasure.",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Malformed/foreign company",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy recovery unavailable; fail closed",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong role/inactive or invalid CSRF; no forced email/processing renewal for an authenticated owner.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
+            "headers": {
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": []
+      },
+      "post": {
+        "operationId": "profile_privacy_post",
+        "summary": "Отзыв доступа и удаление · POST",
+        "description": "Authenticated active candidate; processing consent not required for erasure. revoke_company/revoke_all close contact grants and redact free snapshot text. clear_profile erases candidate data, detaches minimal invitation history, revokes tokens/sessions; keeps login. delete_account also removes User. Clear/delete need current password and unchecked explicit acknowledgement. Durable ledger is recorded before mutation, replayed before reads after restore. Same nonce cannot change subject/action. No destructive bearer endpoint.\nRepeat: Same nonce receipt does not reapply erase; revoked accepted invitation replay never reopens grant.\nRead effects: No business write on GET/HEAD.",
+        "x-django-url-name": "profile-privacy",
+        "x-role": "candidate",
+        "x-repeat": "Same nonce receipt does not reapply erase; revoked accepted invitation replay never reopens grant.",
+        "x-read-effects": "",
+        "security": [
+          {
+            "Session": [],
+            "CsrfCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GET own privacy dashboard",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Unauthenticated -> login; successful revoke -> privacy dashboard; clear/delete -> home/logged out. Processing consent is not required for erasure.",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields/ack/password or nonce conflict; no new action",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Malformed/foreign company",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy recovery unavailable; fail closed",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong role/inactive or invalid CSRF; no forced email/processing renewal for an authenticated owner.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
+            "headers": {
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "X-CSRFToken",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 64,
+              "writeOnly": true,
+              "description": "CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field."
+            },
+            "description": "Alternative to csrfmiddlewaretoken form field; csrf cookie still required."
+          }
+        ],
+        "x-csrf": "Cookie plus same-session header OR form token; session/CSRF rotate at login. application/json is not parsed into request.POST; 415 is not promised.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/PrivacyAction"
+              },
+              "examples": {
+                "valid_shape": {
+                  "value": {
+                    "action": "revoke_all",
+                    "request_id": "d5b2fc0d-7f58-4e28-9e84-41ed9b845c90",
+                    "acknowledge": true
+                  }
+                }
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/PrivacyAction"
+              },
+              "examples": {
+                "valid_shape": {
+                  "value": {
+                    "action": "revoke_all",
+                    "request_id": "d5b2fc0d-7f58-4e28-9e84-41ed9b845c90",
+                    "acknowledge": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/profile/": {
       "get": {
         "operationId": "profile_get",
@@ -6290,6 +7350,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -6350,6 +7432,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -6550,6 +7654,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -6612,6 +7738,17 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
                 }
               }
             }
@@ -6689,6 +7826,23 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -6740,6 +7894,17 @@
         "responses": {
           "200": {
             "description": "FspHistory JSON",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
             "headers": {
               "Content-Type": {
                 "required": true,
@@ -6822,6 +7987,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
             "content": {
@@ -6878,6 +8065,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -6989,6 +8198,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
             "content": {
@@ -7045,6 +8276,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -7160,6 +8413,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
             "content": {
@@ -7216,6 +8491,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -7362,6 +8659,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -7499,6 +8818,17 @@
                 "required": true,
                 "schema": {
                   "const": "text/html; charset=utf-8"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
                 }
               }
             }
@@ -7645,6 +8975,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -7743,6 +9095,17 @@
                 "required": true,
                 "schema": {
                   "const": "text/html; charset=utf-8"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
                 }
               }
             }
@@ -7850,6 +9213,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -7962,6 +9347,17 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -8034,7 +9430,7 @@
       "get": {
         "operationId": "invitations_get",
         "summary": "Свои предложения · GET",
-        "description": "Candidate sees own invitations; employer sees own Company invitations. No cross-candidate data. Immutable conditions snapshot.\nRepeat: \nRead effects: Candidate GET/HEAD sets viewed_at for unseen items. Employer read may lazily create own Company.",
+        "description": "Candidate sees own invitations; employer sees own Company invitations. No cross-candidate data. Conditions snapshot is stable except explicit privacy redaction; candidate nullable after erasure.\nRepeat: \nRead effects: Candidate GET/HEAD sets viewed_at for unseen items. Employer read may lazily create own Company.",
         "x-django-url-name": "invitations",
         "x-role": "both",
         "x-repeat": "",
@@ -8051,6 +9447,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -8093,7 +9511,7 @@
       "head": {
         "operationId": "invitations_head",
         "summary": "Свои предложения · HEAD",
-        "description": "Candidate sees own invitations; employer sees own Company invitations. No cross-candidate data. Immutable conditions snapshot.\nRepeat: \nRead effects: Candidate GET/HEAD sets viewed_at for unseen items. Employer read may lazily create own Company.",
+        "description": "Candidate sees own invitations; employer sees own Company invitations. No cross-candidate data. Conditions snapshot is stable except explicit privacy redaction; candidate nullable after erasure.\nRepeat: \nRead effects: Candidate GET/HEAD sets viewed_at for unseen items. Employer read may lazily create own Company.",
         "x-django-url-name": "invitations",
         "x-role": "both",
         "x-repeat": "",
@@ -8111,6 +9529,17 @@
                 "required": true,
                 "schema": {
                   "const": "text/html; charset=utf-8"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
                 }
               }
             }
@@ -8156,7 +9585,7 @@
       "post": {
         "operationId": "invitation_send_post",
         "summary": "Явная отправка предложения · POST",
-        "description": "Need must be owned, candidate published and same category. New invitation requires Company email. Proof IDs belong to this candidate and are finished of the same grade (failed proof may be explicitly selected). Snapshot includes conditions/contact company/selected witnesses/discussion. No contacts of candidate opened yet.\nRepeat: Unique (candidate,need). Duplicate preserves initial snapshot; route still requires candidate published/same current grade, and parses IDs before service duplicate check.\nRead effects: No business write on GET/HEAD.",
+        "description": "Need must be owned, candidate published and same category. New invitation requires Company email. Proof IDs belong to this candidate and are finished of the same grade (failed proof may be explicitly selected). Snapshot includes conditions/contact company/selected witnesses/discussion. Explicit privacy revocation/erasure replaces free text with controlled minimal history. No contacts of candidate opened yet.\nRepeat: Unique (candidate,need). Duplicate preserves initial snapshot; route still requires candidate published/same current grade, and parses IDs before service duplicate check.\nRead effects: No business write on GET/HEAD.",
         "x-django-url-name": "invitation-send",
         "x-role": "employer",
         "x-repeat": "Unique (candidate,need). Duplicate preserves initial snapshot; route still requires candidate published/same current grade, and parses IDs before service duplicate check.",
@@ -8185,6 +9614,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -8313,6 +9764,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
             "content": {
@@ -8426,6 +9899,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
             "content": {
@@ -8527,6 +10022,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -8583,6 +10100,17 @@
                 "required": true,
                 "schema": {
                   "const": "text/html; charset=utf-8"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
                 }
               }
             }
@@ -8647,6 +10175,28 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -8755,6 +10305,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -8834,6 +10406,17 @@
                 "required": true,
                 "schema": {
                   "const": "text/html; charset=utf-8"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
                 }
               }
             }
@@ -8920,6 +10503,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -9037,6 +10642,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
             "content": {
@@ -9148,6 +10775,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "302": {
             "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
             "headers": {
@@ -9227,6 +10876,17 @@
                 "required": true,
                 "schema": {
                   "const": "text/html; charset=utf-8"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
                 }
               }
             }
@@ -9311,6 +10971,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Provider failure; manual forms remain available",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -9515,6 +11197,18 @@
                 "schema": {
                   "type": "string"
                 }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
               }
             }
           },
@@ -9650,6 +11344,28 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
             "content": {
@@ -9748,6 +11464,28 @@
               "text/html": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
                 }
               }
             }
@@ -9967,6 +11705,23 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -10002,6 +11757,17 @@
               }
             }
           },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
+                }
+              }
+            }
+          },
           "405": {
             "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
             "headers": {
@@ -10015,6 +11781,306 @@
           }
         },
         "parameters": []
+      }
+    },
+    "/api/v1/me/privacy": {
+      "get": {
+        "operationId": "token_me_privacy_get",
+        "parameters": [],
+        "x-required-scopes": [
+          "candidate.read"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; MCP omits free text and contact fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ApiPrivacyStatus"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ApiMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "WWW-Authenticate": {
+                "required": true,
+                "schema": {
+                  "const": "Bearer"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "const": "GET"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Retry-After": {
+                "required": true,
+                "schema": {
+                  "const": "60"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerToken": []
+          }
+        ],
+        "x-contract-group": "token-api",
+        "x-django-url-name": null,
+        "description": "Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. Integer IDs use bounded positive parser; draft UUIDs use Python UUID parser; malformed/foreign IDs 404. candidate.read"
       }
     },
     "/api/v1/me": {

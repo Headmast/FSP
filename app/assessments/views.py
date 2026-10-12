@@ -14,14 +14,14 @@ from django.core.exceptions import PermissionDenied
 @role_required('candidate')
 @require_safe
 def dashboard(request):
-    profile = Profile.objects.get(user=request.user)
+    profile = get_object_or_404(Profile,user=request.user)
     return render(request, 'assessments/dashboard.html', {'profile':profile,
         'attempts':Attempt.objects.filter(candidate=profile).order_by('-started_at')})
 
 @role_required('candidate')
 @require_POST
 def start(request):
-    profile = Profile.objects.get(user=request.user)
+    profile = get_object_or_404(Profile,user=request.user)
     try:
         obj = start_attempt(profile, request.POST.get('grade', ''))
     except ValueError as exc:
@@ -41,7 +41,7 @@ def attempt(request, pk):
 
 
 def submit(request, pk, finish):
-    profile = Profile.objects.get(user=request.user)
+    profile = get_object_or_404(Profile,user=request.user)
     obj = get_object_or_404(Attempt, pk=pk, candidate=profile)
     submitted = {key[2:]:value for key,value in request.POST.items() if key.startswith('q_')}
     try:

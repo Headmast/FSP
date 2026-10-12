@@ -36,6 +36,7 @@ Session only; active confirmed user and processing consent. Last 100 own immutab
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | Own draft list HTML |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -56,6 +57,7 @@ POST schema: **ActionApproval**; поля см. ниже.
 | GET | 302 | Successful apply/cancel: same draft URL |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 404 | Missing/foreign draft or inaccessible target |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 200 | GET draft state |
 | POST | 302 | Successful apply/cancel: same draft URL |
@@ -64,6 +66,7 @@ POST schema: **ActionApproval**; поля см. ниже.
 | POST | 404 | Missing/foreign draft or inaccessible target |
 | POST | 409 | Stale target, cancelled/final conflict |
 | POST | 410 | Expired pending draft |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
 ### /learning/ — Учебный маршрут
@@ -87,6 +90,7 @@ Query (все необязательные):
 | --- | --- | --- |
 | GET | 200 | Track/progress or active-exam lock screen |
 | GET | 404 | Unknown track/missing own profile |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -106,6 +110,7 @@ Legacy route always ios. Known grade/topic required; unknown values 404. Active 
 | GET | 200 | Lesson HTML |
 | GET | 404 | Unknown grade/topic |
 | GET | 423 | Active exam |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -125,6 +130,7 @@ Known track/grade/topic only; own progress/version. Active exam returns 423.
 | GET | 200 | Lesson HTML |
 | GET | 404 | Unknown track/grade/topic |
 | GET | 423 | Active exam |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -144,6 +150,7 @@ POST schema: **LearningRead**; поля см. ниже.
 | POST | 302 | Canonical /learning/tracks/ios/lessons/{grade}/{topic}/ |
 | POST | 404 | Unknown lesson |
 | POST | 423 | Active exam |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -162,6 +169,7 @@ POST schema: **LearningRead**; поля см. ниже.
 | POST | 302 | Canonical selected track lesson |
 | POST | 404 | Unknown track/grade/topic |
 | POST | 423 | Active exam |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -180,6 +188,7 @@ POST schema: **LearningStart**; поля см. ниже.
 | POST | 302 | Session ?question=<next> or /learning/ on invalid selection |
 | POST | 404 | Malformed/foreign/not-finished source |
 | POST | 423 | Active exam |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -204,6 +213,7 @@ Query (все необязательные):
 | GET | 200 | Question/review HTML |
 | GET | 404 | Foreign/missing session or invalid active question index |
 | GET | 423 | Active exam |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -223,6 +233,7 @@ POST schema: **LearningAnswers**; поля см. ниже.
 | POST | 302 | Session/review or dashboard for pause |
 | POST | 404 | Missing/foreign session |
 | POST | 423 | Active exam |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -241,12 +252,14 @@ POST schema: **TokenAction**; поля см. ниже.
 | GET | 200 | GET list or successful create with one-time secret |
 | GET | 302 | Revoke: /accounts/integrations/ |
 | GET | 404 | Malformed/foreign token id |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 200 | GET list or successful create with one-time secret |
 | POST | 400 | Invalid create form/action |
 | POST | 302 | Revoke: /accounts/integrations/ |
 | POST | 404 | Malformed/foreign token id |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -270,6 +283,7 @@ Query (все необязательные):
 | --- | --- | --- |
 | GET | 200 | Dashboard HTML |
 | GET | 404 | Invalid period/foreign or malformed filter |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -290,6 +304,7 @@ POST schema: **TeamAction**; поля см. ниже.
 | --- | --- | --- |
 | POST | 302 | Success/form error: /company/dashboard/ |
 | POST | 404 | Unknown action |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -305,9 +320,11 @@ Only manifest.json, current-version fsp_client-<version>-py3-none-any.whl and fs
 | --- | --- | --- |
 | GET | 200 | Versioned artifact attachment; manifest application/json, wheel octet-stream, tar.gz application/gzip |
 | GET | 404 | Missing/unknown artifact |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Versioned artifact attachment; manifest application/json, wheel octet-stream, tar.gz application/gzip |
 | HEAD | 404 | Missing/unknown artifact |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
 ### / — Главная / кабинет
@@ -322,9 +339,11 @@ Anonymous sees welcome. Candidate redirects /profile/; employer sees cabinet. Au
 | --- | --- | --- |
 | GET | 200 | Welcome/employer cabinet |
 | GET | 302 | Own profile or consent |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Welcome/employer cabinet |
 | HEAD | 302 | Own profile or consent |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
 ### /accounts/privacy/ — Правила обработки
@@ -338,8 +357,10 @@ Public processing-v1 and publication rules.
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | Privacy HTML |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Privacy HTML |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
 ### /accounts/register/ — Демонстрационная регистрация
@@ -355,9 +376,11 @@ POST schema: **Registration**; поля см. ниже.
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | GET form or invalid POST, no user created on error |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 200 | GET form or invalid POST, no user created on error |
 | POST | 302 | Valid POST: /accounts/confirm/ |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 403 | Missing/mismatched csrf cookie + header/form token. |
 
@@ -375,10 +398,12 @@ POST schema: **Confirmation**; поля см. ниже.
 | --- | --- | --- |
 | GET | 200 | GET demo token/form |
 | GET | 404 | No pending session |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 302 | Valid POST: / |
 | POST | 400 | Wrong/expired token with pending session |
 | POST | 404 | No pending session |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 403 | Missing/mismatched csrf cookie + header/form token. |
 
@@ -401,15 +426,19 @@ POST schema: **Login**; поля см. ниже.
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | Form/error or empty OPTIONS |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 200 | Form/error or empty OPTIONS |
 | POST | 302 | Valid login to safe next or / |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 403 | Missing/mismatched csrf cookie + header/form token. |
 | HEAD | 200 | Form/error or empty OPTIONS |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | OPTIONS | 200 | Form/error or empty OPTIONS |
 | OPTIONS | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| OPTIONS | 503 | Privacy ledger/restore fence unavailable; fail closed. |
 
 ### /accounts/logout/ — Выход
 
@@ -424,10 +453,12 @@ POST schema: **CsrfOnly**; поля см. ниже.
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | POST | 302 | POST: / |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 403 | Missing/mismatched csrf cookie + header/form token. |
 | OPTIONS | 200 | OPTIONS empty |
 | OPTIONS | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| OPTIONS | 503 | Privacy ledger/restore fence unavailable; fail closed. |
 
 ### /accounts/consent/ — Согласие processing-v1
 
@@ -443,11 +474,39 @@ POST schema: **Consent**; поля см. ниже.
 | --- | --- | --- |
 | GET | 200 | GET/form error |
 | GET | 302 | POST success: / |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 200 | GET/form error |
 | POST | 302 | POST success: / |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 403 | Missing/mismatched csrf cookie + header/form token. |
+
+### /profile/privacy/ — Отзыв доступа и удаление
+
+Методы: **GET / POST**. Роль: **candidate**.
+
+Authenticated active candidate; processing consent not required for erasure. revoke_company/revoke_all close contact grants and redact free snapshot text. clear_profile erases candidate data, detaches minimal invitation history, revokes tokens/sessions; keeps login. delete_account also removes User. Clear/delete need current password and unchecked explicit acknowledgement. Durable ledger is recorded before mutation, replayed before reads after restore. Same nonce cannot change subject/action. No destructive bearer endpoint.
+
+Повтор: Same nonce receipt does not reapply erase; revoked accepted invitation replay never reopens grant.
+
+POST schema: **PrivacyAction**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | GET own privacy dashboard |
+| GET | 302 | Unauthenticated -> login; successful revoke -> privacy dashboard; clear/delete -> home/logged out. Processing consent is not required for erasure. |
+| GET | 404 | Malformed/foreign company |
+| GET | 503 | Privacy recovery unavailable; fail closed |
+| GET | 403 | Wrong role/inactive or invalid CSRF; no forced email/processing renewal for an authenticated owner. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | GET own privacy dashboard |
+| POST | 302 | Unauthenticated -> login; successful revoke -> privacy dashboard; clear/delete -> home/logged out. Processing consent is not required for erasure. |
+| POST | 400 | Invalid fields/ack/password or nonce conflict; no new action |
+| POST | 404 | Malformed/foreign company |
+| POST | 503 | Privacy recovery unavailable; fail closed |
+| POST | 403 | Wrong role/inactive or invalid CSRF; no forced email/processing renewal for an authenticated owner. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
 ### /profile/ — Собственный профиль
 
@@ -463,10 +522,12 @@ POST schema: **Profile**; поля см. ниже.
 | --- | --- | --- |
 | GET | 200 | GET or any form/formset validation error |
 | GET | 302 | Valid save: /profile/ |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 200 | GET or any form/formset validation error |
 | POST | 302 | Valid save: /profile/ |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -481,10 +542,12 @@ Own candidate PDF with private descriptions, experience and contacts. Cyrillic f
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | application/pdf attachment |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | application/pdf attachment |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -500,10 +563,12 @@ JSON only for owner; changes_grade=false for all states; dates ISO YYYY-MM-DD. M
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | FspHistory JSON |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | FspHistory JSON |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -522,10 +587,12 @@ POST schema: **FspAction**; поля см. ниже.
 | --- | --- | --- |
 | GET | 200 | GET/form error, invalid or occupied external ID |
 | GET | 302 | Connect/unlink success: /profile/fsp/link/ |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 200 | GET/form error, invalid or occupied external ID |
 | POST | 302 | Connect/unlink success: /profile/fsp/link/ |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -545,10 +612,12 @@ POST schema: **Company**; поля см. ниже.
 | --- | --- | --- |
 | GET | 200 | GET/form error |
 | GET | 302 | Save: /company/ |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 200 | GET/form error |
 | POST | 302 | Save: /company/ |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -568,10 +637,12 @@ POST schema: **Need**; поля см. ниже.
 | --- | --- | --- |
 | GET | 200 | GET/form error |
 | GET | 302 | Creation: /candidates/ |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 200 | GET/form error |
 | POST | 302 | Creation: /candidates/ |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -599,11 +670,13 @@ Query (все необязательные):
 | --- | --- | --- |
 | GET | 200 | Search HTML, including invalid filter form |
 | GET | 404 | Malformed/foreign selected need |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Search HTML, including invalid filter form |
 | HEAD | 404 | Malformed/foreign selected need |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -628,11 +701,13 @@ Query (все необязательные):
 | --- | --- | --- |
 | GET | 200 | Candidate HTML with grant-aware fields |
 | GET | 404 | Invisible/missing candidate or malformed/foreign/wrong-grade need |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Candidate HTML with grant-aware fields |
 | HEAD | 404 | Invisible/missing candidate or malformed/foreign/wrong-grade need |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -657,11 +732,13 @@ Query (все необязательные):
 | --- | --- | --- |
 | GET | 200 | application/pdf attachment |
 | GET | 404 | Invisible/missing candidate or malformed/foreign/wrong-grade need |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | application/pdf attachment |
 | HEAD | 404 | Invisible/missing candidate or malformed/foreign/wrong-grade need |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -670,7 +747,7 @@ Query (все необязательные):
 
 Методы: **GET / HEAD**. Роль: **both**.
 
-Candidate sees own invitations; employer sees own Company invitations. No cross-candidate data. Immutable conditions snapshot.
+Candidate sees own invitations; employer sees own Company invitations. No cross-candidate data. Conditions snapshot is stable except explicit privacy redaction; candidate nullable after erasure.
 
 Повтор: Чтение текущего состояния.
 
@@ -679,10 +756,12 @@ Candidate sees own invitations; employer sees own Company invitations. No cross-
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | Invitation list |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Invitation list |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -691,7 +770,7 @@ Candidate sees own invitations; employer sees own Company invitations. No cross-
 
 Методы: **POST**. Роль: **employer**.
 
-Need must be owned, candidate published and same category. New invitation requires Company email. Proof IDs belong to this candidate and are finished of the same grade (failed proof may be explicitly selected). Snapshot includes conditions/contact company/selected witnesses/discussion. No contacts of candidate opened yet.
+Need must be owned, candidate published and same category. New invitation requires Company email. Proof IDs belong to this candidate and are finished of the same grade (failed proof may be explicitly selected). Snapshot includes conditions/contact company/selected witnesses/discussion. Explicit privacy revocation/erasure replaces free text with controlled minimal history. No contacts of candidate opened yet.
 
 Повтор: Unique (candidate,need). Duplicate preserves initial snapshot; route still requires candidate published/same current grade, and parses IDs before service duplicate check.
 
@@ -701,6 +780,7 @@ POST schema: **Invitation**; поля см. ниже.
 | --- | --- | --- |
 | POST | 302 | Success/duplicate: /invitations/; missing company email: /company/; invalid proof/discussion: /candidates/{id}/ with message |
 | POST | 404 | Malformed/foreign need/candidate/proof ID or >20 proof IDs |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -718,6 +798,7 @@ POST schema: **CsrfOnly**; поля см. ниже.
 | --- | --- | --- |
 | POST | 302 | All owned decisions: /invitations/ |
 | POST | 404 | Missing/foreign invitation |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -735,6 +816,7 @@ POST schema: **CsrfOnly**; поля см. ниже.
 | --- | --- | --- |
 | POST | 302 | All owned decisions: /invitations/ |
 | POST | 404 | Missing/foreign invitation |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -749,10 +831,12 @@ Only own attempts and profile category. No answer keys exposed.
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | Dashboard HTML |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Dashboard HTML |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -770,6 +854,7 @@ POST schema: **StartAttempt**; поля см. ниже.
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | POST | 302 | Attempt URL on success/active reuse; /assessments/ on refused start |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -785,11 +870,13 @@ Owned attempt only. Active HTML shows id/area/prompt/options/selected, never cor
 | --- | --- | --- |
 | GET | 200 | Active/result HTML |
 | GET | 404 | Missing/foreign attempt |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Active/result HTML |
 | HEAD | 404 | Missing/foreign attempt |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -808,6 +895,7 @@ POST schema: **Answers**; поля см. ниже.
 | --- | --- | --- |
 | POST | 302 | Own attempt URL with success/error message |
 | POST | 404 | Missing/foreign attempt |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -825,6 +913,7 @@ POST schema: **Answers**; поля см. ниже.
 | --- | --- | --- |
 | POST | 302 | Own attempt URL with result/error |
 | POST | 404 | Missing/foreign attempt |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -842,11 +931,13 @@ Finished own candidate attempt; employer requires visible profile and current gr
 | --- | --- | --- |
 | GET | 200 | HTML witness |
 | GET | 404 | Foreign/invisible/active/wrong-grade attempt |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | HTML witness |
 | HEAD | 404 | Foreign/invisible/active/wrong-grade attempt |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -875,6 +966,7 @@ POST schema: **Assistant**; поля см. ниже.
 | --- | --- | --- |
 | GET | 200 | Mode form/editor/mock result |
 | GET | 404 | Malformed/foreign/invisible explicit ID |
+| GET | 503 | Provider failure; manual forms remain available |
 | GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
@@ -903,6 +995,7 @@ POST schema: **DraftApply**; поля см. ниже.
 | GET | 200 | GET editor/status |
 | GET | 302 | Authentication or consent redirect only; editor never applies on GET. |
 | GET | 404 | Foreign/missing Draft |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | POST | 302 | Applied profile: /profile/; need: /company/needs/ |
@@ -910,6 +1003,7 @@ POST schema: **DraftApply**; поля см. ниже.
 | POST | 404 | Foreign/missing Draft |
 | POST | 409 | Stale source/description or active candidate test |
 | POST | 410 | Expired unapplied Draft |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
 | POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
@@ -941,13 +1035,32 @@ Read queries required tables. DatabaseError -> 503 without secrets. Not a full u
 | Метод | Статус | Значение |
 | --- | --- | --- |
 | GET | 200 | Version JSON |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 | HEAD | 200 | Version JSON |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
 | HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
 
 ## Token API /api/v1
 
 API не использует browser session и CSRF. Каждая операция требует активный Bearer token своей роли/скоупа, подтверждённый аккаунт и processing consent. 60 запросов/минуту, срок 30 дней; revoke/expiry → 401, scope/role/consent → 403. Данные/ошибки JSON без HTML redirect. Cache-Control=no-store, X-Request-ID; 429 также Retry-After=60, 401 WWW-Authenticate=Bearer. На GET меняется только учёт использования токена, бизнес-данные не меняются. MCP не получает контакты/свободные приватные тексты/PDF; CLI private требует contacts.read и действующий grant. Все DTO приведены в схемах Api ниже.
+
+### GET /api/v1/me/privacy
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. Integer IDs use bounded positive parser; draft UUIDs use Python UUID parser; malformed/foreign IDs 404. candidate.read
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
 
 ### GET /api/v1/me
 
@@ -1711,7 +1824,7 @@ Experience formset is validated only when TOTAL_FORMS is present; INITIAL_FORMS 
 | contact_email | нет | string; maxLength=254 | Valid email when non-empty. |
 | contact_phone | нет | string; maxLength=40 | — |
 | desired_grade | да | string; minLength=1; enum=Junior, Middle | — |
-| published | нет | boolean | Separate publication consent. Omitted checkbox is false; accepted invitation grants survive unpublishing. |
+| published | нет | boolean | Separate publication consent. Omitted checkbox is false; Non-revoked accepted grants survive unpublishing; separate privacy actions revoke/erase them. |
 | csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
 | experience-TOTAL_FORMS | нет | integer; minimum=0; maximum=20 | — |
 | experience-INITIAL_FORMS | нет | integer; minimum=0; maximum=20 | — |
@@ -1822,6 +1935,17 @@ salary_min/max are positive rubles before tax per month; max >= min. Creates a n
 | role | да | string; minLength=1; maxLength=120 | — |
 | months | да | integer; minimum=0; maximum=600 | — |
 | description | нет | string; maxLength=2000 | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### PrivacyAction
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| action | да | string; minLength=1; enum=clear_profile, delete_account, revoke_all, revoke_company | — |
+| request_id | да | string; minLength=1 | Idempotency nonce; supplied by own browser form, immutable per action/subject. |
+| company | нет | string | — |
+| acknowledge | да | True | — |
+| password | нет | string | Current password required for clear_profile/delete_account; never stored in the ledger. |
 | csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
 
 ### LearningRead
@@ -2260,7 +2384,7 @@ Actual wheel and source archive of this client version; hashes and byte sizes ch
 | Поле | Обязательно | Тип / границы | Правила |
 | --- | --- | --- | --- |
 | id | да | integer | — |
-| candidate_id | да | integer | — |
+| candidate_id | да | ['integer', 'null'] | — |
 | need_id | да | integer | — |
 | company_id | да | integer | — |
 | company | да | ['string', 'null'] | — |
@@ -2275,6 +2399,9 @@ Actual wheel and source archive of this client version; hashes and byte sizes ch
 | employment_type | да | string; enum=(empty), full_time, part_time, project, internship | — |
 | task_types | да | array[string; enum=development, testing, support, architecture, mentoring] | — |
 | conditions | да | ApiConditions | — |
+| contact_revoked_at | да | ['string', 'null'] | — |
+| candidate_erased_at | да | ['string', 'null'] | — |
+| privacy_redacted | да | boolean | — |
 | status | да | string | — |
 | created_at | да | string | — |
 | responded_at | да | ['string', 'null'] | — |
@@ -2330,6 +2457,25 @@ Actual wheel and source archive of this client version; hashes and byte sizes ch
 | task_types | да | object | — |
 | features | да | array[string] | — |
 | fsp_source | да | 'mock' | — |
+
+### ApiPrivacyCompany
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| name | да | string | — |
+| accepted_grants | да | integer | — |
+
+### ApiPrivacyStatus
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| published | да | boolean | — |
+| companies | да | array[ApiPrivacyCompany] | — |
+| actions_in_browser_only | да | True | — |
+| archive_retention_days | да | integer | — |
+| backup_retention_days | да | integer | — |
+| saved_copies_revocable | да | False | — |
 
 ### ApiError
 

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import transaction
 from django.http import FileResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods,require_safe
 from accounts.access import role_required
 from accounts.models import ConsentEvent
@@ -21,7 +21,7 @@ from .conditions import preferences, labels, WORK_FORMATS, EMPLOYMENT_TYPES, TAS
 @role_required("candidate")
 @require_http_methods(["GET", "POST"])
 def profile(request):
-    obj = Profile.objects.get(user=request.user)
+    obj = get_object_or_404(Profile,user=request.user)
     was_published=obj.published
     form = ProfileForm(request.POST or None, instance=obj)
     experience_data = request.POST if request.method == 'POST' and 'experience-TOTAL_FORMS' in request.POST else None
@@ -101,12 +101,12 @@ def build_pdf(profile, include_contacts=False, need=None):
 @role_required("candidate")
 @require_safe
 def resume(request):
-    return FileResponse(build_pdf(Profile.objects.get(user=request.user), include_contacts=True), as_attachment=True, filename="resume.pdf")
+    return FileResponse(build_pdf(get_object_or_404(Profile,user=request.user), include_contacts=True), as_attachment=True, filename="resume.pdf")
 
 @role_required("candidate")
 @require_safe
 def fsp(request):
-    p = Profile.objects.get(user=request.user)
+    p = get_object_or_404(Profile,user=request.user)
     link=FspLink.objects.filter(profile=p).first()
     return JsonResponse({"source": "mock", "status": p.fsp_status, "changes_grade": False,
         'external_id':link.external_id if link else None,'events':list(link.achievements.values(
@@ -116,7 +116,7 @@ def fsp(request):
 @role_required('candidate')
 @require_http_methods(['GET','POST'])
 def fsp_link(request):
-    p=Profile.objects.get(user=request.user)
+    p=get_object_or_404(Profile,user=request.user)
     link=FspLink.objects.filter(profile=p).first()
     form=FspLinkForm(request.POST or None,initial={'external_id':link.external_id if link else ''})
     if request.method=='POST' and request.POST.get('action')=='unlink':

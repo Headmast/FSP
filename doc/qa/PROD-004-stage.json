@@ -1,0 +1,162 @@
+{
+  "task": "PROD-004",
+  "status": "PASS",
+  "task_status": "IN_PROGRESS",
+  "checked_at": "2026-10-12T01:39:36.471175+00:00",
+  "base_commit": "b3a10b5d38d9da1d20a14ff420d9b8101b697025",
+  "source_state": "working source frozen, fingerprints verified; committed stage follows",
+  "source_sha256": {
+    "app/accounts/models.py": "e7af466193cc1fcbc088c062e18fa7050d9a055eb7680de76451365f27993a1f",
+    "app/accounts/views.py": "b5b6c6867e9d3af811a26b2291f0fd63a824ed9c2174c42d8fde3b67483f71fa",
+    "app/api/schema.py": "7c442e077ed31f65408b4945ed6ce45bf4fdf5dd2f658671a2b07a9cccbac90a",
+    "app/api/serializers.py": "48b75cfe92fbeef0e6e3086e969c2cd608cb8ae4892863120722b257f588b7c7",
+    "app/api/urls.py": "c6d60bc7507f4e13ae38b932d9c492202bb80150728c58e433d6e189671da4d7",
+    "app/api/views.py": "b5a4983d26d141fc26abadd865c3637e6351f5574eaca5a2ae5987129986162f",
+    "app/assessments/services.py": "0b72c62f29c4c853ea95be74bbf38ffdeafe9db0b77c04a6a8ef7ced9cf36da5",
+    "app/assessments/views.py": "cbd285e1c26d4b3dda0a14e9433d8a8a3e284009c6019c2d559e60ef5c7e447a",
+    "app/assistant/contexts.py": "2667ad7d78a61f6557e09952538fb27b42deda7fa52ee414bfb4f49dc1605a6b",
+    "app/config/settings.py": "d8fbd528686fea67d68c8444c208af21393267e9f2c342291bdb8855ddac93c0",
+    "app/config/urls.py": "b528914dcc42cab080833a920d3443f3231d1484942f18d0805db845e01adaf5",
+    "app/hiring/dashboard.py": "68a366e87bf51120d49406a4dc214cd2778dbb7bc59fb0041abce1cd8f6819f7",
+    "app/hiring/models.py": "104a27dbefed24f1d2c46702243902fd30e21f9ed3164607347b318155644a2c",
+    "app/hiring/services.py": "e41e3174cf92a2b0c485baa03adc364927670314846b67d10c625a03131188cf",
+    "app/profiles/models.py": "50775cc1aad0a043919e7181c55bc01ad0d13e5efa5714f7e6791d1696f30a19",
+    "app/profiles/views.py": "7c71b519340fe0176219978893223a7e47ab356d69742d8b142d7656f17a6b52",
+    "app/templates/hiring/dashboard.html": "6dcf45804df153829d2669c76a98e68d4572803118f65f40d1bee49dc5401578",
+    "app/templates/hiring/invitations.html": "50f905735d1aa1c0661bc90eeb55bf68052fd65faf5efd6bada4030bd879d741",
+    "app/templates/profiles/profile.html": "85748f96f36e04aed8bc6d7db333ee9b99ae03683ed00bbbc97c40dad737049e",
+    "clients/python/src/fsp_client/cli.py": "af82894753ac3647c33d1150800aec958467a2136ca55191ea94911b82a32f06",
+    "clients/python/src/fsp_client/mcp.py": "426f2a4a0f176340051dc473f515bb3edf0aba550cd30cd41aab12dfcf20342d",
+    "clients/python/tests/test_client.py": "87a16ad69c52de32d096d08bb20d72aea5100e4dbb085643dedf11895c9bab4a",
+    "clients/python/tests/test_mcp.py": "d97a60bcd6359deadcf61f5ba02ed2eab41ca06bfa076a30edbb23c5b3368a91",
+    "scripts/check_http_contracts.py": "3ef210f53e322a833a6893e30370e8303308128259a98600188fe1037f45dcd9",
+    "scripts/check_mcp_cli.py": "b1dfba72959d6c5ca17adb5e31196c4e91cb515e284098a1c6ad1290fb4eb21d",
+    "scripts/deploy_mvp_remote.py": "479276f3b753229ead6ad3e88b346b399e41fa2728b1f5cf0b1f4223cf7be3ae",
+    "scripts/http_contracts.py": "f90be3f22699a78cefd0a8d5c7f952a9b93916cc93f39e80024742587ceaa06a",
+    "scripts/maintain_demo.py": "27e2fbe5ca873379cbd50cfe3978db03a86358edf1335d28058b3edaf6e2ca9d",
+    "scripts/run_app.py": "fd890cd7c429e00a800555763f10d7716b9414d0dc20b83490903bfe1fe354a8",
+    "app/accounts/migrations/0004_privacy_controls.py": "1cbd8b0f4c6af990cabf9c954c636eb9dac24f3655b837a9d1d58be3ffdfab45",
+    "app/hiring/migrations/0005_privacy_controls.py": "62f368d8ac8754706aaf51a4cb836162da0342539af03d84e05eaa4aa04d6a55",
+    "app/profiles/apps.py": "d029ba08d69774c4f88f0da694009350ed151a44c045a273c5e1caa6145ccdf0",
+    "app/profiles/management/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "app/profiles/management/commands/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "app/profiles/management/commands/privacy_maintenance.py": "fdfa39f30764aa88c8274d8c55b715a402b3a9e99215a92c2457d407ebb8941b",
+    "app/profiles/migrations/0007_privacy_controls.py": "3480889721826c0d0e15487005a17b2c8b525452cd30ebbb25ecf0b86dc8f465",
+    "app/profiles/privacy.py": "c0fd8c1fa145e2e1e36b5e591db54f83e110873de7363f50f47468b8475d3461",
+    "app/profiles/privacy_middleware.py": "e072ada36a3181873f7c1d59f4dae9ef6acd7ced77900763d24e3381c8b94180",
+    "app/profiles/privacy_views.py": "84103044f0a9134eae8e42cdf00abe3f2d28ae993d3c93f4152e39f4281d5e95",
+    "app/profiles/test_privacy.py": "33cf9373729eee341e11995f0df19c1d12385eca6e03c6714650fd25fb10a5e1",
+    "app/templates/profiles/privacy.html": "e85b9733371dbd683e7e3560dee9f95891f8451cdd9f286b9321d7ea0b83b9e7",
+    "scripts/check_privacy_restore.py": "b2f32598c280cd760feb603c5f020d6cd12724367a7d0c11526262c34b9b90ed",
+    "scripts/http_privacy_scenarios.py": "b65d59ff3138b9cad294ee448c078dc5c1bf95c12f494a8c1bb309e51a7e25ee"
+  },
+  "checks": {
+    "server_regression": {
+      "status": "PASS",
+      "count": 182,
+      "seconds": 25.454,
+      "new_privacy_tests": 20
+    },
+    "client_tests": {
+      "status": "PASS",
+      "count": 13,
+      "seconds": 0.241
+    },
+    "tool_tests": {
+      "status": "PASS",
+      "count": 23,
+      "seconds": 3.642
+    },
+    "http": {
+      "status": "PASS",
+      "runtime": 602,
+      "paths": 71,
+      "operations": 114,
+      "examples": 118,
+      "counterfactuals": 4
+    },
+    "native_cli_mcp": {
+      "candidate_http": 10,
+      "privacy_stdio_auto": true,
+      "candidate_conditions_prepare_auto": true,
+      "candidate_stdio_auto": true,
+      "privacy_stdio_legacy": true,
+      "candidate_conditions_prepare_legacy": true,
+      "candidate_stdio_legacy": true,
+      "candidate_conditions_native_cli": true,
+      "candidate_native_keyring_cli": true,
+      "employer_http": 10,
+      "conditions_stdio_auto": true,
+      "employer_conditions_prepare_auto": true,
+      "employer_stdio_auto": true,
+      "conditions_stdio_legacy": true,
+      "employer_conditions_prepare_legacy": true,
+      "employer_stdio_legacy": true,
+      "employer_conditions_native_cli": true,
+      "employer_native_keyring_cli": true
+    },
+    "sqlite_restore_retention": {
+      "task": "PROD-004",
+      "status": "PASS",
+      "checks": [
+        "actual pre-clear SQLite backup restores old data, fence erases it before serving",
+        "actual account-delete backup fenced; prior applied clear does not erase new profile data",
+        "180-day anonymous history/ledger expiry, 7-day owned backup expiry, unrelated files preserved, floor survives",
+        "secure_delete plus successful WAL truncate remove canaries from current SQLite bytes"
+      ],
+      "database": "owned disposable SQLite/ledger/backups removed; production untouched"
+    },
+    "old_schema_upgrade": "PASS using check_conditions_migration.py; all latest migrations applied, existing rows/snapshots preserved",
+    "migration_drift": "PASS",
+    "django_system": "PASS",
+    "docs": "PASS 151",
+    "diff": "PASS",
+    "worktree_isolation": "PASS port8041",
+    "packaged_client_sources": {
+      "status": "PASS",
+      "format": "wheel",
+      "scope": "all current fsp_client Python sources match packaged bytes"
+    },
+    "deployment_floor": "Code rejects older-than-running privacy version under maintenance lock, even with an empty ledger; actual server check still pending"
+  },
+  "pending": [
+    "clean clone and actual destructive-flow browser with both roles",
+    "visual/privacy form and nullable archive review",
+    "integrate/publish and live checks on own synthetic accounts",
+    "actual server daily sweep/floor rollback rejection"
+  ],
+  "failures_retained": [
+    {
+      "phase": "first privacy rules run",
+      "reason": "One restored-acceptance fixture saved a stale sent instance over accepted state; refreshed setup to returned decide instance; 20 privacy checks now pass"
+    },
+    {
+      "phase": "first HTTP stage",
+      "reason": "Old verifier forced processing consent before privacy dashboard; changed the independent expectation to authenticated-owner erasure"
+    },
+    {
+      "phase": "second HTTP stage",
+      "reason": "New browser POST operation lacked runtime case; added real CSRF/revoke/clear/delete scenarios"
+    },
+    {
+      "phase": "initial SQLite restore helper",
+      "reason": "sqlite3 connection context manager did not close handles before file replacement; explicitly closed both backup connections, actual restores now pass"
+    },
+    {
+      "phase": "middleware fault contract",
+      "reason": "Global fail-closed 503 was missing from browser schemas; added JSON response variants and corrupt-ledger fault probes"
+    }
+  ],
+  "original_scope": {
+    "total": 27,
+    "done": 16,
+    "open": 11
+  },
+  "live_release": "unchanged 57bfe06; privacy feature not deployed",
+  "limits": [
+    "Owned disposable SQLite and synthetic accounts only; no real VPS user erasure",
+    "Product retention choices are not legal compliance claims",
+    "Already downloaded/off-platform copies cannot be remotely erased",
+    "Full PROD-004 remains IN_PROGRESS; OPS-003/004, real integrations and human pilot not closed"
+  ]
+}

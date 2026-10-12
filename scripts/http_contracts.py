@@ -9,6 +9,7 @@ from hiring.forms import CompanyForm, NeedForm, RecruiterForm, AssignmentForm
 from accounts.integrations import TokenForm
 from assistant.forms import NeedPromptForm, ProfileDraftForm
 from api.web import ApprovalForm
+from profiles.privacy_views import PrivacyActionForm
 from api.drafts import ExperienceInput, PROFILE_FIELDS, COMPANY_FIELDS, NEED_FIELDS
 
 MAX_ID = 2**63 - 1
@@ -94,9 +95,12 @@ def schemas():
     register['properties']['password2']['minLength'] = 8
     register['properties']['password2']['description'] = 'Must equal password1.'
     result['Login']['properties']['next'] = {'type': 'string', 'description': 'Optional safe redirect on same host; unsafe destination replaced by /.'}
+    result['PrivacyAction']['properties']['request_id'].update(format='uuid',description='Idempotency nonce; supplied by own browser form, immutable per action/subject.')
+    result['PrivacyAction']['properties']['password'].update(writeOnly=True,description='Current password required for clear_profile/delete_account; never stored in the ledger.')
+    result['PrivacyAction']['allOf']=[{'if':{'properties':{'action':{'enum':['clear_profile','delete_account']}}},'then':{'required':['password'],'properties':{'password':{'minLength':1}}}}]
     result['Profile']['properties']['name']['description'] = 'Letters, spaces, hyphens; required when published=true.'
     result['Profile']['properties']['city']['description'] = 'Letters, spaces, hyphens; contacts belong in private fields.'
-    result['Profile']['properties']['published']['description'] = 'Separate publication consent. Omitted checkbox is false; accepted invitation grants survive unpublishing.'
+    result['Profile']['properties']['published']['description'] = 'Separate publication consent. Omitted checkbox is false; Non-revoked accepted grants survive unpublishing; separate privacy actions revoke/erase them.'
     result['Profile']['properties']['description']['description'] = 'Private until this company has an accepted invitation. Plain text, not HTML.'
     result['Profile']['properties']['specialization']['description'] = 'Empty/omitted becomes ios_swift.'
     result['Profile']['properties']['experience_months']['description'] = 'Omitted/empty becomes 0; self-reported.'
@@ -171,7 +175,7 @@ def schemas():
 FORM_CLASSES = {'Registration': RegistrationForm, 'Login': AccessibleAuthenticationForm, 'Consent': ConsentForm,
     'Profile': ProfileForm, 'FspConnect': FspLinkForm, 'Company': CompanyForm, 'Need': NeedForm,
     'NeedPrompt': NeedPromptForm, 'ProfileDraft': ProfileDraftForm,'Recruiter':RecruiterForm,'Assignment':AssignmentForm,'Token':TokenForm,
-    'Approval':ApprovalForm,'ExperienceInput':ExperienceInput}
+    'Approval':ApprovalForm,'ExperienceInput':ExperienceInput,'PrivacyAction':PrivacyActionForm}
 
 
 def endpoint(path, methods, role, summary, detail, statuses, *, body=None, query=None, repeat='', effects=''):
@@ -210,6 +214,7 @@ ENDPOINTS = {
     'login': endpoint('/accounts/login/', 'GET POST HEAD OPTIONS', 'public', 'Вход', 'Django authentication, including active-account check. next is limited to allowed same host. GET/HEAD form; POST errors stay 200. OPTIONS empty response with Allow. PUT explicitly rejected.', {200:'Form/error or empty OPTIONS',302:'Valid login to safe next or /'}, body='Login', query={'next': {'type':'string'}}, repeat='Already authenticated GET shows form (redirect_authenticated_user=False); POST rotates session/CSRF.'),
     'logout': endpoint('/accounts/logout/', 'POST OPTIONS', 'public', 'Выход', 'POST with CSRF clears browser session; anonymous valid POST also redirects. OPTIONS returns empty Allow response.', {200:'OPTIONS empty',302:'POST: /'}, body='CsrfOnly', repeat='Valid repeated POST redirects / without restoring session.'),
     'consent': endpoint('/accounts/consent/', 'GET POST', 'authenticated', 'Согласие processing-v1', 'Authenticated user. Email confirmation is not a separate guard here. Explicit checked boolean is required; processing consent event recorded by service.', {200:'GET/form error',302:'POST success: /'}, body='Consent', repeat='Reconfirming current consent does not duplicate identical event.'),
+    'profile-privacy': endpoint('/profile/privacy/', 'GET POST', 'candidate', 'Отзыв доступа и удаление', 'Authenticated active candidate; processing consent not required for erasure. revoke_company/revoke_all close contact grants and redact free snapshot text. clear_profile erases candidate data, detaches minimal invitation history, revokes tokens/sessions; keeps login. delete_account also removes User. Clear/delete need current password and unchecked explicit acknowledgement. Durable ledger is recorded before mutation, replayed before reads after restore. Same nonce cannot change subject/action. No destructive bearer endpoint.', {200:'GET own privacy dashboard',302:'Revoke success: /profile/privacy/; clear/delete: / with logged-out session',400:'Invalid fields/ack/password or nonce conflict; no new action',404:'Malformed/foreign company',503:'Privacy recovery unavailable; fail closed'}, body='PrivacyAction',repeat='Same nonce receipt does not reapply erase; revoked accepted invitation replay never reopens grant.'),
     'profile': endpoint('/profile/', 'GET POST', 'candidate', 'Собственный профиль', 'Confirmed candidate with processing consent. Only own Profile. Skills canonicalized; name/city exclude contact syntax. A publication transition records a separate consent event. Free text/experience/contact are private until the receiving company has an accepted invitation.', {200:'GET or any form/formset validation error',302:'Valid save: /profile/'}, body='Profile', repeat='Replaces current fields; omitted checkbox false. Same publication state does not duplicate consent.'),
     'resume': endpoint('/profile/resume.pdf', 'GET HEAD', 'candidate', 'Собственный PDF', 'Own candidate PDF with private descriptions, experience and contacts. Cyrillic font embedded. HEAD has headers only.', {200:'application/pdf attachment'}),
     'fsp': endpoint('/profile/fsp/', 'GET HEAD', 'candidate', 'Своя demo история ФСП', 'JSON only for owner; changes_grade=false for all states; dates ISO YYYY-MM-DD. Mock identity is not a registry verification.', {200:'FspHistory JSON'}),
@@ -219,8 +224,8 @@ ENDPOINTS = {
     'candidates': endpoint('/candidates/', 'GET HEAD', 'employer', 'Фильтры и рейтинг', 'Owned need defaults to first own Need; grade defaults to selected need grade else Junior. grade must match chosen Need. Invalid grade/skill/fsp/mismatch displays 200 empty result with form error. Current specialisation is iOS/Swift. Declared match and test witness separated.', {200:'Search HTML, including invalid filter form',404:'Malformed/foreign selected need'}, query={'need':OPTIONAL_ID,'grade':{'type':'string','enum':['','Junior','Middle']},'skill':{'type':'string','description':SKILLS_NOTE},'fsp':{'type':'string','enum':['','no_history','demo_history']},'conditions':{'type':'string','enum':['','compatible','matched','conflicts'],'description':'Requires own Need. compatible permits unknowns but rejects known conflicts; matched requires all three dimensions known/matching; conflicts requires at least one conflict. Does not change score.'}}, effects='GET may lazily create own Company if absent.'),
     'candidate': endpoint('/candidates/{pk}/', 'GET HEAD', 'employer', 'Доступная карточка кандидата', 'Visible when published + confirmed category OR this Company has an accepted invitation. Private texts/contacts only under that Company grant. Optional need must be own and of candidate current grade; absent selects first own matching-grade need. Safe finished witnesses of current grade.', {200:'Candidate HTML with grant-aware fields',404:'Invisible/missing candidate or malformed/foreign/wrong-grade need'}, query={'need':OPTIONAL_ID}, effects='May lazily create own Company.'),
     'candidate-resume': endpoint('/candidates/{pk}/resume.pdf', 'GET HEAD', 'employer', 'PDF доступного кандидата', 'Same visibility and contact grant as HTML, including old grant after unpublishing. No contact leak in PDF without acceptance. Optional owned same-grade need compares stated conditions.', {200:'application/pdf attachment',404:'Invisible/missing candidate or malformed/foreign/wrong-grade need'}, query={'need':OPTIONAL_ID}, effects='May lazily create own Company.'),
-    'invitations': endpoint('/invitations/', 'GET HEAD', 'both', 'Свои предложения', 'Candidate sees own invitations; employer sees own Company invitations. No cross-candidate data. Immutable conditions snapshot.', {200:'Invitation list'}, effects='Candidate GET/HEAD sets viewed_at for unseen items. Employer read may lazily create own Company.'),
-    'invitation-send': endpoint('/invitations/send/', 'POST', 'employer', 'Явная отправка предложения', 'Need must be owned, candidate published and same category. New invitation requires Company email. Proof IDs belong to this candidate and are finished of the same grade (failed proof may be explicitly selected). Snapshot includes conditions/contact company/selected witnesses/discussion. No contacts of candidate opened yet.', {302:'Success/duplicate: /invitations/; missing company email: /company/; invalid proof/discussion: /candidates/{id}/ with message',404:'Malformed/foreign need/candidate/proof ID or >20 proof IDs'}, body='Invitation', repeat='Unique (candidate,need). Duplicate preserves initial snapshot; route still requires candidate published/same current grade, and parses IDs before service duplicate check.'),
+    'invitations': endpoint('/invitations/', 'GET HEAD', 'both', 'Свои предложения', 'Candidate sees own invitations; employer sees own Company invitations. No cross-candidate data. Conditions snapshot is stable except explicit privacy redaction; candidate nullable after erasure.', {200:'Invitation list'}, effects='Candidate GET/HEAD sets viewed_at for unseen items. Employer read may lazily create own Company.'),
+    'invitation-send': endpoint('/invitations/send/', 'POST', 'employer', 'Явная отправка предложения', 'Need must be owned, candidate published and same category. New invitation requires Company email. Proof IDs belong to this candidate and are finished of the same grade (failed proof may be explicitly selected). Snapshot includes conditions/contact company/selected witnesses/discussion. Explicit privacy revocation/erasure replaces free text with controlled minimal history. No contacts of candidate opened yet.', {302:'Success/duplicate: /invitations/; missing company email: /company/; invalid proof/discussion: /candidates/{id}/ with message',404:'Malformed/foreign need/candidate/proof ID or >20 proof IDs'}, body='Invitation', repeat='Unique (candidate,need). Duplicate preserves initial snapshot; route still requires candidate published/same current grade, and parses IDs before service duplicate check.'),
     'invitation-accept': endpoint('/invitations/{pk}/accept/', 'POST', 'candidate', 'Принять своё предложение', 'Only own invitation. sent -> accepted opens contact grant for sender Company only. Opposite terminal decision leaves state and displays message.', {302:'All owned decisions: /invitations/',404:'Missing/foreign invitation'}, body='CsrfOnly', repeat='Same terminal decision safe; opposite rejected by message + 302.'),
     'invitation-decline': endpoint('/invitations/{pk}/decline/', 'POST', 'candidate', 'Отклонить своё предложение', 'Only own invitation. sent -> declined keeps contacts closed. Opposite terminal decision leaves state and displays message.', {302:'All owned decisions: /invitations/',404:'Missing/foreign invitation'}, body='CsrfOnly', repeat='Same terminal decision safe; opposite rejected by message + 302.'),
     'assessments': endpoint('/assessments/', 'GET HEAD', 'candidate', 'История и выбор теста', 'Only own attempts and profile category. No answer keys exposed.', {200:'Dashboard HTML'}),
@@ -240,6 +245,7 @@ EXAMPLES = {
     'LearningAnswers':{'action':'pause'},'ActionApproval':{'action':'apply','acknowledge':True,'publication_consent':True},
     'Recruiter':{'name':'Рекрутер'},'Assignment':{'need':1},'Token':{'name':'Локальный CLI','kind':'cli','contacts':False,'drafts':False},
     'TeamAction':{'action':'add','name':'Рекрутер'},'TokenAction':{'action':'create','name':'Локальный CLI','kind':'cli','contacts':False,'drafts':False},
+    'PrivacyAction': {'action':'revoke_all','request_id':'d5b2fc0d-7f58-4e28-9e84-41ed9b845c90','acknowledge':True},
     'Registration': {'email':'contract@demo.invalid','role':'candidate','password1':'Demo-Contract-934!','password2':'Demo-Contract-934!','processing_consent':True},
     'Login': {'username':'contract@demo.invalid','password':'Demo-Contract-934!'},
     'Consent': {'processing_consent':True},
@@ -275,6 +281,7 @@ def build_spec():
             if method in {'GET','HEAD'}:
                 op['parameters'] += [{'name':key,'in':'query','required':False,'schema':schema} for key,schema in entry['query'].items()]
             statuses = dict(entry['statuses'])
+            statuses.setdefault(503,'Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.')
             if protected:
                 statuses.setdefault(302,'Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.')
                 if entry['role'] != 'authenticated':
@@ -295,7 +302,6 @@ def build_spec():
                 # Some statuses apply only to one method; authentication is retained for every protected method.
                 if method in {'GET','HEAD'} and status in {400,409,410,429}:continue
                 if method in {'GET','HEAD'} and status==302 and name in {'register','confirm','login'}:continue
-                if name=='assistant' and method=='GET' and status==503:continue
                 if name=='assistant-draft' and method=='GET' and status==302:description='Authentication or consent redirect only; editor never applies on GET.'
                 if method=='POST' and name in {'register','confirm','consent','profile','company-profile','needs','fsp-link','assistant-draft'} and status==200:
                     if name in {'confirm','assistant-draft'}:continue
@@ -303,7 +309,7 @@ def build_spec():
                 if method=='OPTIONS' and status not in {200,405}:continue
                 response={'description':description}
                 if method=='HEAD' and status not in {302,405}:
-                    media_type='application/json' if name in {'health','version','fsp'} and status in {200,503} else 'application/pdf' if name in {'resume','candidate-resume'} and status==200 else 'text/html; charset=utf-8'
+                    media_type='application/json' if status==503 or name in {'health','version','fsp'} and status==200 else 'application/pdf' if name in {'resume','candidate-resume'} and status==200 else 'text/html; charset=utf-8'
                     response['headers']={'Content-Type':{'required':True,'schema':{'const':media_type}}}
                     if media_type=='application/pdf':response['headers']['Content-Disposition']={'required':True,'schema':{'type':'string'}}
                     if name=='download-client':response['headers']={'Content-Disposition':{'required':True,'schema':{'type':'string'}}} if status==200 else {}
@@ -326,6 +332,12 @@ def build_spec():
                 if name=='action-draft' and status in {200,400,409,410}:response['headers']={'Cache-Control':{'required':True,'schema':{'const':'no-store'}}}
                 if method=='OPTIONS' and status==200:response['headers']={'Allow':{'required':True,'schema':{'type':'string'}}}
                 op['responses'][str(status)]=response
+            op['responses'].setdefault('503',{'description':'Privacy ledger/restore fence unavailable; fail closed.'})
+            if method!='HEAD':
+                op['responses']['503'].setdefault('content',{})['application/json']={'schema':ref('HealthUnavailable')}
+            if name=='profile-privacy':
+                op['responses']['302']['description']='Unauthenticated -> login; successful revoke -> privacy dashboard; clear/delete -> home/logged out. Processing consent is not required for erasure.'
+                op['responses']['403']['description']='Wrong role/inactive or invalid CSRF; no forced email/processing renewal for an authenticated owner.'
             operations[method.lower()]=op
         spec['paths'][entry['path']]=operations
     add_token_api(spec)

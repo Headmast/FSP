@@ -65,6 +65,15 @@ def start_attempt(profile, grade):
             finalize(active, now)
     with transaction.atomic():
         profile = Profile.objects.get(pk=profile.pk)
+        from django.utils.dateparse import parse_datetime
+        holds=profile.user.assessment_privacy_holds
+        if isinstance(holds,dict):
+            for key in ['change',grade]:
+                if key=='change' and grade==holds.get('change_from'):continue
+                value=holds.get(key)
+                until=parse_datetime(value) if isinstance(value,str) else None
+                if until and timezone.is_aware(until) and until>now:
+                    raise ValueError('После очистки профиля прежний срок повторной проверки ещё не истёк.')
         active = Attempt.objects.filter(candidate=profile, status='active').first()
         if active:
             return active
@@ -75,8 +84,16 @@ def start_attempt(profile, grade):
         latest = Attempt.objects.filter(candidate=profile, grade=grade, status='finished').order_by('-finished_at').first()
         if latest and latest.finished_at > now - timedelta(days=7):
             raise ValueError('Повтор этой категории доступен через семь дней.')
+        retained=None
+        if isinstance(holds,dict) and holds.get('variant_bank')==VERSION:
+            until=parse_datetime(holds.get('variant_until',''))
+            values=holds.get('variants',{})
+            if until and timezone.is_aware(until) and until>now and isinstance(values,dict):
+                retained=values.get(grade)
         if latest:
             variant = 'B' if latest.variant == 'A' else 'A'
+        elif retained in {'A','B'}:
+            variant = 'B' if retained=='A' else 'A'
         else:
             # SQLite IMMEDIATE serializes this allocation with creation of the attempt.
             first_candidates=Attempt.objects.filter(grade=grade,bank_version=VERSION).values('candidate').distinct().count()

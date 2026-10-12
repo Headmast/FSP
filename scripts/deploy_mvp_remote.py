@@ -7,6 +7,14 @@ root=Path.home()/'fsp-mvp';shared=root/'shared';release=root/'releases'/sha
 for name in ['logs','pids','backups']:(shared/name).mkdir(parents=True,exist_ok=True)
 maintenance_lock=(shared/'maintenance.lock').open('a')
 fcntl.flock(maintenance_lock,fcntl.LOCK_EX)
+ledger=shared/'privacy-ledger.jsonl';floor=shared/'privacy-floor-v1'
+def privacy_version(path):
+    found=re.search(r'^PRIVACY_FORMAT_VERSION\s*=\s*([0-9]+)',path.read_text(),re.M) if path.exists() else None
+    return int(found.group(1)) if found else 0
+# A running privacy-capable version itself is a floor, even before the first request: no stop-time race can re-enable old code.
+required=max(privacy_version(root/'current/app/profiles/privacy.py'),int(floor.read_text().strip()) if floor.exists() else (1 if ledger.exists() and ledger.stat().st_size else 0))
+if privacy_version(release/'app/profiles/privacy.py')<required:
+    raise RuntimeError('Privacy floor: refuse a release without current revoke/restore enforcement')
 uv=shared/'venv-check/bin/uv'
 if not uv.exists():
     subprocess.run(['python3','-m','venv',str(shared/'venv-check')],check=True)
@@ -59,8 +67,11 @@ if pidfile.exists():
     except (FileNotFoundError,ProcessLookupError):pass
 if (shared/'db.sqlite3').exists():
     with sqlite3.connect(shared/'db.sqlite3') as source,sqlite3.connect(shared/'backups'/f'{time.time_ns()}.sqlite3') as target:source.backup(target)
-run('app/manage.py','migrate','--noinput');run('app/manage.py','collectstatic','--noinput')
+run('app/manage.py','migrate','--noinput')
+if (release/'app/profiles/privacy.py').exists():run('app/manage.py','privacy_maintenance','--reconcile-only')
+run('app/manage.py','collectstatic','--noinput')
 run('app/manage.py','check','--deploy');run('app/manage.py','seed_demo')
+if (release/'app/profiles/privacy.py').exists():run('app/manage.py','privacy_maintenance')
 env['FSP_UV']=str(uv)
 run('scripts/build_client_release.py')
 current=root/'current';pending=root/'.current-next'

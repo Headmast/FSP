@@ -34,6 +34,7 @@ def matching(user,mode,need_id,candidate_id):
 def conversation(user,invitation_id):
     query=Invitation.objects.filter(candidate__user=user) if user.role=='candidate' else Invitation.objects.filter(company__user=user)
     invitation=get_object_or_404(query,pk=invitation_id)
+    if invitation.candidate_erased_at:raise Http404
     snapshot=invitation.snapshot
     context={'role':user.role,'status':invitation.status,
         'grade':snapshot['grade'],'salary_min':snapshot['salary_min'],'salary_max':snapshot['salary_max'],

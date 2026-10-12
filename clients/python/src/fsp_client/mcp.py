@@ -48,6 +48,10 @@ def build_server(api):
         return get(f'invitations/{id}')
     if actor['role']=='candidate':
         @server.tool(annotations=read)
+        def fsp_get_privacy_status()->Result:
+            """Открытые контактные гранты и сроки хранения; разрушительные действия только в вебе."""
+            return get('me/privacy')
+        @server.tool(annotations=read)
         def fsp_get_profile()->Result:
             """Собственная структурированная часть профиля без контактов и описания."""
             return get('me/profile')

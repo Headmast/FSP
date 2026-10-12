@@ -7,6 +7,7 @@ from accounts.integrations import integrations
 from api.views import download_client
 from api.web import detail as action_draft, index as action_drafts
 from profiles import views as profiles
+from profiles.privacy_views import dashboard as profile_privacy
 from assessments import views as assessments
 from hiring import views as hiring
 from hiring.dashboard import dashboard, team
@@ -44,6 +45,7 @@ path("company/", hiring.company_profile, name="company-profile"),
     path("accounts/logout/", LogoutView.as_view(), name="logout"),
     path("accounts/confirm/", accounts.confirm, name="confirm"),
     path("profile/", profiles.profile, name="profile"),
+    path("profile/privacy/", profile_privacy, name="profile-privacy"),
     path("profile/resume.pdf", profiles.resume, name="resume"),
     path("profile/fsp/", profiles.fsp, name="fsp"),
     path("profile/fsp/link/", profiles.fsp_link, name="fsp-link"),

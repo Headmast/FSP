@@ -36,7 +36,7 @@ class Need(models.Model):
         constraints=[models.CheckConstraint(condition=Q(salary_min__gt=0)&Q(salary_max__gte=F('salary_min')),name='valid_need_salary')]
 
 class Invitation(models.Model):
-    candidate=models.ForeignKey(Profile,on_delete=models.CASCADE)
+    candidate=models.ForeignKey(Profile,on_delete=models.SET_NULL,null=True,blank=True)
     need=models.ForeignKey(Need,on_delete=models.PROTECT)
     company=models.ForeignKey(Company,on_delete=models.PROTECT)
     recruiter=models.ForeignKey(Recruiter,on_delete=models.PROTECT,null=True,blank=True)
@@ -45,5 +45,7 @@ class Invitation(models.Model):
     created_at=models.DateTimeField(auto_now_add=True)
     viewed_at=models.DateTimeField(null=True,blank=True)
     responded_at=models.DateTimeField(null=True,blank=True)
+    contact_revoked_at=models.DateTimeField(null=True,blank=True)
+    candidate_erased_at=models.DateTimeField(null=True,blank=True)
     class Meta:
         constraints=[models.UniqueConstraint(fields=['candidate','need'],name='one_invitation_per_need')]

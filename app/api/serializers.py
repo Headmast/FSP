@@ -67,6 +67,9 @@ def invitation_data(obj, mcp=False):
         'work_format':s.get('work_format') if s.get('work_format') in {'Удалённо','Офис','Гибрид','remote','office','hybrid'} else None,
         'employment_type':s.get('employment_type') if isinstance(s.get('employment_type'),str) and s.get('employment_type') in dict(EMPLOYMENT_TYPES) else '',
         'task_types':codes(s.get('task_types'),TASK_TYPES),'conditions':snapshot_conditions(s),
+        'contact_revoked_at':obj.contact_revoked_at.isoformat() if obj.contact_revoked_at else None,
+        'candidate_erased_at':obj.candidate_erased_at.isoformat() if obj.candidate_erased_at else None,
+        'privacy_redacted':s.get('privacy_redacted') is True,
         'status':obj.status,'created_at':obj.created_at.isoformat(),
         'responded_at':obj.responded_at.isoformat() if obj.responded_at else None,
         'accepted_results':[proof_snapshot(p) for p in s.get('accepted_results',[]) if isinstance(p,dict)]}

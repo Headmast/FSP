@@ -52,7 +52,7 @@ DONE выше относится к фактически проверенным 
 | PROD-001 | Условия кандидата и сопоставление | MVP-006, MVP-011 | Совпадение/конфликт/неизвестное | DONE |
 | PROD-002 | Адресное задание по пробелу | MVP-010, MVP-011 | Критерии/согласие/результат/права | TODO |
 | PROD-003 | Этапы/сроки/уведомления/события | MVP-010 | Понятный маршрут и наблюдаемые события | TODO |
-| PROD-004 | Удаление и отзыв доступа | MVP-008 | Правила старых приглашений/PDF/контактов | TODO |
+| PROD-004 | Удаление и отзыв доступа | MVP-008 | Правила старых приглашений/PDF/контактов | IN_PROGRESS |
 | PROD-005 | Проверка компаний/жалобы/споры | MVP-007, MVP-010 | Ответственный и честный статус | TODO |
 | QA-002 | Пилот полезности и экономии времени | QA-001, MVP-010, PROD-003 | Фактический протокол, ошибки и метрики | TODO |
 | FUT-001 | Другие необязательные функции | Отдельный scope | Отдельные решения перед реализацией | TODO |
@@ -181,3 +181,7 @@ DEL-001: интегратор, mvp/implementation от 34942b5, порт 8041; d
 ## PROD-001 — приёмка завершена
 
 [Результат](../responses/PROD-001-conditions.md), [evidence](../qa/PROD-001-complete.json): код 1d2eb6f, опубликованный выпуск 57bfe06; 162/11 тестов, 577 HTTP, реальные native CLI/MCP, fresh/upgrade, clean clone19 фаз/mobile390px/PDF и live18 PASS. IN_PROGRESS выше относится к этапу до приёмки. Исходные 27: 16 DONE, 11 открыты; следующая PROD-004. Ключи/реальные контакты/чужие незакоммиченные файлы не переносились.
+
+## PROD-004 · приватность
+
+Интегратор, mvp/implementation от b3a10b5, порт 8041. Область accounts auth-generation/holds, profiles privacy/receipts/UI/signals/maintenance, hiring grant/snapshot/nullable archive, API DTO/permissions/schema, clients read privacy, config middleware/route, restore/deploy guards и проверки/доки. IN_PROGRESS: отозвать ранее раскрытые гранты; очистить профиль либо удалить аккаунт; минимальная история без персональных полей; durable ledger + restore fence + retention. Внешние пользовательские данные не удалять при QA: только собственные synthetic fixtures.

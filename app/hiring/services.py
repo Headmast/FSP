@@ -52,7 +52,9 @@ def search(grade,need=None,skill='',fsp='',conditions=''):
     return sorted(results,key=lambda row:(-row['score'],-row['test_score'],row['id']))
 
 def contacts_allowed(company,profile):
-    return Invitation.objects.filter(company=company,candidate=profile,status='accepted').exists()
+    if not company or not profile:return False
+    return Invitation.objects.filter(company=company,candidate=profile,status='accepted',
+        contact_revoked_at__isnull=True,candidate_erased_at__isnull=True).exists()
 
 def invite(company,need_id,candidate_id,accepted_ids=(),discussion=''):
     with transaction.atomic():

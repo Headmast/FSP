@@ -203,10 +203,16 @@ def runtime_checks(spec, report):
         if role in {'candidate','employer','both'}:
             # Correct role but no consent. Wrong role is checked before consent.
             if role in {'candidate','both'}:
-                run('consent-guard-'+path,'unconsented',rendered,method,expected=302,template=path,location='/accounts/consent/')
-                run('email-guard-'+path,'unconfirmed',rendered,method,expected=403,template=path)
+                if path=='/profile/privacy/':
+                    # Erasure must not force a fresh processing/email confirmation on an already authenticated owner.
+                    run('privacy-without-consent', 'unconsented',rendered,method,expected=200,template=path)
+                    run('privacy-unconfirmed-owner','unconfirmed',rendered,method,expected=200,template=path)
+                else:
+                    run('consent-guard-'+path,'unconsented',rendered,method,expected=302,template=path,location='/accounts/consent/')
+                    run('email-guard-'+path,'unconfirmed',rendered,method,expected=403,template=path)
             if role=='employer':run('role-'+path,'candidate',rendered,method,expected=403,template=path)
             if role=='candidate':run('role-'+path,'employer',rendered,method,expected=403,template=path)
+    run('privacy-invalid-post','candidate','/profile/privacy/','POST',{},400)
     public=Client(enforce_csrf_checks=True)
     run('register-form',public,'/accounts/register/')
     run('register-csrf',public,'/accounts/register/','POST',{},403,csrf=False)
@@ -428,6 +434,8 @@ def runtime_checks(spec, report):
         if '{pk}' in path:
             method='GET' if 'get' in operations else 'POST'
             run('foreign-object-'+path,key,rendered_path(path,9223372036854775807),method,{},404,template=path)
+    from http_privacy_scenarios import privacy_checks
+    privacy_checks(run,user,clients,password)
     from api.views import client_version
     for filename in [f'fsp_client-{client_version()}-py3-none-any.whl',f'fsp_client-{client_version()}.tar.gz']:
         run('download-'+filename,anonymous,'/downloads/'+filename,template='/downloads/{filename}')
@@ -502,7 +510,7 @@ def main():
             connections.close_all()
         source_names=['app/config/urls.py','app/accounts/views.py','app/profiles/views.py','app/assessments/views.py','app/hiring/views.py','app/assistant/views.py',
             'app/accounts/forms.py','app/profiles/forms.py','app/profiles/models.py','app/assessments/models.py','app/assessments/learning_tracks.py','app/accounts/integrations.py','app/api/tests.py','app/api/drafts.py','app/api/web.py','app/api/models.py','app/assessments/learning_views.py','app/assessments/learning.py','app/assessments/learning_urls.py','app/hiring/dashboard.py','app/hiring/forms.py','app/api/urls.py','app/api/core.py','app/api/schema.py','app/api/views.py','app/api/serializers.py',
-            'app/profiles/conditions.py','app/hiring/models.py','app/hiring/services.py','scripts/http_contracts.py','scripts/http_contract_scenarios.py','scripts/build_http_spec.py','scripts/check_http_contracts.py','doc/api/openapi.json']
+            'app/accounts/models.py','app/config/settings.py','app/profiles/apps.py','app/profiles/privacy.py','app/profiles/privacy_views.py','app/profiles/privacy_middleware.py','app/profiles/management/commands/privacy_maintenance.py','app/profiles/conditions.py','app/hiring/models.py','app/hiring/services.py','scripts/http_privacy_scenarios.py','scripts/check_privacy_restore.py','scripts/run_app.py','scripts/deploy_mvp_remote.py','scripts/maintain_demo.py','scripts/http_contracts.py','scripts/http_contract_scenarios.py','scripts/build_http_spec.py','scripts/check_http_contracts.py','doc/api/openapi.json']
         report['source_hashes']={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in source_names}
         report['status']='PASS';report['completed_at']=datetime.datetime.now(datetime.timezone.utc).isoformat()
     except Exception as exc:

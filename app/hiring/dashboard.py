@@ -18,14 +18,14 @@ def summarize(items, now):
     total = len(items)
     accepted = sum(item['status'] == 'accepted' for item in items)
     declined = sum(item['status'] == 'declined' for item in items)
-    pending = total - accepted - declined
+    pending = sum(item['status']=='sent' and not item.get('candidate_erased_at') for item in items)
     viewed = sum(bool(item['viewed_at']) or item['status'] != 'sent' for item in items)
     durations = [(item['responded_at'] - item['created_at']).total_seconds() / 86400
                  for item in items if item['status'] != 'sent' and item['responded_at']
                  and item['created_at'] <= item['responded_at'] <= now]
     return {'total': total, 'viewed': viewed, 'accepted': accepted, 'declined': declined,
             'answered': accepted + declined, 'pending': pending,
-            'overdue': sum(item['status'] == 'sent' and item['created_at'] <= now - timedelta(days=7) for item in items),
+            'overdue': sum(item['status'] == 'sent' and not item.get('candidate_erased_at') and item['created_at'] <= now - timedelta(days=7) for item in items),
             'conversion': round(100 * accepted / total, 1) if total else None,
             'response_rate': round(100 * (accepted + declined) / total, 1) if total else None,
             'response_days': round(sum(durations) / len(durations), 1) if durations else None}
@@ -65,7 +65,7 @@ def dashboard(request):
         query = query.filter(need_id=need_id)
     items = list(query.order_by('-created_at', '-pk').values(
         'pk', 'need_id', 'need__title', 'candidate__name', 'recruiter_id', 'recruiter__name',
-        'created_at', 'viewed_at', 'responded_at', 'status'))
+        'created_at', 'viewed_at', 'responded_at', 'status','candidate_erased_at'))
     summary = summarize(items, now)
     people_groups, need_groups = defaultdict(list), defaultdict(list)
     for item in items:
@@ -106,7 +106,7 @@ def dashboard(request):
     for bucket in buckets:
         bucket['sent_height'] = round(100 * bucket['sent'] / peak)
         bucket['accepted_height'] = round(100 * bucket['accepted'] / peak)
-    pending = [item for item in items if item['status'] == 'sent']
+    pending = [item for item in items if item['status'] == 'sent' and not item.get('candidate_erased_at')]
     pending.sort(key=lambda item: (item['created_at'], item['pk']))
     for item in pending:
         item['age_days'] = (now - item['created_at']).days

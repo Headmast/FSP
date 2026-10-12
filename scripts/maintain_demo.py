@@ -225,6 +225,12 @@ def maintain(root):
     available = False
     action = 'checked'
     try:
+        # Current releases provide a durable privacy guard; old mock-only releases remain compatible.
+        privacy_module=root/'current/app/profiles/privacy.py'
+        if privacy_module.exists() and state.get('privacy_sweep_day') != time.strftime('%Y-%m-%d',time.gmtime()):
+            privacy_env=os.environ.copy();privacy_env['FSP_ENV_FILE']=str(shared/'.env')
+            subprocess.run([str(root/'current/.venv/bin/python'),'app/manage.py','privacy_maintenance'],cwd=root/'current',env=privacy_env,check=True,capture_output=True)
+            state['privacy_sweep_day']=time.strftime('%Y-%m-%d',time.gmtime())
         renewed = owned_pid(root, 'mvp-pinggy') is None or not valid_url(url)
         local_url = 'http://127.0.0.1:8011'
         local_ready = public_ready = False

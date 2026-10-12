@@ -32,12 +32,18 @@ def owned_profile(request):
 def catalog(request):
     return reply(request, {'specializations':['ios_swift'],'grades':['Junior','Middle'],'skills':list(SKILLS),
         'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'work_formats':dict(WORK_FORMATS),
-        'employment_types':dict(EMPLOYMENT_TYPES),'task_types':dict(TASK_TYPES),'features':['read','drafts','conditions-v1'],'fsp_source':'mock'})
+        'employment_types':dict(EMPLOYMENT_TYPES),'task_types':dict(TASK_TYPES),'features':['read','drafts','conditions-v1','privacy-web-actions'],'fsp_source':'mock'})
 
 
 @endpoint('candidate')
 def profile(request):
     return reply(request,profile_data(owned_profile(request)))
+
+
+@endpoint('candidate')
+def privacy_status(request):
+    from profiles.privacy import status_data
+    return reply(request,status_data(request.user))
 
 
 @endpoint('candidate',private=True)
@@ -109,7 +115,9 @@ def invitation_contacts(request,pk):
     obj=get_object_or_404(invitation_query(request.user),pk=parse_identifier(pk))
     if request.user.role=='candidate':
         return reply(request,{'company_id':obj.company_id,'contact_email':obj.snapshot.get('company_email','')})
-    require(obj.status=='accepted')
+    from hiring.services import contacts_allowed
+    require(obj.candidate is not None and obj.contact_revoked_at is None and obj.candidate_erased_at is None
+        and contacts_allowed(obj.company,obj.candidate))
     return reply(request,private_profile(obj.candidate))
 
 from hiring.access import company_read, owned_need, visible_profile

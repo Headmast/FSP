@@ -41,12 +41,12 @@ schemas={
  'Explanation':obj({'declared_matches':array(S),'declared_gaps':array(S),'confirmation':{'anyOf':[ref('Proof'),{'type':'null'}]},'unknown':array(S),'conditions':ref('Conditions')}),
  'Match':obj({'profile':ref('Profile'),'score':F,'parts':obj({'test':F,'skills':F,'fsp':F}),'explanation':ref('Explanation')}),
  'Candidate':obj({'profile':ref('Profile'),'contacts_allowed':B,'explanation':ref('Explanation')}),
- 'Invitation':obj({'id':I,'candidate_id':I,'need_id':I,'company_id':I,'company':N,'title':N,'grade':S,
+ 'Invitation':obj({'id':I,'candidate_id':{'type':['integer','null']},'need_id':I,'company_id':I,'company':N,'title':N,'grade':S,
     'salary_min':{'type':['integer','null']},'salary_max':{'type':['integer','null']},'currency':S,'salary_period':S,'salary_tax':S,
     'work_format':N,'employment_type':choice(EMPLOYMENT_TYPES,True),'task_types':array(choice(TASK_TYPES)),
-    'conditions':ref('Conditions'),'status':S,'created_at':S,'responded_at':N,'accepted_results':array(ref('Proof')),
+    'conditions':ref('Conditions'),'contact_revoked_at':N,'candidate_erased_at':N,'privacy_redacted':B,'status':S,'created_at':S,'responded_at':N,'accepted_results':array(ref('Proof')),
     'company_description':S,'company_industry':S,'tasks':S,'next_step':S,'discussion':S},
-    ['id','candidate_id','need_id','company_id','company','title','grade','salary_min','salary_max','currency','salary_period','salary_tax','work_format','employment_type','task_types','conditions','status','created_at','responded_at','accepted_results']),
+    ['id','candidate_id','need_id','company_id','company','title','grade','salary_min','salary_max','currency','salary_period','salary_tax','work_format','employment_type','task_types','conditions','contact_revoked_at','candidate_erased_at','privacy_redacted','status','created_at','responded_at','accepted_results']),
  'CompanyContact':obj({'company_id':I,'contact_email':S}),
  'Achievement':obj({'id':I,'source':{'const':'mock'},'event_name':S,'occurred_on':S,'team':B,'prize':B,'event_id':S,'discipline':S,'result':S},
     ['id','source','event_name','occurred_on','team','prize']),
@@ -55,12 +55,14 @@ schemas={
  'Catalog':obj({'specializations':array(S),'grades':array(S),'skills':array(S),'roles':{'type':'object','additionalProperties':S},
     'soft_skills':{'type':'object','additionalProperties':S},'work_formats':{'type':'object','additionalProperties':S},
     'employment_types':{'type':'object','additionalProperties':S},'task_types':{'type':'object','additionalProperties':S},'features':array(S),'fsp_source':{'const':'mock'}}),
+ 'PrivacyCompany':obj({'id':I,'name':S,'accepted_grants':I}),
+ 'PrivacyStatus':obj({'published':B,'companies':array(ref('PrivacyCompany')),'actions_in_browser_only':{'const':True},'archive_retention_days':I,'backup_retention_days':I,'saved_copies_revocable':{'const':False}}),
  'Error':obj({'error':obj({'code':S,'message':S,'details':{'type':'object'}},['code','message']),'meta':ref('Meta')})
 }
 
 # path, DTO, role, paginated, private
 READ_ROUTES=[
- ('/me','Identity',None,False,False),('/catalog','Catalog',None,False,False),
+ ('/me/privacy','PrivacyStatus','candidate',False,False),('/me','Identity',None,False,False),('/catalog','Catalog',None,False,False),
  ('/me/profile','Profile','candidate',False,False),('/me/profile/private','PrivateProfile','candidate',False,True),
  ('/me/assessments','Assessment','candidate',True,False),('/me/assessments/{id}/result','Proof','candidate',False,False),
  ('/me/achievements','Achievements','candidate',False,False),('/me/company','CompanyState','employer',False,False),

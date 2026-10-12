@@ -33,7 +33,7 @@ INSTALLED_APPS = ["django.contrib.auth", "django.contrib.contenttypes", "django.
 MIDDLEWARE = ["django.middleware.security.SecurityMiddleware", "whitenoise.middleware.WhiteNoiseMiddleware",
               "django.contrib.sessions.middleware.SessionMiddleware", "django.middleware.common.CommonMiddleware",
               "django.middleware.csrf.CsrfViewMiddleware", "django.contrib.auth.middleware.AuthenticationMiddleware",
-              "django.contrib.messages.middleware.MessageMiddleware", "django.middleware.clickjacking.XFrameOptionsMiddleware"]
+              "django.contrib.messages.middleware.MessageMiddleware", "profiles.privacy_middleware.PrivacyGuardMiddleware", "django.middleware.clickjacking.XFrameOptionsMiddleware"]
 ROOT_URLCONF = "config.urls"
 TEMPLATES = [{"BACKEND": "django.template.backends.django.DjangoTemplates", "DIRS": [BASE_DIR / "templates"],
               "APP_DIRS": True, "OPTIONS": {"context_processors": ["django.template.context_processors.request",
@@ -43,8 +43,11 @@ DATABASE_PATH = Path(os.environ.get("DATABASE_PATH", str(ROOT / ".runtime" / "db
 if not DATABASE_PATH.is_absolute():
     DATABASE_PATH = ROOT / DATABASE_PATH
 DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
+PRIVACY_LEDGER_PATH = Path(os.environ.get('PRIVACY_LEDGER_PATH', str(DATABASE_PATH.parent / 'privacy-ledger.jsonl')))
+PRIVACY_ARCHIVE_DAYS = 180
+PRIVACY_BACKUP_DAYS = 7
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": DATABASE_PATH,
-              "OPTIONS": {"timeout": 20, "transaction_mode": "IMMEDIATE", "init_command": "PRAGMA journal_mode=WAL;"}}}
+              "OPTIONS": {"timeout": 20, "transaction_mode": "IMMEDIATE", "init_command": "PRAGMA journal_mode=WAL; PRAGMA secure_delete=ON;"}}}
 AUTH_USER_MODEL = "accounts.User"
 AUTH_PASSWORD_VALIDATORS = [{"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
                             {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"}]

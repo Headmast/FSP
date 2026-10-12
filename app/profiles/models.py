@@ -74,3 +74,13 @@ class Achievement(models.Model):
 
     class Meta:
         constraints=[models.UniqueConstraint(fields=['link','event_id'],name='unique_fsp_event')]
+
+
+class PrivacyReceipt(models.Model):
+    """Technical idempotency receipt. No profile text, contacts, secrets or raw request."""
+    from uuid import uuid4
+    id=models.UUIDField(primary_key=True,default=uuid4,editable=False)
+    actor=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL,null=True,blank=True)
+    action=models.CharField(max_length=20)
+    created_at=models.DateTimeField()
+    applied_at=models.DateTimeField()

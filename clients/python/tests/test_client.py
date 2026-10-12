@@ -108,3 +108,10 @@ class ConditionsClientTests(unittest.TestCase):
         self.assertEqual(requests[1].url.params['with_contacts'],'false')
         with contextlib.redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):
             parser().parse_args(['candidates','search','--conditions','anything'])
+
+
+class PrivacyCliTests(unittest.TestCase):
+    def test_privacy_is_read_only_command(self):
+        args=parser().parse_args(['privacy','show','--json'])
+        self.assertEqual(args.path,'me/privacy')
+        with contextlib.redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):parser().parse_args(['privacy','delete'])

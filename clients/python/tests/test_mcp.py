@@ -116,3 +116,15 @@ class ConditionsMcpTests(unittest.IsolatedAsyncioTestCase):
             before=len(api.calls)
             result=await client.call_tool('fsp_search_candidates',{'need_id':2,'conditions':'PRIVATE'})
             self.assertTrue(result.is_error);self.assertEqual(len(api.calls),before)
+
+
+class PrivacyMcpTests(unittest.IsolatedAsyncioTestCase):
+    async def test_privacy_status_has_no_destructive_tools(self):
+        api=DraftApi()
+        async with Client(build_server(api)) as client:
+            tools=(await client.list_tools()).tools
+            privacy=next(t for t in tools if t.name=='fsp_get_privacy_status')
+            self.assertTrue(privacy.annotations.read_only_hint)
+            self.assertFalse(any('delete' in t.name or 'erase' in t.name or 'revoke' in t.name for t in tools))
+            result=await client.call_tool('fsp_get_privacy_status');self.assertFalse(result.is_error)
+            self.assertEqual(api.calls[-1][0],'me/privacy')

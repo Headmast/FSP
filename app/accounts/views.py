@@ -91,12 +91,17 @@ def confirm(request):
 def health(request):
     from django.db import DatabaseError
     from .models import User, ConsentEvent
-    from profiles.models import Profile
+    from profiles.models import Profile, PrivacyReceipt
+    from django.db import connection
     from assessments.models import Attempt
     from hiring.models import Company, Need, Invitation
     try:
-        for model in (User, ConsentEvent, Profile, Attempt, Company, Need, Invitation):
+        for model in (User, ConsentEvent, Profile, Attempt, Company, Need, Invitation, PrivacyReceipt):
             model.objects.exists()
+            with connection.cursor() as cursor:
+                actual={column.name for column in connection.introspection.get_table_description(cursor,model._meta.db_table)}
+            if not {field.column for field in model._meta.concrete_fields}<=actual:
+                return JsonResponse({'status':'unavailable'},status=503)
     except DatabaseError:
         return JsonResponse({"status": "unavailable"}, status=503)
     return JsonResponse({"status": "ok"})

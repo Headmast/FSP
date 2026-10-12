@@ -7,6 +7,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'app'))
 from config import settings
+import django
+django.setup()
+from profiles.privacy import reconcile
+reconcile()
 port = int(os.environ.get('APP_PORT', '8011'))
 if not 1024 <= port <= 65535:
     raise SystemExit('APP_PORT must be between 1024 and 65535')

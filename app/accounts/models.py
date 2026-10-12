@@ -8,6 +8,16 @@ class User(AbstractUser):
     email_confirmed = models.BooleanField(default=False)
     processing_consented_at = models.DateTimeField(null=True, blank=True)
     processing_consent_version = models.CharField(max_length=40, blank=True)
+    session_generation = models.PositiveIntegerField(default=0)
+    assessment_privacy_holds = models.JSONField(default=dict, blank=True)
+
+    def _get_session_auth_hash(self, secret=None):
+        base = super()._get_session_auth_hash(secret)
+        if not self.session_generation:
+            return base
+        from django.utils.crypto import salted_hmac
+        return salted_hmac('fsp.session-generation', base+':'+str(self.session_generation),
+                           secret=secret, algorithm='sha256').hexdigest()
 
     @property
     def has_processing_consent(self):

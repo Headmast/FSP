@@ -24,7 +24,7 @@ async def check(values):
         value=values[role]
         api=FspClient(base,value['cli'])
         paths=['me','catalog','invitations',f'invitations/{value["invitation_id"]}']
-        paths += ['me/profile','me/profile/private','me/assessments',f'me/assessments/{value["result_id"]}/result','me/achievements'] if role=='candidate' else [
+        paths += ['me/privacy','me/profile','me/profile/private','me/assessments',f'me/assessments/{value["result_id"]}/result','me/achievements'] if role=='candidate' else [
             'me/company','needs',f'needs/{value["need_id"]}','candidates',f'candidates/{value["candidate_id"]}',f'candidates/{value["candidate_id"]}/proofs']
         specification=api.client.get(base+'/api/v1/openapi.json').json()
         for path in paths:
@@ -51,6 +51,11 @@ async def check(values):
                     assert len(rows[0]['explanation']['conditions']['unknown'])==3
                     assert not rows[0]['explanation']['conditions']['matches']
                     result['conditions_stdio_'+mode]=True
+                if role=='candidate':
+                    privacy=await client.call_tool('fsp_get_privacy_status')
+                    assert not privacy.is_error and privacy.structured_content['data']['actions_in_browser_only']
+                    assert not privacy.structured_content['data']['saved_copies_revocable']
+                    result['privacy_stdio_'+mode]=True
                 if role=='candidate':
                     prepared=await client.call_tool('fsp_prepare_profile',{'changes':{'preferred_work_formats':['remote'],'preferred_task_types':['testing']}})
                 else:
