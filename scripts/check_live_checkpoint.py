@@ -33,6 +33,16 @@ from profiles.models import Profile,FspLink
 from hiring.models import Company,Need,Invitation
 from assessments.models import Attempt
 from assistant.models import Draft
+from api.core import issue_token
+
+def api_read(path,secret):
+    request=urllib.request.Request(base+'/api/v1/'+path,headers={'Authorization':'Bearer '+secret,'User-Agent':'FSP synthetic conditions checkpoint'})
+    with urllib.request.urlopen(request,timeout=15) as response:return json.load(response)
+
+def api_denied(path,secret):
+    try:api_read(path,secret)
+    except urllib.error.HTTPError as exc:assert exc.code==403
+    else:raise AssertionError('MCP private access unexpectedly allowed')
 
 class Fields(HTMLParser):
     def __init__(self,text):
@@ -82,11 +92,17 @@ try:
     passed('two HTTPS registrations with CSRF, explicit consent and session-bound demo confirmation')
     data={'name':'Тестовый Кандидат','city':'Москва','skills':'Swift, SwiftUI','desired_grade':'Junior','published':'on',
         'specialization':'ios_swift','experience_months':'12','roles':['developer'],'soft_skills':['teamwork'],
+        'preferred_work_formats':['remote'],'preferred_employment_types':['full_time'],'preferred_task_types':['development','testing'],
         'description':'Приватное описание private-checkpoint@demo.invalid','contact_email':'private-checkpoint@demo.invalid'}
     candidate.request('/profile/');candidate.request('/profile/',data)
     profile=Profile.objects.get(user__username=emails[0]);assert profile.published and profile.publication_consented_at
     assert profile.experience_months==12 and profile.roles==['developer']
     passed('full profile persistence and distinct publication consent')
+    assert profile.preferred_work_formats==['remote'] and profile.preferred_task_types==['development','testing']
+    candidate_secret=issue_token(profile.user,'Owned conditions checkpoint','mcp')[1]
+    profile_dto=api_read('me/profile',candidate_secret)['data']
+    assert profile_dto['preferred_employment_types']==['full_time'] and 'private-checkpoint@demo.invalid' not in json.dumps(profile_dto)
+    passed('optional candidate preferences persist and safe token projection excludes contacts')
     helper=candidate.request('/assistant/',{'mode':'profile'})
     assert 'Проверил черновик' in helper and 'Мок' in helper
     draft=Draft.objects.get(user=profile.user,mode='profile')
@@ -118,7 +134,7 @@ try:
     assert not Need.objects.filter(company__user__username=emails[1]).exists()
     need_data={'company_name':'Тестовая Компания','company_email':'company-checkpoint@demo.invalid',
         'title':'Синтетическая iOS роль','grade':'Junior','skills':'SwiftUI, Combine','tasks':'Демонстрационные задачи',
-        'salary_min':'100000','salary_max':'150000','work_format':'remote','next_step':'Знакомство с командой'}
+        'salary_min':'100000','salary_max':'150000','work_format':'remote','employment_type':'full_time','task_types':['development','testing'],'next_step':'Знакомство с командой'}
     employer.request(f'/assistant/drafts/{need_draft.pk}/',need_data)
     employer.request(f'/assistant/drafts/{need_draft.pk}/',{})
     company=Company.objects.get(user__username=emails[1]);need=Need.objects.get(company=company)
@@ -130,6 +146,16 @@ try:
     assert 'private-checkpoint@demo.invalid' not in page and 'Не указаны в навыках кандидата: Combine' in page
     assert 'rules-v1' in page
     passed('employer sees explanation and proof while private text and contacts stay hidden')
+    assert 'Все три условия указаны обеими сторонами' in page
+    matched=employer.request(f'/candidates/?need={need.pk}&conditions=matched')
+    assert 'Тестовый Кандидат' in matched
+    employer_secret=issue_token(company.user,'Owned conditions checkpoint','mcp')[1]
+    dto=api_read(f'candidates/{profile.pk}?need_id={need.pk}',employer_secret)['data']
+    assert len(dto['explanation']['conditions']['matches'])==3 and not dto['contacts_allowed']
+    assert 'private-checkpoint@demo.invalid' not in json.dumps(dto)
+    api_denied(f'candidates/{profile.pk}/resume.pdf?need_id={need.pk}',employer_secret)
+    api_denied(f'candidates/{profile.pk}/private',employer_secret)
+    passed('matching condition filter and safe MCP DTO over HTTPS before contact')
     helper=employer.request('/assistant/',{'mode':'matching','need':need.pk,'candidate':profile.pk})
     assert 'Пробелы самоописания: Combine' in helper and 'private-checkpoint@demo.invalid' not in helper
     helper=employer.request('/assistant/',{'mode':'invitation','need':need.pk,'candidate':profile.pk})
@@ -144,6 +170,14 @@ try:
     assert 'Работодатель зачёл результатов: 1' in helper
     offer.refresh_from_db();assert offer.status=='sent'
     passed('candidate conversation uses snapshot and preserves pending decision')
+    initial=offer.snapshot.copy();data['preferred_work_formats']=['office'];candidate.request('/profile/',data)
+    profile.refresh_from_db();assert profile.preferred_work_formats==['office']
+    assert 'Тестовый Кандидат' not in employer.request(f'/candidates/?need={need.pk}&conditions=matched')
+    assert 'требуется уточнение' in employer.request(f'/candidates/{profile.pk}/?need={need.pk}')
+    snapshot_dto=api_read(f'invitations/{offer.pk}',employer_secret)['data']
+    assert len(snapshot_dto['conditions']['matches'])==3
+    offer.refresh_from_db();assert offer.snapshot==initial
+    passed('changed preferences create a current conflict while the sent invitation snapshot stays matched')
     candidate.request(f'/invitations/{offer.pk}/accept/',{})
     assert 'private-checkpoint@demo.invalid' in employer.request(f'/candidates/{profile.pk}/')
     assert employer.request(f'/candidates/{profile.pk}/resume.pdf').startswith(b'%PDF')

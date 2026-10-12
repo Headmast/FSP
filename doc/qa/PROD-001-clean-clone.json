@@ -1,0 +1,126 @@
+{
+  "task": "DEL-001",
+  "code_commit": "1d2eb6f2058f6ddd11f7c9e18973a26fc605397b",
+  "status": "PASS",
+  "checks": [
+    "clean local clone",
+    "isolated worktree/env/database",
+    "locked installation",
+    "fresh migrations/static/system/drift",
+    "synthetic fixtures",
+    "packaged client",
+    "Gunicorn health/version actual SHA",
+    "browser journey and privacy",
+    "actual Chromium recording",
+    "screenshots"
+  ],
+  "browser": {
+    "status": "PASS",
+    "engine": "Chromium",
+    "code_commit": "1d2eb6f2058f6ddd11f7c9e18973a26fc605397b",
+    "automated": true,
+    "fixture_answers": "read only from private disposable synthetic DB; not exported",
+    "duration_seconds": 14.034,
+    "phases": [
+      {
+        "label": "Демо текущего приложения",
+        "seconds": 1.199,
+        "path": "/"
+      },
+      {
+        "label": "Регистрация и demo email",
+        "seconds": 1.659,
+        "path": "/profile/"
+      },
+      {
+        "label": "Профиль и отдельная публикация",
+        "seconds": 2.071,
+        "path": "/profile/"
+      },
+      {
+        "label": "Мок помощника: проверяемый черновик",
+        "seconds": 2.196,
+        "path": "/assistant/"
+      },
+      {
+        "label": "Тест категории: восемь вопросов",
+        "seconds": 2.498,
+        "path": "/assessments/41/"
+      },
+      {
+        "label": "Результат категории Junior",
+        "seconds": 7.529,
+        "path": "/assessments/41/"
+      },
+      {
+        "label": "Переносимое свидетельство",
+        "seconds": 7.589,
+        "path": "/assessments/41/proof/"
+      },
+      {
+        "label": "Работодатель: условия и выдача",
+        "seconds": 8.396,
+        "path": "/candidates/"
+      },
+      {
+        "label": "До согласия контакты закрыты",
+        "seconds": 11.332,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Приглашение с вилкой и зачтённым результатом",
+        "seconds": 11.788,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Явное согласие кандидата",
+        "seconds": 12.08,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Контакты открыты только отправителю",
+        "seconds": 12.482,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Другая компания контакты не получает",
+        "seconds": 12.891,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Учебный трек Android",
+        "seconds": 13.176,
+        "path": "/learning/"
+      },
+      {
+        "label": "Сохранение практики без изменения категории",
+        "seconds": 13.4,
+        "path": "/learning/"
+      },
+      {
+        "label": "Подключения MCP/CLI: персональные права",
+        "seconds": 13.458,
+        "path": "/accounts/integrations/"
+      },
+      {
+        "label": "Дашборд владельца и результаты HR",
+        "seconds": 13.783,
+        "path": "/company/dashboard/"
+      },
+      {
+        "label": "Режим доступности",
+        "seconds": 13.859,
+        "path": "/company/dashboard/"
+      },
+      {
+        "label": "Версия проверенного кода",
+        "seconds": 13.902,
+        "path": "/version/"
+      }
+    ],
+    "browser_errors": [],
+    "raw_video": "raw-video/page@dc2cf7655b2e648f0b77c8e7624c0461.webm"
+  },
+  "browser_driver_sha256": "bf72bdb35d4366a0e71fff610486f3acab4bb1f790d2bceafd1dcc4c2d3f6c3e",
+  "driver_source_state": "QA driver expanded in calling worktree; application and client bytes exactly 1d2eb6f; driver digest verified before commit"
+}

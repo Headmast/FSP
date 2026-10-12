@@ -100,11 +100,12 @@
     "migration_drift": "PASS",
     "docs": "PASS: 147 Markdown documents",
     "diff": "PASS",
-    "worktree": "PASS port8041"
+    "worktree": "PASS port8041",
+    "clean_clone_browser": "PASS: 19 real Chromium phases, matched filter, modified preferences preserve offer snapshot, 390px no horizontal overflow",
+    "visual": "PASS: match/conflict/unknown/390px/preferences PNGs and two actual downloaded PDF pages reviewed"
   },
   "pending": [
-    "clean clone actual browser both roles and visual inspection",
-    "integrated release verification"
+    "integration and live release checkpoint"
   ],
   "corrected_failures": [
     {
@@ -112,5 +113,7 @@
       "error": "Attempted verification with a previously closed httpx client",
       "resolution": "Separate short-lived verification client; repeated actual CLI and modern/legacy stdio successfully"
     }
-  ]
+  ],
+  "application_code_commit": "1d2eb6f2058f6ddd11f7c9e18973a26fc605397b",
+  "source_match": "App/client hashes verified against committed 1d2eb6f; initial stage tests ran its exact source bytes"
 }
