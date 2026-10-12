@@ -94,9 +94,9 @@ def health(request):
     from profiles.models import Profile, PrivacyReceipt
     from django.db import connection
     from assessments.models import Attempt
-    from hiring.models import Company, Need, Invitation
+    from hiring.models import Company, Need, Invitation, GapChallenge
     try:
-        for model in (User, ConsentEvent, Profile, Attempt, Company, Need, Invitation, PrivacyReceipt):
+        for model in (User, ConsentEvent, Profile, Attempt, Company, Need, Invitation, PrivacyReceipt, GapChallenge):
             model.objects.exists()
             with connection.cursor() as cursor:
                 actual={column.name for column in connection.introspection.get_table_description(cursor,model._meta.db_table)}

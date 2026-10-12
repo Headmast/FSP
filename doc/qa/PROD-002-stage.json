@@ -1,0 +1,166 @@
+{
+  "task": "PROD-002",
+  "status": "PASS",
+  "task_status": "IN_PROGRESS",
+  "checked_at": "2026-10-12T04:08:22.404137+00:00",
+  "base_commit": "b0b4f0bd708372fc88ff2fee78a5eb59954a2c94",
+  "source_state": "working source frozen and fingerprints verified; stage commit follows",
+  "source_sha256": {
+    "app/accounts/views.py": "1898a4be81e988e0faefb521fef677aba7a5b9be575b587abca5cfdbd5984d5c",
+    "app/api/schema.py": "c2c7daf694e42987e42567abec98c9372e1eb789884c7f7ef2f8831dcd311fc3",
+    "app/api/urls.py": "80abb8435bbd26c82c5946e793805e83c660d3bf1744c96c6f7e2dabc87cebd4",
+    "app/api/views.py": "3db6c44191ab519447b76f2df38cd0b98fbbbe2e2440099b6073aeee31201a19",
+    "app/config/urls.py": "8142a037796e8e4f2194ee1c6f63f71bd6529dd6d3503ae9fc5ae518db658e58",
+    "app/hiring/challenge_forms.py": "e4832e503fbffe7c7914526db489e32b49480a0461ca502d291ec788ca47a14a",
+    "app/hiring/challenge_projection.py": "14876be92154a1c1b584cc26d6954bb479a9777aa4387234027d1a5fe79dc8da",
+    "app/hiring/challenge_views.py": "cd2b7647ce1e30c27fee89bae16cdd9996caf1cd2d716ad7623c61a26553fa67",
+    "app/hiring/challenges.py": "db01e5c33a71c546290b20816724f7c96c8a301cd30d1430f181a88021aa29e7",
+    "app/hiring/migrations/0006_gap_challenges.py": "b8f63c8c08c4197b0c60adf65a648e298b409b0c6c2002ddb343620e37f57e1a",
+    "app/hiring/models.py": "9a0a51e00d43dd2c829fc838185b2c1ec61c2fa467b50e3426333f1b26994552",
+    "app/hiring/test_challenges.py": "6f7ebee03bb502679861b9a3de7d03c856c9922b1fd093fa062b5c6972c26ad5",
+    "app/profiles/management/commands/privacy_maintenance.py": "389600539612d863c21deaaf2f7cec4393559e7ee0c162ed1fa3226acf2f24e2",
+    "app/profiles/privacy.py": "14d67127c2293d25e42bed91709c42e5ea371ef1c52e335d172e3767864629ec",
+    "app/profiles/test_privacy.py": "cf224d07bc0ed9d1c37e3d25194f606b393d0ceb2525fc410f18a4be0d95b281",
+    "app/templates/base.html": "e98bf43073203e70abb61da999ae2812ecc5f83faaf31b7253512e98109ff5c4",
+    "app/templates/hiring/challenge_detail.html": "a848924e1f7ef04451b3a77f02ced3be4c409435aa9004d3087f4ad937b08b60",
+    "app/templates/hiring/challenge_offer.html": "73404c4d98ae61c6fc8bdb2dfe6d686768af899fb8fbd4c481c28434c89a105a",
+    "app/templates/hiring/challenges.html": "0ef7f6144147ec0d78b18be7fab4a58cdd1cdaaf0493f4e68d09f2ad474db240",
+    "app/templates/hiring/invitations.html": "f25ec61863b6980a9768bef6e025ca533cfc4711d92e16f02764d3931789b3aa",
+    "app/templates/profiles/privacy.html": "8004519fa5890070d55e1da261765f9e0944dc9d3409735d1054f651176c4120",
+    "clients/python/src/fsp_client/cli.py": "c94d82c02e038b6d871c928253bdfd0ab58946f1dc4c17c320448dceae8436a1",
+    "clients/python/src/fsp_client/mcp.py": "6e1985501ff9c7f7fa0aa75c3598aa0e26fc262e599dbccb193acbad0f11ed01",
+    "clients/python/tests/test_client.py": "d83bb38ad8a285eb3d6afbcdf62eff856536b8abdfbb015b128b01df9b2e4303",
+    "clients/python/tests/test_mcp.py": "6b3a0ce41efcf921c625457b36dc290d13090d31201cc18ba77d295968da92da",
+    "scripts/check_challenge_storage.py": "91085f1104462eed6c596dee23104b7fe378d4e3ad64368c40ef9214a586bdb1",
+    "scripts/check_http_contracts.py": "517e668cc524eb1e395ae1d2b1cf97c0f512a5ee32588154b577e580c9708cb5",
+    "scripts/check_mcp_cli.py": "b2b9e4b9d62e192e1f83e2e038beef77b2a08a4be35602042daceeb5882924c1",
+    "scripts/check_privacy_restore.py": "0d045649dc541893f38075bc5b069632b595526a400cba7db28100eca196917c",
+    "scripts/http_challenge_scenarios.py": "4af33d7837a3768bb77eed4540bd5198471794f2cb952cd3bded6273e2aed3e7",
+    "scripts/http_contracts.py": "d7266c6c1caec0f31304fc46bab1dcf07ff223dd184a20c7b2ab2ca2c2c6507f",
+    "scripts/setup_mcli_fixture.py": "d502c8459eec236567cd67eb2f71af76cfc91189cea31331647f8e73abba1d62"
+  },
+  "checks": {
+    "server_tests": {
+      "status": "PASS",
+      "count": 204,
+      "seconds": 38.861,
+      "new_challenge_tests": 21,
+      "new_ledger_type_test": 1
+    },
+    "client_tests": {
+      "status": "PASS",
+      "count": 15,
+      "seconds": 0.308
+    },
+    "tools": {
+      "status": "PASS",
+      "count": 23,
+      "seconds": 3.958
+    },
+    "http": {
+      "status": "PASS",
+      "runtime": 666,
+      "paths": 76,
+      "operations": 122,
+      "examples": 127,
+      "counterfactuals": 4
+    },
+    "native_cli_stdio": {
+      "candidate_http": 12,
+      "candidate_challenge_stdio_auto": true,
+      "privacy_stdio_auto": true,
+      "candidate_conditions_prepare_auto": true,
+      "candidate_stdio_auto": true,
+      "candidate_challenge_stdio_legacy": true,
+      "privacy_stdio_legacy": true,
+      "candidate_conditions_prepare_legacy": true,
+      "candidate_stdio_legacy": true,
+      "candidate_challenge_native_cli": true,
+      "candidate_conditions_native_cli": true,
+      "candidate_native_keyring_cli": true,
+      "employer_http": 12,
+      "employer_challenge_stdio_auto": true,
+      "conditions_stdio_auto": true,
+      "employer_conditions_prepare_auto": true,
+      "employer_stdio_auto": true,
+      "employer_challenge_stdio_legacy": true,
+      "conditions_stdio_legacy": true,
+      "employer_conditions_prepare_legacy": true,
+      "employer_stdio_legacy": true,
+      "employer_challenge_native_cli": true,
+      "employer_conditions_native_cli": true,
+      "employer_native_keyring_cli": true
+    },
+    "sqlite_race_restore": {
+      "task": "PROD-002",
+      "status": "PASS",
+      "checks": [
+        "file-backed SQLite simultaneous submit/review: one fixed result and one conflict, no duplicates or overwrite",
+        "simultaneous owner revoke and company review: final share always closed, stale revision cannot block revoke",
+        "actual pre-task-revoke SQLite backup restores old consent; durable task UUID fence closes it before serving",
+        "actual pre-clear backup: profile fence erases all challenge text/results and detaches rows again",
+        "180-day challenge archive expiry, floor2 retained, secure_delete/WAL truncate remove task canary from live DB bytes"
+      ],
+      "database": "disposable own SQLite/ledger/fixtures removed; production untouched",
+      "source_sha256": {
+        "app/hiring/challenges.py": "db01e5c33a71c546290b20816724f7c96c8a301cd30d1430f181a88021aa29e7",
+        "app/hiring/models.py": "9a0a51e00d43dd2c829fc838185b2c1ec61c2fa467b50e3426333f1b26994552",
+        "app/profiles/privacy.py": "14d67127c2293d25e42bed91709c42e5ea371ef1c52e335d172e3767864629ec",
+        "scripts/check_challenge_storage.py": "91085f1104462eed6c596dee23104b7fe378d4e3ad64368c40ef9214a586bdb1"
+      }
+    },
+    "prior_privacy_restore": "PASS: four actual SQLite restore/retention assertions using format2",
+    "old_schema_upgrade": "PASS",
+    "migration_drift": "PASS",
+    "schema_freshness": "PASS76/122",
+    "wheel_sources": "PASS: current client sources match packaged wheel",
+    "worktree": "PASS port8041",
+    "docs": "PASS: 157 Markdown documents; local links/gate metadata",
+    "diff": "PASS",
+    "native_binding": "Client/API schema/projection/auth code unchanged since actual native run; added malformed-ledger guard subsequently covered by 204 app and 666 HTTP checks"
+  },
+  "privacy_format": 2,
+  "preserved_invariants": [
+    "professional grade/test score/ranking unchanged by task/review/credit",
+    "original paid invitation contact grant independent of answer revoke",
+    "read interfaces omit free texts and do not mutate challenge state on GET",
+    "wrong company/candidate/role and missing CSRF/ack reject",
+    "task nonce durable restore fence prevents old consent from returning"
+  ],
+  "failures_corrected": [
+    {
+      "step": "Contract generation",
+      "error": "Missing ChallengeMutation example",
+      "resolution": "Added reviewed offer/action examples; generated spec and validators pass"
+    },
+    {
+      "step": "HTTP consent guard",
+      "error": "Shared browser tasks returned403 instead of existing consent renewal redirect302",
+      "resolution": "Both-role gate preserves web renewal redirect, token API stays403"
+    },
+    {
+      "step": "HTTP foreign actor case",
+      "error": "Harness passed User instead of its client key",
+      "resolution": "Actor key corrected; full runtime coverage passes"
+    },
+    {
+      "step": "Manual ledger source review",
+      "error": "New task record discriminator called get() before checking JSON object type",
+      "resolution": "Non-object records rejected fail-closed503; list/null/string/int/bool covered by a new actual API test"
+    }
+  ],
+  "not_run": [
+    "clean clone/browser actual challenge path",
+    "visual desktop/mobile/errors",
+    "main integration acceptance",
+    "production deployment and own-fixture HTTPS path",
+    "actual server privacy floor2 rejection",
+    "manual VoiceOver/NVDA",
+    "Linux native keyring/full MCLI-013",
+    "human pilot"
+  ],
+  "goal_counts": {
+    "done": 17,
+    "open": 10
+  }
+}

@@ -71,7 +71,7 @@ def main():
         assert not expired.exists() and recent.exists() and unrelated.read_bytes()==b'Unrelated data'
         assert not Invitation.objects.filter(pk=aged.pk).exists()
         assert all(row['created_at']!=old.isoformat() for row in map(json.loads,ledger.read_text().splitlines()))
-        assert (target/'privacy-floor-v1').read_text().strip()=='1'
+        assert (target/'privacy-floor-v1').read_text().strip()=='2'
         assert recent.stat().st_mode & 0o777==0o600
         checks.append('180-day anonymous history/ledger expiry, 7-day owned backup expiry, unrelated files preserved, floor survives')
         connections.close_all()

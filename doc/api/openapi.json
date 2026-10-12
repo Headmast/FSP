@@ -843,6 +843,277 @@
           }
         ]
       },
+      "ChallengeOffer": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "x-django-field": "UUIDField",
+            "format": "uuid"
+          },
+          "skill": {
+            "type": "string",
+            "enum": [
+              "Swift",
+              "SwiftUI",
+              "UIKit",
+              "Combine",
+              "CoreData",
+              "Git",
+              "XCTest",
+              "URLSession"
+            ],
+            "minLength": 1,
+            "x-django-field": "ChoiceField"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "x-django-field": "CharField"
+          },
+          "instructions": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 1,
+            "x-django-field": "CharField"
+          },
+          "criteria": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "x-django-field": "CharField",
+            "description": "1–5 unique nonempty lines, <=180 characters each; two maximum points per criterion."
+          },
+          "pass_points": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "x-django-field": "IntegerField"
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 60,
+            "x-django-field": "IntegerField"
+          },
+          "deadline_at": {
+            "type": "string",
+            "minLength": 1,
+            "x-django-field": "DateTimeField",
+            "description": "datetime-local interpreted in Europe/Moscow; future, <=30 days. Accepted response due=min(deadline,start+budget)."
+          },
+          "acknowledge": {
+            "type": "boolean",
+            "const": true,
+            "x-django-field": "BooleanField"
+          },
+          "csrfmiddlewaretoken": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 64,
+            "writeOnly": true,
+            "description": "CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field."
+          }
+        },
+        "required": [
+          "request_id",
+          "skill",
+          "title",
+          "instructions",
+          "criteria",
+          "pass_points",
+          "duration_minutes",
+          "deadline_at",
+          "acknowledge"
+        ],
+        "additionalProperties": true,
+        "x-form-class": "hiring.challenge_forms.ChallengeOfferForm"
+      },
+      "ChallengeAction": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "accept",
+              "decline",
+              "save",
+              "submit",
+              "revoke",
+              "withdraw",
+              "credit"
+            ],
+            "minLength": 1,
+            "x-django-field": "ChoiceField"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "x-django-field": "IntegerField"
+          },
+          "answer": {
+            "type": "string",
+            "maxLength": 12000,
+            "x-django-field": "CharField"
+          },
+          "acknowledge": {
+            "type": "boolean",
+            "x-django-field": "BooleanField"
+          },
+          "csrfmiddlewaretoken": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 64,
+            "writeOnly": true,
+            "description": "CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field."
+          }
+        },
+        "required": [
+          "action",
+          "revision"
+        ],
+        "additionalProperties": true,
+        "x-form-class": "hiring.challenge_forms.ChallengeActionForm",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "action": {
+                  "enum": [
+                    "accept",
+                    "submit",
+                    "revoke",
+                    "withdraw",
+                    "credit"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "acknowledge"
+              ],
+              "properties": {
+                "acknowledge": {
+                  "const": true
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "action": {
+                  "const": "submit"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "answer"
+              ],
+              "properties": {
+                "answer": {
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ChallengeReview": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "review"
+            ],
+            "minLength": 1,
+            "x-django-field": "ChoiceField"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "x-django-field": "IntegerField"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "x-django-field": "CharField"
+          },
+          "credit": {
+            "type": "boolean",
+            "x-django-field": "BooleanField"
+          },
+          "acknowledge": {
+            "type": "boolean",
+            "const": true,
+            "x-django-field": "BooleanField"
+          },
+          "score_0": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "x-django-field": "IntegerField"
+          },
+          "score_1": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "x-django-field": "IntegerField"
+          },
+          "score_2": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "x-django-field": "IntegerField"
+          },
+          "score_3": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "x-django-field": "IntegerField"
+          },
+          "score_4": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "x-django-field": "IntegerField"
+          },
+          "csrfmiddlewaretoken": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 64,
+            "writeOnly": true,
+            "description": "CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field."
+          }
+        },
+        "required": [
+          "action",
+          "revision",
+          "note",
+          "acknowledge"
+        ],
+        "additionalProperties": true,
+        "x-form-class": "hiring.challenge_forms.ChallengeReviewForm"
+      },
+      "ChallengeMutation": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ChallengeAction"
+          },
+          {
+            "$ref": "#/components/schemas/ChallengeReview"
+          }
+        ],
+        "description": "Browser-owned role action. Review requires score_0..score_N-1 for the actual immutable criterion count, no missing/out-of-range score; one fixed manual result."
+      },
       "LearningRead": {
         "type": "object",
         "properties": {
@@ -1602,6 +1873,206 @@
           "changes_grade",
           "external_id",
           "events"
+        ],
+        "additionalProperties": false
+      },
+      "ApiChallengeResult": {
+        "type": "object",
+        "properties": {
+          "points": {
+            "type": "integer"
+          },
+          "maximum": {
+            "type": "integer"
+          },
+          "threshold": {
+            "type": "integer"
+          },
+          "sufficient": {
+            "type": "boolean"
+          },
+          "scores": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2
+            }
+          },
+          "credited": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "points",
+          "maximum",
+          "threshold",
+          "sufficient",
+          "scores",
+          "credited"
+        ],
+        "additionalProperties": false
+      },
+      "ApiChallenge": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "invitation_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "candidate_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "company_id": {
+            "type": "integer"
+          },
+          "need_id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "skill": {
+            "enum": [
+              "Swift",
+              "SwiftUI",
+              "UIKit",
+              "Combine",
+              "CoreData",
+              "Git",
+              "XCTest",
+              "URLSession"
+            ]
+          },
+          "gap_kind": {
+            "enum": [
+              "missing_declared",
+              "unverified_skill"
+            ]
+          },
+          "state": {
+            "enum": [
+              "offered",
+              "accepted",
+              "submitted",
+              "reviewed",
+              "declined",
+              "withdrawn",
+              "expired",
+              "revoked",
+              "erased"
+            ]
+          },
+          "revision": {
+            "type": "integer"
+          },
+          "rubric_version": {
+            "const": "company-rubric-v1"
+          },
+          "criterion_count": {
+            "type": "integer"
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 60
+          },
+          "deadline_at": {
+            "type": "string"
+          },
+          "response_due_at": {
+            "type": "string"
+          },
+          "accepted_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "submitted_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reviewed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "consent_revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "candidate_erased_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pass_points": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApiChallengeResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "changes_professional_grade": {
+            "const": false
+          },
+          "actions_in_browser_only": {
+            "const": true
+          },
+          "evaluation_source": {
+            "const": "company_manual"
+          }
+        },
+        "required": [
+          "id",
+          "invitation_id",
+          "candidate_id",
+          "company_id",
+          "need_id",
+          "title",
+          "skill",
+          "gap_kind",
+          "state",
+          "revision",
+          "rubric_version",
+          "criterion_count",
+          "duration_minutes",
+          "deadline_at",
+          "response_due_at",
+          "accepted_at",
+          "submitted_at",
+          "reviewed_at",
+          "consent_revoked_at",
+          "candidate_erased_at",
+          "pass_points",
+          "result",
+          "changes_professional_grade",
+          "actions_in_browser_only",
+          "evaluation_source"
         ],
         "additionalProperties": false
       },
@@ -3498,6 +3969,725 @@
     }
   },
   "paths": {
+    "/challenges/": {
+      "get": {
+        "operationId": "challenges_get",
+        "summary": "Адресные задания · GET",
+        "description": "Owned list only; company answer/result closed until submit and after challenge/contact revoke. GET computes expiration without business mutation.\nRepeat: \nRead effects: No business write on GET/HEAD.",
+        "x-django-url-name": "challenges",
+        "x-role": "both",
+        "x-repeat": "",
+        "x-read-effects": "",
+        "security": [
+          {
+            "Session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Owned safe list",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
+            "headers": {
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": []
+      },
+      "head": {
+        "operationId": "challenges_head",
+        "summary": "Адресные задания · HEAD",
+        "description": "Owned list only; company answer/result closed until submit and after challenge/contact revoke. GET computes expiration without business mutation.\nRepeat: \nRead effects: No business write on GET/HEAD.",
+        "x-django-url-name": "challenges",
+        "x-role": "both",
+        "x-repeat": "",
+        "x-read-effects": "",
+        "security": [
+          {
+            "Session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Owned safe list",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "text/html; charset=utf-8"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "application/json"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent.",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
+            "headers": {
+              "Content-Type": {
+                "required": true,
+                "schema": {
+                  "const": "text/html; charset=utf-8"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
+            "headers": {
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": []
+      }
+    },
+    "/challenges/{pk}/": {
+      "get": {
+        "operationId": "challenge_detail_get",
+        "summary": "Задание и отдельное согласие · GET",
+        "description": "Own candidate or Company only. Immutable terms and fixed rubric. Candidate accepts/declines/saves private draft/submits/revokes share; employer reviews/withdraws offered/credits sufficient result. Revision prevents stale save/review. Effective expiry blocks acceptance/save/submit. No professional grade or ranking write. Shared raw answer never goes to another company or MCP.\nRepeat: Accept replay never extends timer; same submitted answer/manual result immutable. Changed stale payload conflicts.\nRead effects: No business write on GET/HEAD.",
+        "x-django-url-name": "challenge-detail",
+        "x-role": "both",
+        "x-repeat": "Accept replay never extends timer; same submitted answer/manual result immutable. Changed stale payload conflicts.",
+        "x-read-effects": "",
+        "security": [
+          {
+            "Session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Owned details; company sees answer only after submit with valid original grant and task consent",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Success or identical repeat: same detail",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Missing or foreign ID",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
+            "headers": {
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pk",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9223372036854775807,
+              "description": "Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404."
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "challenge_detail_post",
+        "summary": "Задание и отдельное согласие · POST",
+        "description": "Own candidate or Company only. Immutable terms and fixed rubric. Candidate accepts/declines/saves private draft/submits/revokes share; employer reviews/withdraws offered/credits sufficient result. Revision prevents stale save/review. Effective expiry blocks acceptance/save/submit. No professional grade or ranking write. Shared raw answer never goes to another company or MCP.\nRepeat: Accept replay never extends timer; same submitted answer/manual result immutable. Changed stale payload conflicts.\nRead effects: No business write on GET/HEAD.",
+        "x-django-url-name": "challenge-detail",
+        "x-role": "both",
+        "x-repeat": "Accept replay never extends timer; same submitted answer/manual result immutable. Changed stale payload conflicts.",
+        "x-read-effects": "",
+        "security": [
+          {
+            "Session": [],
+            "CsrfCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Owned details; company sees answer only after submit with valid original grant and task consent",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Success or identical repeat: same detail",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields/ack/rubric/answer",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Missing or foreign ID",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Expired/revoked/stale/opposite terminal action",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
+            "headers": {
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pk",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9223372036854775807,
+              "description": "Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404."
+            }
+          },
+          {
+            "name": "X-CSRFToken",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 64,
+              "writeOnly": true,
+              "description": "CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field."
+            },
+            "description": "Alternative to csrfmiddlewaretoken form field; csrf cookie still required."
+          }
+        ],
+        "x-csrf": "Cookie plus same-session header OR form token; session/CSRF rotate at login. application/json is not parsed into request.POST; 415 is not promised.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ChallengeMutation"
+              },
+              "examples": {
+                "valid_shape": {
+                  "value": {
+                    "action": "accept",
+                    "revision": 0,
+                    "acknowledge": true
+                  }
+                }
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ChallengeMutation"
+              },
+              "examples": {
+                "valid_shape": {
+                  "value": {
+                    "action": "accept",
+                    "revision": 0,
+                    "acknowledge": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invitations/{pk}/challenge/": {
+      "get": {
+        "operationId": "challenge_offer_get",
+        "summary": "Предложить короткое задание · GET",
+        "description": "Own non-revoked accepted invitation required; current Need skill, 1–5 criteria 0/1/2, pass_points<=2*N, 5–60 minute budget and future deadline<=30 days. Candidate consent is separate; text/code not executed.\nRepeat: Unique invitation/skill and request UUID; changed terms rejected.\nRead effects: No business write on GET/HEAD.",
+        "x-django-url-name": "challenge-offer",
+        "x-role": "employer",
+        "x-repeat": "Unique invitation/skill and request UUID; changed terms rejected.",
+        "x-read-effects": "",
+        "security": [
+          {
+            "Session": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Offer form",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Created/exact duplicate: challenge detail",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Foreign/missing invitation or nonce owner",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
+            "headers": {
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pk",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9223372036854775807,
+              "description": "Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404."
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "challenge_offer_post",
+        "summary": "Предложить короткое задание · POST",
+        "description": "Own non-revoked accepted invitation required; current Need skill, 1–5 criteria 0/1/2, pass_points<=2*N, 5–60 minute budget and future deadline<=30 days. Candidate consent is separate; text/code not executed.\nRepeat: Unique invitation/skill and request UUID; changed terms rejected.\nRead effects: No business write on GET/HEAD.",
+        "x-django-url-name": "challenge-offer",
+        "x-role": "employer",
+        "x-repeat": "Unique invitation/skill and request UUID; changed terms rejected.",
+        "x-read-effects": "",
+        "security": [
+          {
+            "Session": [],
+            "CsrfCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Offer form",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Created/exact duplicate: challenge detail",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or domain constraints",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Foreign/missing invitation or nonce owner",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No active accepted grant or duplicate with changed immutable terms",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "examples": {
+                  "synthetic": {
+                    "value": {
+                      "status": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong role/unconfirmed email; POST additionally invalid CSRF.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first.",
+            "headers": {
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pk",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9223372036854775807,
+              "description": "Positive ASCII decimal, at most 19 digits on the wire; leading zeroes accepted. Foreign/malformed ID returns 404."
+            }
+          },
+          {
+            "name": "X-CSRFToken",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 32,
+              "maxLength": 64,
+              "writeOnly": true,
+              "description": "CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field."
+            },
+            "description": "Alternative to csrfmiddlewaretoken form field; csrf cookie still required."
+          }
+        ],
+        "x-csrf": "Cookie plus same-session header OR form token; session/CSRF rotate at login. application/json is not parsed into request.POST; 415 is not promised.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ChallengeOffer"
+              },
+              "examples": {
+                "valid_shape": {
+                  "value": {
+                    "request_id": "33333333-3333-4333-8333-333333333333",
+                    "skill": "Combine",
+                    "title": "Проверка отмены запроса",
+                    "instructions": "Покажите решение и объясните его ограничения.",
+                    "criteria": "Объяснена отмена\nПоказана проверка",
+                    "pass_points": 3,
+                    "duration_minutes": 15,
+                    "deadline_at": "2026-11-01T12:00",
+                    "acknowledge": true
+                  }
+                }
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ChallengeOffer"
+              },
+              "examples": {
+                "valid_shape": {
+                  "value": {
+                    "request_id": "33333333-3333-4333-8333-333333333333",
+                    "skill": "Combine",
+                    "title": "Проверка отмены запроса",
+                    "instructions": "Покажите решение и объясните его ограничения.",
+                    "criteria": "Объяснена отмена\nПоказана проверка",
+                    "pass_points": 3,
+                    "duration_minutes": 15,
+                    "deadline_at": "2026-11-01T12:00",
+                    "acknowledge": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/drafts/": {
       "get": {
         "operationId": "action_drafts_get",
@@ -11781,6 +12971,645 @@
           }
         },
         "parameters": []
+      }
+    },
+    "/api/v1/challenges": {
+      "get": {
+        "operationId": "token_challenges_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          }
+        ],
+        "x-required-scopes": [
+          "candidate.read OR employer.read"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; MCP omits free text and contact fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ApiChallenge"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ApiMeta"
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/ApiPagination"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta",
+                    "pagination"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "WWW-Authenticate": {
+                "required": true,
+                "schema": {
+                  "const": "Bearer"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "const": "GET"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Retry-After": {
+                "required": true,
+                "schema": {
+                  "const": "60"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerToken": []
+          }
+        ],
+        "x-contract-group": "token-api",
+        "x-django-url-name": null,
+        "description": "Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. Integer IDs use bounded positive parser; draft UUIDs use Python UUID parser; malformed/foreign IDs 404. candidate.read OR employer.read"
+      }
+    },
+    "/api/v1/challenges/{pk}": {
+      "get": {
+        "operationId": "token_challenges_by_id_get",
+        "parameters": [
+          {
+            "name": "pk",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9223372036854775807
+            }
+          }
+        ],
+        "x-required-scopes": [
+          "candidate.read OR employer.read"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; MCP omits free text and contact fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ApiChallenge"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ApiMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "WWW-Authenticate": {
+                "required": true,
+                "schema": {
+                  "const": "Bearer"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Allow": {
+                "required": true,
+                "schema": {
+                  "const": "GET"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Retry-After": {
+                "required": true,
+                "schema": {
+                  "const": "60"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "const": "no-store"
+                }
+              },
+              "X-Request-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerToken": []
+          }
+        ],
+        "x-contract-group": "token-api",
+        "x-django-url-name": null,
+        "description": "Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. Integer IDs use bounded positive parser; draft UUIDs use Python UUID parser; malformed/foreign IDs 404. candidate.read OR employer.read"
       }
     },
     "/api/v1/me/privacy": {

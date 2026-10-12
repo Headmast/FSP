@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import F,Q
 from profiles.models import Profile
 from profiles.conditions import WORK_FORMATS, EMPLOYMENT_TYPES
+from profiles.skills import SKILLS
 
 class Company(models.Model):
     user=models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
@@ -49,3 +50,42 @@ class Invitation(models.Model):
     candidate_erased_at=models.DateTimeField(null=True,blank=True)
     class Meta:
         constraints=[models.UniqueConstraint(fields=['candidate','need'],name='one_invitation_per_need')]
+
+
+class GapChallenge(models.Model):
+    """Company-scoped manual evidence, never a professional category examination."""
+    STATES=[(value,label) for value,label in [('offered','Предложено'),('accepted','Начато'),
+        ('submitted','Ответ отправлен'),('reviewed','Оценено компанией'),('declined','Кандидат отказался'),
+        ('withdrawn','Компания отозвала'),('expired','Срок истёк'),('revoked','Доступ отозван'),('erased','Данные очищены')]]
+    request_id=models.UUIDField(unique=True)
+    invitation=models.ForeignKey(Invitation,on_delete=models.SET_NULL,null=True,blank=True,related_name='challenges')
+    candidate=models.ForeignKey(Profile,on_delete=models.SET_NULL,null=True,blank=True,related_name='challenges')
+    company=models.ForeignKey(Company,on_delete=models.PROTECT,related_name='challenges')
+    need=models.ForeignKey(Need,on_delete=models.PROTECT,related_name='challenges')
+    skill=models.CharField(max_length=32,choices=[(value,value) for value in SKILLS])
+    gap_kind=models.CharField(max_length=24,choices=[('missing_declared','Не указан в самоописании'),('unverified_skill','Отдельно не проверен')])
+    title=models.CharField(max_length=120)
+    instructions=models.TextField(max_length=4000)
+    criteria=models.JSONField(default=list)
+    rubric_version=models.CharField(max_length=32,default='company-rubric-v1')
+    duration_minutes=models.PositiveSmallIntegerField()
+    deadline_at=models.DateTimeField()
+    pass_points=models.PositiveSmallIntegerField()
+    state=models.CharField(max_length=12,choices=STATES,default='offered')
+    revision=models.PositiveIntegerField(default=0)
+    created_at=models.DateTimeField(auto_now_add=True)
+    accepted_at=models.DateTimeField(null=True,blank=True)
+    submitted_at=models.DateTimeField(null=True,blank=True)
+    reviewed_at=models.DateTimeField(null=True,blank=True)
+    credited_at=models.DateTimeField(null=True,blank=True)
+    consent_revoked_at=models.DateTimeField(null=True,blank=True)
+    candidate_erased_at=models.DateTimeField(null=True,blank=True)
+    answer=models.TextField(max_length=12000,blank=True)
+    review_scores=models.JSONField(default=list)
+    review_note=models.TextField(max_length=2000,blank=True)
+    reviewed_by=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL,null=True,blank=True,related_name='challenge_reviews')
+
+    class Meta:
+        constraints=[models.UniqueConstraint(fields=['invitation','skill'],name='one_challenge_per_invitation_skill'),
+            models.CheckConstraint(condition=Q(duration_minutes__gte=5)&Q(duration_minutes__lte=60),name='short_challenge_budget'),
+            models.CheckConstraint(condition=Q(pass_points__gte=1)&Q(pass_points__lte=10),name='valid_challenge_threshold')]

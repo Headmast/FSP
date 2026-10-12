@@ -1,0 +1,6761 @@
+{
+  "task": "DOC-003",
+  "checked_at": "2026-10-12T04:11:20.317241+00:00",
+  "base_commit": "b0b4f0bd708372fc88ff2fee78a5eb59954a2c94",
+  "source_hashes": {
+    "app/hiring/challenges.py": "db01e5c33a71c546290b20816724f7c96c8a301cd30d1430f181a88021aa29e7",
+    "app/hiring/challenge_forms.py": "e4832e503fbffe7c7914526db489e32b49480a0461ca502d291ec788ca47a14a",
+    "app/hiring/challenge_views.py": "cd2b7647ce1e30c27fee89bae16cdd9996caf1cd2d716ad7623c61a26553fa67",
+    "app/hiring/challenge_projection.py": "14876be92154a1c1b584cc26d6954bb479a9777aa4387234027d1a5fe79dc8da",
+    "scripts/http_challenge_scenarios.py": "4af33d7837a3768bb77eed4540bd5198471794f2cb952cd3bded6273e2aed3e7",
+    "app/config/urls.py": "8142a037796e8e4f2194ee1c6f63f71bd6529dd6d3503ae9fc5ae518db658e58",
+    "app/accounts/views.py": "1898a4be81e988e0faefb521fef677aba7a5b9be575b587abca5cfdbd5984d5c",
+    "app/profiles/views.py": "6417d479addd5de0f499f70859972145d3b27363dbee3030fc74de8feeb5cdc6",
+    "app/assessments/views.py": "cbd285e1c26d4b3dda0a14e9433d8a8a3e284009c6019c2d559e60ef5c7e447a",
+    "app/hiring/views.py": "eddc6e28b6d5ddd91b0284fbfa0b4bc4ce03761de65ff0c01a32af3fbfc76487",
+    "app/assistant/views.py": "3273011cadfaa2f38b82c439c8ac609af78bec786d66de4c5ea0a51c2ed42d35",
+    "app/accounts/forms.py": "8587d99467f8098c31b0c5d75b5ce6345f1b8164ab6d444f019eb34467d1b266",
+    "app/profiles/forms.py": "f3038cb091bc65b2e36e3ef1e270a37a2dea608312b50a1e0e2c27f8043e87d4",
+    "app/profiles/models.py": "50775cc1aad0a043919e7181c55bc01ad0d13e5efa5714f7e6791d1696f30a19",
+    "app/assessments/models.py": "f805ff96b4584e686206adddc909f835543d37945ddf484395432021ff00447f",
+    "app/assessments/learning_tracks.py": "ea42347b6d12cca26f04217f2ba6a7842e22d6c6efe58f4b9ce8b082c0536f85",
+    "app/accounts/integrations.py": "ba5885ab6d7a7f3b98627c9d28b967ad6c363b91fd2c20e6b74bc9027671803d",
+    "app/api/tests.py": "607de4e3b267e54f9eb3dd41f3aae588bb4fab1d82851e5ed9f3b4bcdb03abe3",
+    "app/api/drafts.py": "8771cbf0204fe9f190340abdb1c27a5d448d0a0d3adf2513a76e238a0e43daff",
+    "app/api/web.py": "edc3383d77df1fbec4c852671028823967b9b54772573474dc19fd41b05926e7",
+    "app/api/models.py": "f7e7e0120f45693c6ada58e70771381e7f4ef72d4f6b9458233dccde83b387f7",
+    "app/assessments/learning_views.py": "789e95fa7d6d30edc37b2e51c363113041d682484e55a386e6a3272dc4fdce3e",
+    "app/assessments/learning.py": "15578a8029115f625656b20d48726259283ecf08d782815f1ebdb73a55909e57",
+    "app/assessments/learning_urls.py": "9983cf31d62ca87ef534f26d9a8a530de6395369fd7941f1d9851d3f4bae734f",
+    "app/hiring/dashboard.py": "68a366e87bf51120d49406a4dc214cd2778dbb7bc59fb0041abce1cd8f6819f7",
+    "app/hiring/forms.py": "322d4482be1f7730a6e5babe185cc14eb1c0293d1dbedcfea844dd9fdc3079f7",
+    "app/api/urls.py": "80abb8435bbd26c82c5946e793805e83c660d3bf1744c96c6f7e2dabc87cebd4",
+    "app/api/core.py": "9d8248b832f48e0e981e0f9428fad2684311fb391a3c16093fa13622b9597303",
+    "app/api/schema.py": "c2c7daf694e42987e42567abec98c9372e1eb789884c7f7ef2f8831dcd311fc3",
+    "app/api/views.py": "3db6c44191ab519447b76f2df38cd0b98fbbbe2e2440099b6073aeee31201a19",
+    "app/api/serializers.py": "48b75cfe92fbeef0e6e3086e969c2cd608cb8ae4892863120722b257f588b7c7",
+    "app/accounts/models.py": "e7af466193cc1fcbc088c062e18fa7050d9a055eb7680de76451365f27993a1f",
+    "app/config/settings.py": "d8fbd528686fea67d68c8444c208af21393267e9f2c342291bdb8855ddac93c0",
+    "app/profiles/apps.py": "d029ba08d69774c4f88f0da694009350ed151a44c045a273c5e1caa6145ccdf0",
+    "app/profiles/privacy.py": "14d67127c2293d25e42bed91709c42e5ea371ef1c52e335d172e3767864629ec",
+    "app/profiles/privacy_views.py": "84103044f0a9134eae8e42cdf00abe3f2d28ae993d3c93f4152e39f4281d5e95",
+    "app/profiles/privacy_middleware.py": "e072ada36a3181873f7c1d59f4dae9ef6acd7ced77900763d24e3381c8b94180",
+    "app/profiles/management/commands/privacy_maintenance.py": "389600539612d863c21deaaf2f7cec4393559e7ee0c162ed1fa3226acf2f24e2",
+    "app/profiles/conditions.py": "ccf504dcba8ca99486a6cac9d125fe63f4dca1b57f7d873ecd10a31a031dba02",
+    "app/hiring/models.py": "9a0a51e00d43dd2c829fc838185b2c1ec61c2fa467b50e3426333f1b26994552",
+    "app/hiring/services.py": "e41e3174cf92a2b0c485baa03adc364927670314846b67d10c625a03131188cf",
+    "scripts/http_privacy_scenarios.py": "b65d59ff3138b9cad294ee448c078dc5c1bf95c12f494a8c1bb309e51a7e25ee",
+    "scripts/check_privacy_restore.py": "0d045649dc541893f38075bc5b069632b595526a400cba7db28100eca196917c",
+    "scripts/run_app.py": "2616aca83e0363c4822b7d69cd16277e57b1cf28876ed8c2277ba3e419324afc",
+    "scripts/deploy_mvp_remote.py": "479276f3b753229ead6ad3e88b346b399e41fa2728b1f5cf0b1f4223cf7be3ae",
+    "scripts/maintain_demo.py": "27e2fbe5ca873379cbd50cfe3978db03a86358edf1335d28058b3edaf6e2ca9d",
+    "scripts/http_contracts.py": "d7266c6c1caec0f31304fc46bab1dcf07ff223dd184a20c7b2ab2ca2c2c6507f",
+    "scripts/http_contract_scenarios.py": "8c3192b5c3a373621c5d38639e583dd84ba80420b02b74c87c047f0d2f3f2a5b",
+    "scripts/build_http_spec.py": "6842d8e4095bbde741a349a9f166b8711fadce2826f96c0e9f9b90bd6ea05e41",
+    "scripts/check_http_contracts.py": "517e668cc524eb1e395ae1d2b1cf97c0f512a5ee32588154b577e580c9708cb5",
+    "doc/api/openapi.json": "e09f6c0096f84e044ad64e32206cfa093f651336ee32b19436662d7db4dc3db8"
+  },
+  "runtime": [
+    {
+      "id": "welcome",
+      "method": "GET",
+      "route": "/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy",
+      "method": "GET",
+      "route": "/accounts/privacy/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/challenges/",
+      "method": "GET",
+      "route": "/challenges/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/challenges/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/challenges/",
+      "method": "GET",
+      "route": "/challenges/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/challenges/",
+      "method": "GET",
+      "route": "/challenges/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/challenges/{pk}/",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/challenges/9223372036854775807/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/challenges/{pk}/",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/challenges/{pk}/",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/invitations/{pk}/challenge/",
+      "method": "GET",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/invitations/9223372036854775807/challenge/",
+      "status": "PASS"
+    },
+    {
+      "id": "role-/invitations/{pk}/challenge/",
+      "method": "GET",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/drafts/",
+      "method": "GET",
+      "route": "/drafts/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/drafts/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/drafts/",
+      "method": "GET",
+      "route": "/drafts/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/drafts/",
+      "method": "GET",
+      "route": "/drafts/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/drafts/{pk}/",
+      "method": "GET",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/drafts/00000000-0000-0000-0000-000000000001/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/drafts/{pk}/",
+      "method": "GET",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/drafts/{pk}/",
+      "method": "GET",
+      "route": "/drafts/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/learning/",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/learning/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/learning/",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/learning/",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/learning/",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/learning/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/lessons/{grade}/{topic}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/learning/lessons/Junior/swift/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/learning/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/lessons/{grade}/{topic}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/learning/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/lessons/{grade}/{topic}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/learning/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/lessons/{grade}/{topic}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/learning/tracks/ios/lessons/Junior/swift/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/learning/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/learning/lessons/Junior/swift/complete/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/learning/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/learning/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/lessons/{grade}/{topic}/complete/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/learning/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/lessons/{grade}/{topic}/complete/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/learning/tracks/ios/lessons/Junior/swift/complete/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/learning/start/",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/learning/start/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/learning/start/",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/learning/start/",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/learning/start/",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/learning/sessions/{pk}/",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/learning/sessions/9223372036854775807/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/learning/sessions/{pk}/",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/learning/sessions/{pk}/",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/learning/sessions/{pk}/",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/learning/sessions/{pk}/answer/",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/learning/sessions/9223372036854775807/answer/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/learning/sessions/{pk}/answer/",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/learning/sessions/{pk}/answer/",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/learning/sessions/{pk}/answer/",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/accounts/integrations/",
+      "method": "GET",
+      "route": "/accounts/integrations/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/accounts/integrations/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/accounts/integrations/",
+      "method": "GET",
+      "route": "/accounts/integrations/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/accounts/integrations/",
+      "method": "GET",
+      "route": "/accounts/integrations/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/company/dashboard/",
+      "method": "GET",
+      "route": "/company/dashboard/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/company/dashboard/",
+      "status": "PASS"
+    },
+    {
+      "id": "role-/company/dashboard/",
+      "method": "GET",
+      "route": "/company/dashboard/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/company/team/",
+      "method": "POST",
+      "route": "/company/team/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/company/team/",
+      "status": "PASS"
+    },
+    {
+      "id": "role-/company/team/",
+      "method": "POST",
+      "route": "/company/team/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/accounts/consent/",
+      "method": "GET",
+      "route": "/accounts/consent/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/profile/privacy/",
+      "method": "GET",
+      "route": "/profile/privacy/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/profile/privacy/",
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-without-consent",
+      "method": "GET",
+      "route": "/profile/privacy/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-unconfirmed-owner",
+      "method": "GET",
+      "route": "/profile/privacy/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/profile/privacy/",
+      "method": "GET",
+      "route": "/profile/privacy/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/profile/",
+      "method": "GET",
+      "route": "/profile/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/profile/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/profile/",
+      "method": "GET",
+      "route": "/profile/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/profile/",
+      "method": "GET",
+      "route": "/profile/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/profile/",
+      "method": "GET",
+      "route": "/profile/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/profile/resume.pdf",
+      "method": "GET",
+      "route": "/profile/resume.pdf",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/profile/resume.pdf",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/profile/resume.pdf",
+      "method": "GET",
+      "route": "/profile/resume.pdf",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/profile/resume.pdf",
+      "method": "GET",
+      "route": "/profile/resume.pdf",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/profile/resume.pdf",
+      "method": "GET",
+      "route": "/profile/resume.pdf",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/profile/fsp/",
+      "method": "GET",
+      "route": "/profile/fsp/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/profile/fsp/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/profile/fsp/",
+      "method": "GET",
+      "route": "/profile/fsp/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/profile/fsp/",
+      "method": "GET",
+      "route": "/profile/fsp/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/profile/fsp/",
+      "method": "GET",
+      "route": "/profile/fsp/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/profile/fsp/link/",
+      "method": "GET",
+      "route": "/profile/fsp/link/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/profile/fsp/link/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/profile/fsp/link/",
+      "method": "GET",
+      "route": "/profile/fsp/link/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/profile/fsp/link/",
+      "method": "GET",
+      "route": "/profile/fsp/link/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/profile/fsp/link/",
+      "method": "GET",
+      "route": "/profile/fsp/link/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/company/",
+      "method": "GET",
+      "route": "/company/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/company/",
+      "status": "PASS"
+    },
+    {
+      "id": "role-/company/",
+      "method": "GET",
+      "route": "/company/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/company/needs/",
+      "method": "GET",
+      "route": "/company/needs/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/company/needs/",
+      "status": "PASS"
+    },
+    {
+      "id": "role-/company/needs/",
+      "method": "GET",
+      "route": "/company/needs/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/candidates/",
+      "method": "GET",
+      "route": "/candidates/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/candidates/",
+      "status": "PASS"
+    },
+    {
+      "id": "role-/candidates/",
+      "method": "GET",
+      "route": "/candidates/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/candidates/{pk}/",
+      "method": "GET",
+      "route": "/candidates/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/candidates/9223372036854775807/",
+      "status": "PASS"
+    },
+    {
+      "id": "role-/candidates/{pk}/",
+      "method": "GET",
+      "route": "/candidates/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/candidates/{pk}/resume.pdf",
+      "method": "GET",
+      "route": "/candidates/{pk}/resume.pdf",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/candidates/9223372036854775807/resume.pdf",
+      "status": "PASS"
+    },
+    {
+      "id": "role-/candidates/{pk}/resume.pdf",
+      "method": "GET",
+      "route": "/candidates/{pk}/resume.pdf",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/invitations/",
+      "method": "GET",
+      "route": "/invitations/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/invitations/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/invitations/",
+      "method": "GET",
+      "route": "/invitations/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/invitations/",
+      "method": "GET",
+      "route": "/invitations/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/invitations/send/",
+      "method": "POST",
+      "route": "/invitations/send/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/invitations/send/",
+      "status": "PASS"
+    },
+    {
+      "id": "role-/invitations/send/",
+      "method": "POST",
+      "route": "/invitations/send/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/invitations/{pk}/accept/",
+      "method": "POST",
+      "route": "/invitations/{pk}/accept/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/invitations/9223372036854775807/accept/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/invitations/{pk}/accept/",
+      "method": "POST",
+      "route": "/invitations/{pk}/accept/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/invitations/{pk}/accept/",
+      "method": "POST",
+      "route": "/invitations/{pk}/accept/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/invitations/{pk}/accept/",
+      "method": "POST",
+      "route": "/invitations/{pk}/accept/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/invitations/{pk}/decline/",
+      "method": "POST",
+      "route": "/invitations/{pk}/decline/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/invitations/9223372036854775807/decline/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/invitations/{pk}/decline/",
+      "method": "POST",
+      "route": "/invitations/{pk}/decline/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/invitations/{pk}/decline/",
+      "method": "POST",
+      "route": "/invitations/{pk}/decline/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/invitations/{pk}/decline/",
+      "method": "POST",
+      "route": "/invitations/{pk}/decline/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/assessments/",
+      "method": "GET",
+      "route": "/assessments/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/assessments/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/assessments/",
+      "method": "GET",
+      "route": "/assessments/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/assessments/",
+      "method": "GET",
+      "route": "/assessments/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/assessments/",
+      "method": "GET",
+      "route": "/assessments/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/assessments/start/",
+      "method": "POST",
+      "route": "/assessments/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/assessments/start/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/assessments/start/",
+      "method": "POST",
+      "route": "/assessments/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/assessments/start/",
+      "method": "POST",
+      "route": "/assessments/start/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/assessments/start/",
+      "method": "POST",
+      "route": "/assessments/start/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/assessments/{pk}/",
+      "method": "GET",
+      "route": "/assessments/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/assessments/9223372036854775807/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/assessments/{pk}/",
+      "method": "GET",
+      "route": "/assessments/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/assessments/{pk}/",
+      "method": "GET",
+      "route": "/assessments/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/assessments/{pk}/",
+      "method": "GET",
+      "route": "/assessments/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/assessments/{pk}/answer/",
+      "method": "POST",
+      "route": "/assessments/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/assessments/9223372036854775807/answer/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/assessments/{pk}/answer/",
+      "method": "POST",
+      "route": "/assessments/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/assessments/{pk}/answer/",
+      "method": "POST",
+      "route": "/assessments/{pk}/answer/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/assessments/{pk}/answer/",
+      "method": "POST",
+      "route": "/assessments/{pk}/answer/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/assessments/{pk}/finish/",
+      "method": "POST",
+      "route": "/assessments/{pk}/finish/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/assessments/9223372036854775807/finish/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/assessments/{pk}/finish/",
+      "method": "POST",
+      "route": "/assessments/{pk}/finish/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/assessments/{pk}/finish/",
+      "method": "POST",
+      "route": "/assessments/{pk}/finish/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "role-/assessments/{pk}/finish/",
+      "method": "POST",
+      "route": "/assessments/{pk}/finish/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/assessments/{pk}/proof/",
+      "method": "GET",
+      "route": "/assessments/{pk}/proof/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/assessments/9223372036854775807/proof/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/assessments/{pk}/proof/",
+      "method": "GET",
+      "route": "/assessments/{pk}/proof/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/assessments/{pk}/proof/",
+      "method": "GET",
+      "route": "/assessments/{pk}/proof/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/assistant/",
+      "method": "GET",
+      "route": "/assistant/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/assistant/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/assistant/",
+      "method": "GET",
+      "route": "/assistant/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/assistant/",
+      "method": "GET",
+      "route": "/assistant/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "auth-/assistant/drafts/{pk}/",
+      "method": "GET",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/assistant/drafts/9223372036854775807/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-guard-/assistant/drafts/{pk}/",
+      "method": "GET",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/consent/",
+      "status": "PASS"
+    },
+    {
+      "id": "email-guard-/assistant/drafts/{pk}/",
+      "method": "GET",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-invalid-post",
+      "method": "POST",
+      "route": "/profile/privacy/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "register-form",
+      "method": "GET",
+      "route": "/accounts/register/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "register-csrf",
+      "method": "POST",
+      "route": "/accounts/register/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "register-invalid",
+      "method": "POST",
+      "route": "/accounts/register/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "register-valid",
+      "method": "POST",
+      "route": "/accounts/register/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/confirm/",
+      "status": "PASS"
+    },
+    {
+      "id": "confirm-form",
+      "method": "GET",
+      "route": "/accounts/confirm/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "confirm-invalid",
+      "method": "POST",
+      "route": "/accounts/confirm/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "confirm-valid",
+      "method": "POST",
+      "route": "/accounts/confirm/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/",
+      "status": "PASS"
+    },
+    {
+      "id": "confirm-repeat",
+      "method": "POST",
+      "route": "/accounts/confirm/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "register-duplicate",
+      "method": "POST",
+      "route": "/accounts/register/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "consent-form",
+      "method": "GET",
+      "route": "/accounts/consent/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "consent-invalid",
+      "method": "POST",
+      "route": "/accounts/consent/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "consent-valid",
+      "method": "POST",
+      "route": "/accounts/consent/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/",
+      "status": "PASS"
+    },
+    {
+      "id": "consent-repeat",
+      "method": "POST",
+      "route": "/accounts/consent/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/",
+      "status": "PASS"
+    },
+    {
+      "id": "login-get",
+      "method": "GET",
+      "route": "/accounts/login/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "login-invalid",
+      "method": "POST",
+      "route": "/accounts/login/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "login-valid-safe-next",
+      "method": "POST",
+      "route": "/accounts/login/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/",
+      "status": "PASS"
+    },
+    {
+      "id": "login-head",
+      "method": "HEAD",
+      "route": "/accounts/login/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "login-options",
+      "method": "OPTIONS",
+      "route": "/accounts/login/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "logout-options",
+      "method": "OPTIONS",
+      "route": "/accounts/logout/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "logout-csrf",
+      "method": "POST",
+      "route": "/accounts/logout/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "logout-valid",
+      "method": "POST",
+      "route": "/accounts/logout/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/",
+      "status": "PASS"
+    },
+    {
+      "id": "logout-repeat",
+      "method": "POST",
+      "route": "/accounts/logout/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/",
+      "status": "PASS"
+    },
+    {
+      "id": "profile-invalid",
+      "method": "POST",
+      "route": "/profile/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "profile-valid",
+      "method": "POST",
+      "route": "/profile/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/profile/",
+      "status": "PASS"
+    },
+    {
+      "id": "profile-json-ignored",
+      "method": "POST",
+      "route": "/profile/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "fsp-connect-invalid",
+      "method": "POST",
+      "route": "/profile/fsp/link/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "fsp-connect-DEMO-001",
+      "method": "POST",
+      "route": "/profile/fsp/link/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/profile/fsp/link/",
+      "status": "PASS"
+    },
+    {
+      "id": "fsp-json-demo_history",
+      "method": "GET",
+      "route": "/profile/fsp/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "fsp-connect-DEMO-EMPTY",
+      "method": "POST",
+      "route": "/profile/fsp/link/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/profile/fsp/link/",
+      "status": "PASS"
+    },
+    {
+      "id": "fsp-json-no_history",
+      "method": "GET",
+      "route": "/profile/fsp/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "fsp-connect-DEMO-DOWN",
+      "method": "POST",
+      "route": "/profile/fsp/link/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/profile/fsp/link/",
+      "status": "PASS"
+    },
+    {
+      "id": "fsp-json-unavailable",
+      "method": "GET",
+      "route": "/profile/fsp/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "fsp-unlink",
+      "method": "POST",
+      "route": "/profile/fsp/link/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/profile/fsp/link/",
+      "status": "PASS"
+    },
+    {
+      "id": "fsp-json-disconnected",
+      "method": "GET",
+      "route": "/profile/fsp/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "company-invalid",
+      "method": "POST",
+      "route": "/company/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "company-valid",
+      "method": "POST",
+      "route": "/company/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/company/",
+      "status": "PASS"
+    },
+    {
+      "id": "need-invalid",
+      "method": "POST",
+      "route": "/company/needs/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "need-valid",
+      "method": "POST",
+      "route": "/company/needs/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/candidates/",
+      "status": "PASS"
+    },
+    {
+      "id": "team-add",
+      "method": "POST",
+      "route": "/company/team/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/company/dashboard/",
+      "status": "PASS"
+    },
+    {
+      "id": "team-assign",
+      "method": "POST",
+      "route": "/company/team/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/company/dashboard/",
+      "status": "PASS"
+    },
+    {
+      "id": "team-invalid",
+      "method": "POST",
+      "route": "/company/team/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/company/dashboard/",
+      "status": "PASS"
+    },
+    {
+      "id": "team-unknown",
+      "method": "POST",
+      "route": "/company/team/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "dashboard-filter",
+      "method": "GET",
+      "route": "/company/dashboard/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "dashboard-invalid-period",
+      "method": "GET",
+      "route": "/company/dashboard/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "token-invalid",
+      "method": "POST",
+      "route": "/accounts/integrations/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "token-create",
+      "method": "POST",
+      "route": "/accounts/integrations/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "token-revoke",
+      "method": "POST",
+      "route": "/accounts/integrations/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/integrations/",
+      "status": "PASS"
+    },
+    {
+      "id": "token-revoke-repeat",
+      "method": "POST",
+      "route": "/accounts/integrations/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/integrations/",
+      "status": "PASS"
+    },
+    {
+      "id": "token-revoke-foreign",
+      "method": "POST",
+      "route": "/accounts/integrations/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "start-invalid",
+      "method": "POST",
+      "route": "/assessments/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/",
+      "status": "PASS"
+    },
+    {
+      "id": "start-valid",
+      "method": "POST",
+      "route": "/assessments/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "start-reuse",
+      "method": "POST",
+      "route": "/assessments/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "attempt-active",
+      "method": "GET",
+      "route": "/assessments/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-active",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "proof-active",
+      "method": "GET",
+      "route": "/assessments/{pk}/proof/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "answer-invalid",
+      "method": "POST",
+      "route": "/assessments/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "answer-valid",
+      "method": "POST",
+      "route": "/assessments/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "finish-valid",
+      "method": "POST",
+      "route": "/assessments/{pk}/finish/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "finish-repeat",
+      "method": "POST",
+      "route": "/assessments/{pk}/finish/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "start-cooldown",
+      "method": "POST",
+      "route": "/assessments/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/",
+      "status": "PASS"
+    },
+    {
+      "id": "filter-invalid",
+      "method": "GET",
+      "route": "/candidates/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "need-id-²",
+      "method": "GET",
+      "route": "/candidates/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "need-id--1",
+      "method": "GET",
+      "route": "/candidates/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "need-id-9999999999",
+      "method": "GET",
+      "route": "/candidates/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "need-id-2",
+      "method": "GET",
+      "route": "/candidates/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-profile",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "draft-get",
+      "method": "GET",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "draft-invalid",
+      "method": "POST",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "draft-apply-profile",
+      "method": "POST",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/profile/",
+      "status": "PASS"
+    },
+    {
+      "id": "draft-repeat-profile",
+      "method": "POST",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/profile/",
+      "status": "PASS"
+    },
+    {
+      "id": "generate-stale",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "draft-stale",
+      "method": "POST",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "generate-expired",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "draft-expired",
+      "method": "POST",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 410,
+      "actual_status": 410,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "draft-foreign",
+      "method": "GET",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-result",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-result-empty",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-role",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-need",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "draft-apply-need",
+      "method": "POST",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/company/needs/",
+      "status": "PASS"
+    },
+    {
+      "id": "draft-repeat-need",
+      "method": "POST",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/company/needs/",
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-matching",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-matching-missing",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-invitation",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-invitation-missing",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "send-valid",
+      "method": "POST",
+      "route": "/invitations/send/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/invitations/",
+      "status": "PASS"
+    },
+    {
+      "id": "send-repeat",
+      "method": "POST",
+      "route": "/invitations/send/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/invitations/",
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-conversation-candidate",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "assistant-conversation-employer",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-partial-get",
+      "method": "GET",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-complete-foreign",
+      "method": "GET",
+      "route": "/assistant/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "conversation-foreign",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "candidate-before-contact",
+      "method": "GET",
+      "route": "/candidates/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "accept-foreign",
+      "method": "POST",
+      "route": "/invitations/{pk}/accept/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "accept-valid",
+      "method": "POST",
+      "route": "/invitations/{pk}/accept/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/invitations/",
+      "status": "PASS"
+    },
+    {
+      "id": "accept-repeat",
+      "method": "POST",
+      "route": "/invitations/{pk}/accept/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/invitations/",
+      "status": "PASS"
+    },
+    {
+      "id": "decline-conflict",
+      "method": "POST",
+      "route": "/invitations/{pk}/decline/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/invitations/",
+      "status": "PASS"
+    },
+    {
+      "id": "candidate-after-contact",
+      "method": "GET",
+      "route": "/candidates/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "candidate-other-company",
+      "method": "GET",
+      "route": "/candidates/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "proof-employer",
+      "method": "GET",
+      "route": "/assessments/{pk}/proof/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "send-for-decline",
+      "method": "POST",
+      "route": "/invitations/send/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/invitations/",
+      "status": "PASS"
+    },
+    {
+      "id": "decline-valid",
+      "method": "POST",
+      "route": "/invitations/{pk}/decline/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/invitations/",
+      "status": "PASS"
+    },
+    {
+      "id": "decline-repeat",
+      "method": "POST",
+      "route": "/invitations/{pk}/decline/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/invitations/",
+      "status": "PASS"
+    },
+    {
+      "id": "answer-expired",
+      "method": "POST",
+      "route": "/assessments/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/2/",
+      "status": "PASS"
+    },
+    {
+      "id": "finish-expired",
+      "method": "POST",
+      "route": "/assessments/{pk}/finish/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/assessments/2/",
+      "status": "PASS"
+    },
+    {
+      "id": "send-email-missing",
+      "method": "POST",
+      "route": "/invitations/send/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/company/",
+      "status": "PASS"
+    },
+    {
+      "id": "send-proof-invalid",
+      "method": "POST",
+      "route": "/invitations/send/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/candidates/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "send-id-invalid",
+      "method": "POST",
+      "route": "/invitations/send/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "provider-failure",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 503,
+      "actual_status": 503,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "provider-limit",
+      "method": "POST",
+      "route": "/assistant/",
+      "expected_status": 429,
+      "actual_status": 429,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "health-unavailable",
+      "method": "GET",
+      "route": "/health/",
+      "expected_status": 503,
+      "actual_status": 503,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-dashboard-ios",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-lesson-ios",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-unchecked-ios",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/ios/lessons/Junior/swift/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-complete-ios",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/ios/lessons/Junior/swift/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-repeat-ios",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/ios/lessons/Junior/swift/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-start-ios",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/1/?question=0",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-start-reuse-ios",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/1/?question=0",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-question-ios",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-ios-1",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-ios8",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-iosbad",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-foreign-ios",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-no-csrf-ios",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-invalid-atomic-ios",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-pause-ios",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/?track=ios&grade=Junior",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-finish-ios",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-finish-repeat-ios",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-review-ios",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-dashboard-android",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-lesson-android",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-unchecked-android",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/android/lessons/Junior/kotlin/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-complete-android",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/android/lessons/Junior/kotlin/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-repeat-android",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/android/lessons/Junior/kotlin/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-start-android",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/2/?question=0",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-start-reuse-android",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/2/?question=0",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-question-android",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-android-1",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-android8",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-androidbad",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-foreign-android",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-no-csrf-android",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-invalid-atomic-android",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/2/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-pause-android",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/?track=android&grade=Junior",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-finish-android",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/2/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-finish-repeat-android",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/2/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-review-android",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-dashboard-flutter",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-lesson-flutter",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-unchecked-flutter",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/flutter/lessons/Junior/dart/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-complete-flutter",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/flutter/lessons/Junior/dart/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-repeat-flutter",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/flutter/lessons/Junior/dart/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-start-flutter",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/3/?question=0",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-start-reuse-flutter",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/3/?question=0",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-question-flutter",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-flutter-1",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-flutter8",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-flutterbad",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-foreign-flutter",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-no-csrf-flutter",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-invalid-atomic-flutter",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/3/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-pause-flutter",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/?track=flutter&grade=Junior",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-finish-flutter",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/3/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-finish-repeat-flutter",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/3/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-review-flutter",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-dashboard-aurora",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-lesson-aurora",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-unchecked-aurora",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/aurora/lessons/Junior/cpp-qt/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-complete-aurora",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/aurora/lessons/Junior/cpp-qt/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-repeat-aurora",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/aurora/lessons/Junior/cpp-qt/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-start-aurora",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/4/?question=0",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-start-reuse-aurora",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/4/?question=0",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-question-aurora",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-aurora-1",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-aurora8",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-index-aurorabad",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-foreign-aurora",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-no-csrf-aurora",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-invalid-atomic-aurora",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/4/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-pause-aurora",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/?track=aurora&grade=Junior",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-finish-aurora",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/4/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-finish-repeat-aurora",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/4/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-review-aurora",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-legacy-lesson",
+      "method": "GET",
+      "route": "/learning/lessons/{grade}/{topic}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-legacy-complete",
+      "method": "POST",
+      "route": "/learning/lessons/{grade}/{topic}/complete/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/tracks/ios/lessons/Junior/swift/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-track-invalid",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-grade-fallback",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-start-invalid",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-source-foreign",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-source-malformed",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-repeat-errors",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/6/?question=0",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-repeat-finish",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/sessions/6/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-repeat-no-errors",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/learning/",
+      "status": "PASS"
+    },
+    {
+      "id": "learning-exam-dashboard",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-exam-lock-/learning/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/lessons/{grade}/{topic}/",
+      "expected_status": 423,
+      "actual_status": 423,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-exam-lock-/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 423,
+      "actual_status": 423,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-exam-lock-/learning/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/lessons/{grade}/{topic}/complete/",
+      "expected_status": 423,
+      "actual_status": 423,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-exam-lock-/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "method": "POST",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 423,
+      "actual_status": 423,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-exam-lock-/learning/start/",
+      "method": "POST",
+      "route": "/learning/start/",
+      "expected_status": 423,
+      "actual_status": 423,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-exam-lock-/learning/sessions/{pk}/",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 423,
+      "actual_status": 423,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "learning-exam-lock-/learning/sessions/{pk}/answer/",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 423,
+      "actual_status": 423,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-prepare-profile",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-own-read",
+      "method": "GET",
+      "route": "/api/v1/drafts/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-foreign-api",
+      "method": "GET",
+      "route": "/api/v1/drafts/{pk}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-foreign-web",
+      "method": "GET",
+      "route": "/drafts/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-apply-bearer-no-session",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/drafts/8e8d3886-d354-4c3d-af75-4bdabbf4c349/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-apply-no-csrf",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-apply-unacknowledged",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-no-api-apply",
+      "method": "POST",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-profile-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/8e8d3886-d354-4c3d-af75-4bdabbf4c349/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-applied-repeat-expired",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/8e8d3886-d354-4c3d-af75-4bdabbf4c349/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-cancel-applied",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-stale-prepare",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-stale-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-expired-prepare",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-expired-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 410,
+      "actual_status": 410,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-cancelled-prepare",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-cancel-web",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/16ef1006-2106-42aa-b3ed-92665b315fba/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-cancelled-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-cancel-prepare",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-cancel",
+      "method": "POST",
+      "route": "/api/v1/drafts/{pk}/cancel",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-cancel-repeat",
+      "method": "POST",
+      "route": "/api/v1/drafts/{pk}/cancel",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-cancel-body-invalid",
+      "method": "POST",
+      "route": "/api/v1/drafts/{pk}/cancel",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-json-media-invalid",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-json-array-invalid",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-body-fields-invalid",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-role-invalid",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-scope-invalid",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-mcp-contact-rejected",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-mcp-safe",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-mcp-projection",
+      "method": "GET",
+      "route": "/api/v1/drafts/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-experience",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-experience-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/3ef835f5-5fd7-4035-90d1-4a31d4f59843/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-profile.unpublish",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-profile.unpublish-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/dcfe55e6-c692-4a29-a028-00da3bb17800/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-profile.publish",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-publication-consent-missing",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-profile.publish-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/321dcf6f-23c9-4e30-877e-c7d0091c7460/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-company",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-company-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/e8181b6a-f8d0-4c27-b692-56a3313e9e83/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-need-create",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-need-create-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/2139d284-0aad-4a23-bc65-6e6682d06454/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-need-update",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-need-update-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/f99d1a0e-a0d4-44ec-9f52-c6dd581eddf4/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-foreign-hr-rejected",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-hr-unassign",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-hr-edit-browser",
+      "method": "GET",
+      "route": "/drafts/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-hr-unassign-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/d5c02d3c-52db-4b85-9f70-dd00570933cb/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-need-invalid-salary",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-invitation-send",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-invitation-send-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/3bd5c35d-a591-453f-8451-9f4153f17c86/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-invitation-duplicate",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-invitation-accept",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-invitation-accept-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/804586e8-3f63-49c7-81cc-a19d650d1814/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-send-for-decline",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-send-for-decline-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/8c7f45b6-77d0-4085-ae83-abd9dd0bbffa/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-decline",
+      "method": "POST",
+      "route": "/api/v1/drafts",
+      "expected_status": 201,
+      "actual_status": 201,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-decline-apply",
+      "method": "POST",
+      "route": "/drafts/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/drafts/c8dd0479-1ee2-4829-98f9-0485bde7dcac/",
+      "status": "PASS"
+    },
+    {
+      "id": "v2-invalid-bad",
+      "method": "GET",
+      "route": "/api/v1/drafts/{pk}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-invalid-baaf5588-e6ac-4f04-ba00-6f039cb60206",
+      "method": "GET",
+      "route": "/api/v1/drafts/{pk}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "v2-draft-pagination",
+      "method": "GET",
+      "route": "/api/v1/drafts",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-offer-form",
+      "method": "GET",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-offer-wrong-role",
+      "method": "GET",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-offer-foreign",
+      "method": "GET",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-offer-csrf",
+      "method": "POST",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-offer-invalid-skill",
+      "method": "POST",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-offer-valid",
+      "method": "POST",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-offer-repeat",
+      "method": "POST",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-offer-immutable",
+      "method": "POST",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-rules-before-consent",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-foreign-detail",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-accept-csrf",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-accept-no-ack",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-accept",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-accept-repeat",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-save-draft",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-draft-company-hidden",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-stale-draft",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-submit",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-submit-repeat",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-company-reads-submitted",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-review-wrong-role",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-review-bad-score",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-review",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-review-repeat",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-review-immutable",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-credit",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-credit-repeat",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-api-http-challenge-candidate",
+      "method": "GET",
+      "route": "/api/v1/challenges/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-api-list-http-challenge-candidate",
+      "method": "GET",
+      "route": "/api/v1/challenges",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-api-http-challenge-employer",
+      "method": "GET",
+      "route": "/api/v1/challenges/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-api-list-http-challenge-employer",
+      "method": "GET",
+      "route": "/api/v1/challenges",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-api-foreign",
+      "method": "GET",
+      "route": "/api/v1/challenges/{pk}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-api-write-forbidden",
+      "method": "POST",
+      "route": "/api/v1/challenges/{pk}",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-expiry-fixture-offer",
+      "method": "POST",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/2/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-expired-accept",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 409,
+      "actual_status": 409,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-decline-fixture-offer",
+      "method": "POST",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/3/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-decline",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/3/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-decline-repeat",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/3/",
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/challenges",
+      "method": "GET",
+      "route": "/api/v1/challenges",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/challenges",
+      "method": "GET",
+      "route": "/api/v1/challenges",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/challenges",
+      "method": "PUT",
+      "route": "/api/v1/challenges",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/challenges/{pk}",
+      "method": "GET",
+      "route": "/api/v1/challenges/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/challenges/{pk}",
+      "method": "GET",
+      "route": "/api/v1/challenges/{pk}",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/challenges/{pk}",
+      "method": "PUT",
+      "route": "/api/v1/challenges/{pk}",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/me/privacy",
+      "method": "GET",
+      "route": "/api/v1/me/privacy",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/me/privacy",
+      "method": "GET",
+      "route": "/api/v1/me/privacy",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/me/privacy",
+      "method": "PUT",
+      "route": "/api/v1/me/privacy",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/me",
+      "method": "GET",
+      "route": "/api/v1/me",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/me",
+      "method": "GET",
+      "route": "/api/v1/me",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/me",
+      "method": "PUT",
+      "route": "/api/v1/me",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/catalog",
+      "method": "GET",
+      "route": "/api/v1/catalog",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/catalog",
+      "method": "GET",
+      "route": "/api/v1/catalog",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/catalog",
+      "method": "PUT",
+      "route": "/api/v1/catalog",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/me/profile",
+      "method": "GET",
+      "route": "/api/v1/me/profile",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/me/profile",
+      "method": "GET",
+      "route": "/api/v1/me/profile",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/me/profile",
+      "method": "PUT",
+      "route": "/api/v1/me/profile",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/me/profile/private",
+      "method": "GET",
+      "route": "/api/v1/me/profile/private",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/me/profile/private",
+      "method": "GET",
+      "route": "/api/v1/me/profile/private",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/me/profile/private",
+      "method": "PUT",
+      "route": "/api/v1/me/profile/private",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/me/assessments",
+      "method": "GET",
+      "route": "/api/v1/me/assessments",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/me/assessments",
+      "method": "GET",
+      "route": "/api/v1/me/assessments",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/me/assessments",
+      "method": "PUT",
+      "route": "/api/v1/me/assessments",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/me/assessments/{pk}/result",
+      "method": "GET",
+      "route": "/api/v1/me/assessments/{pk}/result",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/me/assessments/{pk}/result",
+      "method": "GET",
+      "route": "/api/v1/me/assessments/{pk}/result",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/me/assessments/{pk}/result",
+      "method": "PUT",
+      "route": "/api/v1/me/assessments/{pk}/result",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/me/achievements",
+      "method": "GET",
+      "route": "/api/v1/me/achievements",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/me/achievements",
+      "method": "GET",
+      "route": "/api/v1/me/achievements",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/me/achievements",
+      "method": "PUT",
+      "route": "/api/v1/me/achievements",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/me/company",
+      "method": "GET",
+      "route": "/api/v1/me/company",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/me/company",
+      "method": "GET",
+      "route": "/api/v1/me/company",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/me/company",
+      "method": "PUT",
+      "route": "/api/v1/me/company",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/needs",
+      "method": "GET",
+      "route": "/api/v1/needs",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/needs",
+      "method": "GET",
+      "route": "/api/v1/needs",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/needs",
+      "method": "PUT",
+      "route": "/api/v1/needs",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/needs/{pk}",
+      "method": "GET",
+      "route": "/api/v1/needs/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/needs/{pk}",
+      "method": "GET",
+      "route": "/api/v1/needs/{pk}",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/needs/{pk}",
+      "method": "PUT",
+      "route": "/api/v1/needs/{pk}",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/candidates",
+      "method": "GET",
+      "route": "/api/v1/candidates",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/candidates",
+      "method": "GET",
+      "route": "/api/v1/candidates",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/candidates",
+      "method": "PUT",
+      "route": "/api/v1/candidates",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/candidates/{pk}",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/candidates/{pk}",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/candidates/{pk}",
+      "method": "PUT",
+      "route": "/api/v1/candidates/{pk}",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/candidates/{pk}/proofs",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}/proofs",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/candidates/{pk}/proofs",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}/proofs",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/candidates/{pk}/proofs",
+      "method": "PUT",
+      "route": "/api/v1/candidates/{pk}/proofs",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/candidates/{pk}/private",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}/private",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/candidates/{pk}/private",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}/private",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/candidates/{pk}/private",
+      "method": "PUT",
+      "route": "/api/v1/candidates/{pk}/private",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/invitations",
+      "method": "GET",
+      "route": "/api/v1/invitations",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/invitations",
+      "method": "GET",
+      "route": "/api/v1/invitations",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/invitations",
+      "method": "PUT",
+      "route": "/api/v1/invitations",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/invitations/{pk}",
+      "method": "GET",
+      "route": "/api/v1/invitations/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/invitations/{pk}",
+      "method": "GET",
+      "route": "/api/v1/invitations/{pk}",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/invitations/{pk}",
+      "method": "PUT",
+      "route": "/api/v1/invitations/{pk}",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/invitations/{pk}/contacts",
+      "method": "GET",
+      "route": "/api/v1/invitations/{pk}/contacts",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/invitations/{pk}/contacts",
+      "method": "GET",
+      "route": "/api/v1/invitations/{pk}/contacts",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/invitations/{pk}/contacts",
+      "method": "PUT",
+      "route": "/api/v1/invitations/{pk}/contacts",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/me/profile/resume.pdf",
+      "method": "GET",
+      "route": "/api/v1/me/profile/resume.pdf",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/pdf",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/me/profile/resume.pdf",
+      "method": "GET",
+      "route": "/api/v1/me/profile/resume.pdf",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/me/profile/resume.pdf",
+      "method": "PUT",
+      "route": "/api/v1/me/profile/resume.pdf",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/candidates/{pk}/resume.pdf",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}/resume.pdf",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/pdf",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/candidates/{pk}/resume.pdf",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}/resume.pdf",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/candidates/{pk}/resume.pdf",
+      "method": "PUT",
+      "route": "/api/v1/candidates/{pk}/resume.pdf",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/drafts",
+      "method": "GET",
+      "route": "/api/v1/drafts",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/drafts",
+      "method": "GET",
+      "route": "/api/v1/drafts",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/drafts",
+      "method": "PUT",
+      "route": "/api/v1/drafts",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/drafts/{pk}",
+      "method": "GET",
+      "route": "/api/v1/drafts/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/drafts/{pk}",
+      "method": "GET",
+      "route": "/api/v1/drafts/{pk}",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/drafts/{pk}",
+      "method": "PUT",
+      "route": "/api/v1/drafts/{pk}",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/openapi.json",
+      "method": "GET",
+      "route": "/api/v1/openapi.json",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/openapi.json",
+      "method": "GET",
+      "route": "/api/v1/openapi.json",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/openapi.json",
+      "method": "PUT",
+      "route": "/api/v1/openapi.json",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/",
+      "method": "GET",
+      "route": "/api/v1/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/",
+      "method": "GET",
+      "route": "/api/v1/",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/",
+      "method": "PUT",
+      "route": "/api/v1/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-POST/api/v1/",
+      "method": "POST",
+      "route": "/api/v1/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-PATCH/api/v1/",
+      "method": "PATCH",
+      "route": "/api/v1/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-DELETE/api/v1/",
+      "method": "DELETE",
+      "route": "/api/v1/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-HEAD/api/v1/",
+      "method": "HEAD",
+      "route": "/api/v1/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-OPTIONS/api/v1/",
+      "method": "OPTIONS",
+      "route": "/api/v1/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-trace-/api/v1/",
+      "method": "TRACE",
+      "route": "/api/v1/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-read-/api/v1/{unknown}",
+      "method": "GET",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-no-token-/api/v1/{unknown}",
+      "method": "GET",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-put-/api/v1/{unknown}",
+      "method": "PUT",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-POST/api/v1/{unknown}",
+      "method": "POST",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-PATCH/api/v1/{unknown}",
+      "method": "PATCH",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-DELETE/api/v1/{unknown}",
+      "method": "DELETE",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-HEAD/api/v1/{unknown}",
+      "method": "HEAD",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-OPTIONS/api/v1/{unknown}",
+      "method": "OPTIONS",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-fallback-trace-/api/v1/{unknown}",
+      "method": "TRACE",
+      "route": "/api/v1/{unknown}",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-mcp-private",
+      "method": "GET",
+      "route": "/api/v1/me/profile/private",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-mcp-pdf",
+      "method": "GET",
+      "route": "/api/v1/me/profile/resume.pdf",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-other-company-contacts",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}/private",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-invalid-id",
+      "method": "GET",
+      "route": "/api/v1/needs/{pk}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-invalid-pagination",
+      "method": "GET",
+      "route": "/api/v1/needs",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-rate-limit",
+      "method": "GET",
+      "route": "/api/v1/me",
+      "expected_status": 429,
+      "actual_status": 429,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "api-revoked",
+      "method": "GET",
+      "route": "/api/v1/me",
+      "expected_status": 401,
+      "actual_status": 401,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/challenges/",
+      "method": "GET",
+      "route": "/challenges/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/challenges/",
+      "method": "HEAD",
+      "route": "/challenges/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/challenges/",
+      "method": "PUT",
+      "route": "/challenges/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/challenges/{pk}/",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/challenges/{pk}/",
+      "method": "PUT",
+      "route": "/challenges/{pk}/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/challenges/{pk}/",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/invitations/{pk}/challenge/",
+      "method": "GET",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/invitations/{pk}/challenge/",
+      "method": "PUT",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/invitations/{pk}/challenge/",
+      "method": "GET",
+      "route": "/invitations/{pk}/challenge/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/drafts/",
+      "method": "GET",
+      "route": "/drafts/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/drafts/",
+      "method": "PUT",
+      "route": "/drafts/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/drafts/{pk}/",
+      "method": "GET",
+      "route": "/drafts/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/drafts/{pk}/",
+      "method": "PUT",
+      "route": "/drafts/{pk}/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/drafts/{pk}/",
+      "method": "GET",
+      "route": "/drafts/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/learning/",
+      "method": "GET",
+      "route": "/learning/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/learning/",
+      "method": "PUT",
+      "route": "/learning/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/learning/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/lessons/{grade}/{topic}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/learning/lessons/{grade}/{topic}/",
+      "method": "PUT",
+      "route": "/learning/lessons/{grade}/{topic}/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "method": "GET",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "method": "PUT",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/learning/lessons/{grade}/{topic}/complete/",
+      "method": "PUT",
+      "route": "/learning/lessons/{grade}/{topic}/complete/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "method": "PUT",
+      "route": "/learning/tracks/{track}/lessons/{grade}/{topic}/complete/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/learning/start/",
+      "method": "PUT",
+      "route": "/learning/start/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/learning/sessions/{pk}/",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/learning/sessions/{pk}/",
+      "method": "PUT",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/learning/sessions/{pk}/",
+      "method": "GET",
+      "route": "/learning/sessions/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/learning/sessions/{pk}/answer/",
+      "method": "PUT",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/learning/sessions/{pk}/answer/",
+      "method": "POST",
+      "route": "/learning/sessions/{pk}/answer/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/accounts/integrations/",
+      "method": "GET",
+      "route": "/accounts/integrations/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/accounts/integrations/",
+      "method": "PUT",
+      "route": "/accounts/integrations/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/company/dashboard/",
+      "method": "GET",
+      "route": "/company/dashboard/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/company/dashboard/",
+      "method": "PUT",
+      "route": "/company/dashboard/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/company/team/",
+      "method": "PUT",
+      "route": "/company/team/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/downloads/{filename}",
+      "method": "GET",
+      "route": "/downloads/{filename}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/downloads/{filename}",
+      "method": "HEAD",
+      "route": "/downloads/{filename}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/downloads/{filename}",
+      "method": "PUT",
+      "route": "/downloads/{filename}",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/",
+      "method": "GET",
+      "route": "/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/",
+      "method": "HEAD",
+      "route": "/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/",
+      "method": "PUT",
+      "route": "/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/accounts/privacy/",
+      "method": "GET",
+      "route": "/accounts/privacy/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/accounts/privacy/",
+      "method": "HEAD",
+      "route": "/accounts/privacy/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/accounts/privacy/",
+      "method": "PUT",
+      "route": "/accounts/privacy/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/accounts/register/",
+      "method": "GET",
+      "route": "/accounts/register/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/accounts/register/",
+      "method": "PUT",
+      "route": "/accounts/register/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "pending-create",
+      "method": "POST",
+      "route": "/accounts/register/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/confirm/",
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/accounts/confirm/",
+      "method": "GET",
+      "route": "/accounts/confirm/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/accounts/confirm/",
+      "method": "PUT",
+      "route": "/accounts/confirm/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/accounts/login/",
+      "method": "GET",
+      "route": "/accounts/login/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/accounts/login/",
+      "method": "HEAD",
+      "route": "/accounts/login/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/accounts/login/",
+      "method": "PUT",
+      "route": "/accounts/login/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/accounts/logout/",
+      "method": "PUT",
+      "route": "/accounts/logout/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/accounts/consent/",
+      "method": "GET",
+      "route": "/accounts/consent/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/accounts/consent/",
+      "method": "PUT",
+      "route": "/accounts/consent/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/profile/privacy/",
+      "method": "GET",
+      "route": "/profile/privacy/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/profile/privacy/",
+      "method": "PUT",
+      "route": "/profile/privacy/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/profile/",
+      "method": "GET",
+      "route": "/profile/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/profile/",
+      "method": "PUT",
+      "route": "/profile/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/profile/resume.pdf",
+      "method": "GET",
+      "route": "/profile/resume.pdf",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/pdf",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/profile/resume.pdf",
+      "method": "HEAD",
+      "route": "/profile/resume.pdf",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/pdf",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/profile/resume.pdf",
+      "method": "PUT",
+      "route": "/profile/resume.pdf",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/profile/fsp/",
+      "method": "GET",
+      "route": "/profile/fsp/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/profile/fsp/",
+      "method": "HEAD",
+      "route": "/profile/fsp/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/profile/fsp/",
+      "method": "PUT",
+      "route": "/profile/fsp/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/profile/fsp/link/",
+      "method": "GET",
+      "route": "/profile/fsp/link/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/profile/fsp/link/",
+      "method": "PUT",
+      "route": "/profile/fsp/link/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/company/",
+      "method": "GET",
+      "route": "/company/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/company/",
+      "method": "PUT",
+      "route": "/company/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/company/needs/",
+      "method": "GET",
+      "route": "/company/needs/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/company/needs/",
+      "method": "PUT",
+      "route": "/company/needs/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/candidates/",
+      "method": "GET",
+      "route": "/candidates/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/candidates/",
+      "method": "HEAD",
+      "route": "/candidates/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/candidates/",
+      "method": "PUT",
+      "route": "/candidates/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/candidates/{pk}/",
+      "method": "GET",
+      "route": "/candidates/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/candidates/{pk}/",
+      "method": "HEAD",
+      "route": "/candidates/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/candidates/{pk}/",
+      "method": "PUT",
+      "route": "/candidates/{pk}/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/candidates/{pk}/",
+      "method": "GET",
+      "route": "/candidates/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/candidates/{pk}/resume.pdf",
+      "method": "GET",
+      "route": "/candidates/{pk}/resume.pdf",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/pdf",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/candidates/{pk}/resume.pdf",
+      "method": "HEAD",
+      "route": "/candidates/{pk}/resume.pdf",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/pdf",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/candidates/{pk}/resume.pdf",
+      "method": "PUT",
+      "route": "/candidates/{pk}/resume.pdf",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/candidates/{pk}/resume.pdf",
+      "method": "GET",
+      "route": "/candidates/{pk}/resume.pdf",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/invitations/",
+      "method": "GET",
+      "route": "/invitations/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/invitations/",
+      "method": "HEAD",
+      "route": "/invitations/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/invitations/",
+      "method": "PUT",
+      "route": "/invitations/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/invitations/send/",
+      "method": "PUT",
+      "route": "/invitations/send/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/invitations/{pk}/accept/",
+      "method": "PUT",
+      "route": "/invitations/{pk}/accept/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/invitations/{pk}/accept/",
+      "method": "POST",
+      "route": "/invitations/{pk}/accept/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/invitations/{pk}/decline/",
+      "method": "PUT",
+      "route": "/invitations/{pk}/decline/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/invitations/{pk}/decline/",
+      "method": "POST",
+      "route": "/invitations/{pk}/decline/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/assessments/",
+      "method": "GET",
+      "route": "/assessments/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/assessments/",
+      "method": "HEAD",
+      "route": "/assessments/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/assessments/",
+      "method": "PUT",
+      "route": "/assessments/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/assessments/start/",
+      "method": "PUT",
+      "route": "/assessments/start/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/assessments/{pk}/",
+      "method": "GET",
+      "route": "/assessments/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/assessments/{pk}/",
+      "method": "HEAD",
+      "route": "/assessments/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/assessments/{pk}/",
+      "method": "PUT",
+      "route": "/assessments/{pk}/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/assessments/{pk}/",
+      "method": "GET",
+      "route": "/assessments/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/assessments/{pk}/answer/",
+      "method": "PUT",
+      "route": "/assessments/{pk}/answer/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/assessments/{pk}/answer/",
+      "method": "POST",
+      "route": "/assessments/{pk}/answer/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/assessments/{pk}/finish/",
+      "method": "PUT",
+      "route": "/assessments/{pk}/finish/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/assessments/{pk}/finish/",
+      "method": "POST",
+      "route": "/assessments/{pk}/finish/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/assessments/{pk}/proof/",
+      "method": "GET",
+      "route": "/assessments/{pk}/proof/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/assessments/{pk}/proof/",
+      "method": "HEAD",
+      "route": "/assessments/{pk}/proof/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/assessments/{pk}/proof/",
+      "method": "PUT",
+      "route": "/assessments/{pk}/proof/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/assessments/{pk}/proof/",
+      "method": "GET",
+      "route": "/assessments/{pk}/proof/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/assistant/",
+      "method": "GET",
+      "route": "/assistant/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/assistant/",
+      "method": "PUT",
+      "route": "/assistant/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/assistant/drafts/{pk}/",
+      "method": "GET",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/assistant/drafts/{pk}/",
+      "method": "PUT",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-object-/assistant/drafts/{pk}/",
+      "method": "GET",
+      "route": "/assistant/drafts/{pk}/",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/health/",
+      "method": "GET",
+      "route": "/health/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/health/",
+      "method": "HEAD",
+      "route": "/health/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/health/",
+      "method": "PUT",
+      "route": "/health/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-GET-/version/",
+      "method": "GET",
+      "route": "/version/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "read-HEAD-/version/",
+      "method": "HEAD",
+      "route": "/version/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "method-PUT-/version/",
+      "method": "PUT",
+      "route": "/version/",
+      "expected_status": 405,
+      "actual_status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-owned-revoke",
+      "method": "POST",
+      "route": "/challenges/{pk}/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/challenges/1/",
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-revoked-company-safe",
+      "method": "GET",
+      "route": "/api/v1/challenges/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "challenge-revoked-company-body",
+      "method": "GET",
+      "route": "/challenges/{pk}/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-private-before",
+      "method": "GET",
+      "route": "/api/v1/invitations/{pk}/contacts",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-revoke-csrf",
+      "method": "POST",
+      "route": "/profile/privacy/",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-revoke-valid",
+      "method": "POST",
+      "route": "/profile/privacy/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/profile/privacy/",
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-revoke-repeat",
+      "method": "POST",
+      "route": "/profile/privacy/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/profile/privacy/",
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-private-denied",
+      "method": "GET",
+      "route": "/api/v1/invitations/{pk}/contacts",
+      "expected_status": 403,
+      "actual_status": 403,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-snapshot-redacted",
+      "method": "GET",
+      "route": "/api/v1/invitations/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-clear-bad-password",
+      "method": "POST",
+      "route": "/profile/privacy/",
+      "expected_status": 400,
+      "actual_status": 400,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-clear-valid",
+      "method": "POST",
+      "route": "/profile/privacy/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/",
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-clear-old-session",
+      "method": "GET",
+      "route": "/profile/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/accounts/login/?next=/profile/",
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-archive-null-candidate",
+      "method": "GET",
+      "route": "/api/v1/invitations/{pk}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-old-profile-denied",
+      "method": "GET",
+      "route": "/api/v1/candidates/{pk}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-delete-valid",
+      "method": "POST",
+      "route": "/profile/privacy/",
+      "expected_status": 302,
+      "actual_status": 302,
+      "content_type": "text/html; charset=utf-8",
+      "location": "/",
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-ledger-failure-health",
+      "method": "GET",
+      "route": "/health/",
+      "expected_status": 503,
+      "actual_status": 503,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-ledger-failure-browser",
+      "method": "GET",
+      "route": "/candidates/",
+      "expected_status": 503,
+      "actual_status": 503,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "privacy-ledger-failure-api",
+      "method": "GET",
+      "route": "/api/v1/me",
+      "expected_status": 503,
+      "actual_status": 503,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "download-fsp_client-0.1.0-py3-none-any.whl",
+      "method": "GET",
+      "route": "/downloads/{filename}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/octet-stream",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "download-fsp_client-0.1.0.tar.gz",
+      "method": "GET",
+      "route": "/downloads/{filename}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/gzip",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "download-manifest-integrity",
+      "method": "GET",
+      "route": "/downloads/{filename}",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "download-unknown",
+      "method": "GET",
+      "route": "/downloads/{filename}",
+      "expected_status": 404,
+      "actual_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "location": null,
+      "status": "PASS"
+    },
+    {
+      "id": "counterfactual-health-baseline",
+      "method": "GET",
+      "route": "/health/",
+      "expected_status": 200,
+      "actual_status": 200,
+      "content_type": "application/json",
+      "location": null,
+      "status": "PASS"
+    }
+  ],
+  "counterfactuals": [
+    {
+      "id": "removed-route",
+      "status": "PASS",
+      "meaning": "Rejected"
+    },
+    {
+      "id": "wrong-success-status",
+      "status": "PASS",
+      "meaning": "Rejected"
+    },
+    {
+      "id": "wrong-json-field",
+      "status": "PASS",
+      "meaning": "Rejected"
+    },
+    {
+      "id": "wrong-v2-request-field",
+      "status": "PASS",
+      "meaning": "Rejected"
+    }
+  ],
+  "status": "PASS",
+  "structure": {
+    "status": "PASS",
+    "paths": 76,
+    "operations": 122,
+    "validated_examples": 127,
+    "openapi": "3.1.1"
+  },
+  "download_source_match": {
+    "status": "PASS",
+    "format": "wheel",
+    "scope": "all current fsp_client Python sources match packaged bytes"
+  },
+  "runtime_operation_coverage": {
+    "status": "PASS",
+    "covered": 122,
+    "total": 122
+  },
+  "completed_at": "2026-10-12T04:11:29.899187+00:00"
+}

@@ -18,9 +18,10 @@ from hiring.models import Invitation, Company
 from .models import Profile, Experience, FspLink, PrivacyReceipt
 from .conditions import WORK_FORMATS, EMPLOYMENT_TYPES, TASK_TYPES, codes, preferences
 
-PRIVACY_FORMAT_VERSION = 1
+PRIVACY_FORMAT_VERSION = 2
 
 ACTIONS={'revoke_company','revoke_all','clear_profile','delete_account'}
+LEDGER_ACTIONS=ACTIONS|{'revoke_challenge'}
 
 
 class PrivacyUnavailable(RuntimeError):
@@ -43,9 +44,15 @@ def ledger_records():
             fcntl.flock(stream,fcntl.LOCK_SH)
             records=[json.loads(line) for line in stream if line.strip()]
         for row in records:
-            if set(row)!={'id','user_id','identity','action','company_id','created_at'}:raise ValueError('Invalid shape')
+            if not isinstance(row,dict):raise ValueError('Invalid record type')
+            expected={'id','user_id','identity','action','company_id','created_at'}
+            if row.get('action')=='revoke_challenge':expected|={'challenge_id','challenge_nonce'}
+            if set(row)!=expected:raise ValueError('Invalid shape')
             if not isinstance(row['id'],str) or str(UUID(row['id']))!=row['id']:raise ValueError('Invalid UUID')
-            if row['action'] not in ACTIONS or type(row['user_id']) is not int or row['user_id']<=0:raise ValueError('Invalid action')
+            if row['action'] not in LEDGER_ACTIONS or type(row['user_id']) is not int or row['user_id']<=0:raise ValueError('Invalid action')
+            if row['action']=='revoke_challenge':
+                if type(row['challenge_id']) is not int or row['challenge_id']<=0:raise ValueError('Invalid challenge')
+                if not isinstance(row['challenge_nonce'],str) or str(UUID(row['challenge_nonce']))!=row['challenge_nonce']:raise ValueError('Invalid challenge nonce')
             if not isinstance(row['identity'],str) or not re.fullmatch('[0-9a-f]{64}',row['identity']):raise ValueError('Invalid identity')
             if row['company_id'] is not None and (type(row['company_id']) is not int or row['company_id']<=0):raise ValueError('Invalid company')
             created=parse_datetime(row['created_at'])
@@ -69,8 +76,9 @@ def append_ledger(row):
             fcntl.flock(stream,fcntl.LOCK_EX)
             existing=[json.loads(line) for line in stream if line.strip()]
             for previous in existing:
+                if not isinstance(previous,dict):raise ValueError('Invalid record type')
                 if previous['id']==row['id']:
-                    if any(previous[key]!=row[key] for key in ['user_id','identity','action','company_id']):
+                    if any(previous.get(key)!=row.get(key) for key in ['user_id','identity','action','company_id','challenge_id','challenge_nonce']):
                         raise ValidationError('Идентификатор запроса уже используется.')
                     return previous
             stream.seek(0,os.SEEK_END);stream.write(json.dumps(row,separators=(',',':'))+'\n')
@@ -118,6 +126,8 @@ def remove_related_drafts(profile):
 def archive_profile_links(profile,at=None):
     """Also a pre_delete invariant for administrator/cascade deletion, not just the web route."""
     now=at or timezone.now()
+    from hiring.challenges import erase_for_profile
+    erase_for_profile(profile,now)
     remove_related_drafts(profile)
     for invitation in Invitation.objects.filter(candidate=profile):
         invitation.snapshot=safe_snapshot(invitation,erase=True)
@@ -134,6 +144,8 @@ def revoke(profile,company_id=None,cutoff=None):
     for invitation in query:
         # A deliberate later acceptance is a new grant; a restored old receipt must not revoke it.
         if invitation.responded_at and invitation.responded_at>cutoff:continue
+        from hiring.challenges import revoke_for_invitation
+        revoke_for_invitation(invitation,cutoff)
         if invitation.status=='accepted' and invitation.contact_revoked_at is None:
             invitation.contact_revoked_at=cutoff;count+=1
         invitation.snapshot=safe_snapshot(invitation)
@@ -208,7 +220,12 @@ def apply_record(row):
         if user and hmac.compare_digest(identity(user),row['identity']):
             actor=user
             profile=Profile.objects.filter(user=user).first()
-            if row['action'] in {'clear_profile','delete_account'}:
+            if row['action']=='revoke_challenge':
+                from hiring.models import GapChallenge
+                from hiring.challenges import revoke_one
+                obj=GapChallenge.objects.filter(pk=row['challenge_id'],request_id=row['challenge_nonce'],candidate__user=user).first()
+                if obj:revoke_one(obj,parse_datetime(row['created_at']))
+            elif row['action'] in {'clear_profile','delete_account'}:
                 if profile:clear(profile,parse_datetime(row['created_at']))
                 if row['action']=='delete_account':
                     user.delete();actor=None

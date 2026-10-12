@@ -7,6 +7,7 @@ urlpatterns += [
     path('me/profile/resume.pdf',views.profile_pdf),path('me/assessments',views.assessments),
     path('me/assessments/<str:pk>/result',views.assessment_result),path('me/achievements',views.achievements),
     path('invitations',views.invitations),path('invitations/<str:pk>',views.invitation),
+    path('challenges',views.challenges),path('challenges/<str:pk>',views.challenge),
     path('invitations/<str:pk>/contacts',views.invitation_contacts),
 ]
 urlpatterns += [path('me/company',views.company),path('needs',views.needs),path('needs/<str:pk>',views.need),

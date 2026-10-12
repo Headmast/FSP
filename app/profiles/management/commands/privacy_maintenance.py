@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from profiles.privacy import reconcile,ledger_records
 from profiles.models import PrivacyReceipt
-from hiring.models import Invitation
+from hiring.models import Invitation,GapChallenge
 from accounts.models import User
 
 
@@ -38,6 +38,8 @@ class Command(BaseCommand):
                 stream.seek(0);stream.write(''.join(json.dumps(row,separators=(',',':'))+'\n' for row in kept));stream.truncate()
                 stream.flush();os.fsync(stream.fileno())
         with transaction.atomic():
+            challenges=GapChallenge.objects.filter(candidate__isnull=True,candidate_erased_at__lt=cutoff).count()
+            GapChallenge.objects.filter(candidate__isnull=True,candidate_erased_at__lt=cutoff).delete()
             archived=Invitation.objects.filter(candidate__isnull=True,candidate_erased_at__lt=cutoff).count()
             Invitation.objects.filter(candidate__isnull=True,candidate_erased_at__lt=cutoff).delete()
             PrivacyReceipt.objects.filter(created_at__lt=cutoff).delete()
@@ -66,5 +68,5 @@ class Command(BaseCommand):
             if candidate.is_file() and not candidate.is_symlink():candidate.chmod(0o600)
         with connection.cursor() as cursor:
             cursor.execute('PRAGMA wal_checkpoint(TRUNCATE)');checkpoint=cursor.fetchone()
-        self.stdout.write(json.dumps({'status':'PASS','archived_invitations_expired':archived,'owned_backups_expired':deleted,
+        self.stdout.write(json.dumps({'status':'PASS','archived_invitations_expired':archived,'archived_challenges_expired':challenges,'owned_backups_expired':deleted,
             'wal_checkpoint_busy':bool(checkpoint[0]),'archive_days':settings.PRIVACY_ARCHIVE_DAYS,'backup_days':settings.PRIVACY_BACKUP_DAYS}))

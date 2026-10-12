@@ -38,6 +38,7 @@ def parser():
     pme=groups.add_parser('me');pme.set_defaults(path='me')
     pcat=groups.add_parser('catalog');pcat.set_defaults(path='catalog')
     command(group('privacy'),'show','me/privacy')
+    challenges=group('challenges');command(challenges,'list','challenges',list=True);command(challenges,'show','challenges/{id}',id=True)
     profile=group('profile');command(profile,'show','me/profile');command(profile,'private','me/profile/private')
     command(profile,'resume','me/profile/resume.pdf',pdf=True)
     assessments=group('assessments');command(assessments,'list','me/assessments',list=True)

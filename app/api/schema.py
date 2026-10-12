@@ -14,6 +14,14 @@ def ref(name):return {'$ref':'#/components/schemas/'+name}
 def choice(choices,empty=False):return {'type':'string','enum':([''] if empty else [])+[k for k,_ in choices]}
 
 schemas={
+ 'ChallengeResult':obj({'points':I,'maximum':I,'threshold':I,'sufficient':B,'scores':array({'type':'integer','minimum':0,'maximum':2}),'credited':B}),
+ 'Challenge':obj({'id':I,'invitation_id':{'type':['integer','null']},'candidate_id':{'type':['integer','null']},'company_id':I,'need_id':I,
+    'title':S,'skill':{'enum':['Swift','SwiftUI','UIKit','Combine','CoreData','Git','XCTest','URLSession']},
+    'gap_kind':{'enum':['missing_declared','unverified_skill']},'state':{'enum':['offered','accepted','submitted','reviewed','declined','withdrawn','expired','revoked','erased']},
+    'revision':I,'rubric_version':{'const':'company-rubric-v1'},'criterion_count':I,'duration_minutes':{'type':'integer','minimum':5,'maximum':60},
+    'deadline_at':S,'response_due_at':S,'accepted_at':N,'submitted_at':N,'reviewed_at':N,'consent_revoked_at':N,'candidate_erased_at':N,
+    'pass_points':{'type':['integer','null']},'result':{'anyOf':[ref('ChallengeResult'),{'type':'null'}]},
+    'changes_professional_grade':{'const':False},'actions_in_browser_only':{'const':True},'evaluation_source':{'const':'company_manual'}}),
  'Meta':obj({'api_version':{'const':'1'},'data_mode':{'const':'demo'},'request_id':S}),
  'Pagination':obj({'limit':I,'offset':I,'total':I}),
  'Identity':obj({'id':I,'role':{'enum':['candidate','employer']},'token_kind':{'enum':['cli','mcp']},'scopes':array(S),'expires_at':S}),
@@ -62,6 +70,7 @@ schemas={
 
 # path, DTO, role, paginated, private
 READ_ROUTES=[
+ ('/challenges','Challenge',None,True,False),('/challenges/{id}','Challenge',None,False,False),
  ('/me/privacy','PrivacyStatus','candidate',False,False),('/me','Identity',None,False,False),('/catalog','Catalog',None,False,False),
  ('/me/profile','Profile','candidate',False,False),('/me/profile/private','PrivateProfile','candidate',False,True),
  ('/me/assessments','Assessment','candidate',True,False),('/me/assessments/{id}/result','Proof','candidate',False,False),

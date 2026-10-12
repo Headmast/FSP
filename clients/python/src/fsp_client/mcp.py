@@ -46,6 +46,14 @@ def build_server(api):
     def fsp_get_invitation(id:ID)->Result:
         """Сохранённые условия своего предложения и зачтённые свидетельства."""
         return get(f'invitations/{id}')
+    @server.tool(annotations=read)
+    def fsp_list_challenges(limit:Limit=20,offset:Offset=0)->Result:
+        """Свои адресные задания и статус; без задания/ответа/комментария и без изменения грейда."""
+        return get('challenges',limit=limit,offset=offset)
+    @server.tool(annotations=read)
+    def fsp_get_challenge(id:ID)->Result:
+        """Сроки и структурированный результат собственной компании; подтверждения только в вебе."""
+        return get(f'challenges/{id}')
     if actor['role']=='candidate':
         @server.tool(annotations=read)
         def fsp_get_privacy_status()->Result:

@@ -119,6 +119,16 @@ class ConditionsMcpTests(unittest.IsolatedAsyncioTestCase):
 
 
 class PrivacyMcpTests(unittest.IsolatedAsyncioTestCase):
+    async def test_both_roles_get_only_readonly_challenge_tools(self):
+        for role in ['candidate','employer']:
+            api=FakeApi(role)
+            async with Client(build_server(api)) as client:
+                tools=(await client.list_tools()).tools
+                names=[tool.name for tool in tools];self.assertIn('fsp_list_challenges',names);self.assertIn('fsp_get_challenge',names)
+                for tool in tools:
+                    if 'challenge' in tool.name:self.assertTrue(tool.annotations.read_only_hint)
+                self.assertFalse(any('submit_challenge' in name or 'review_challenge' in name for name in names))
+                result=await client.call_tool('fsp_get_challenge',{'id':7});self.assertFalse(result.is_error);self.assertEqual(api.calls[-1][0],'challenges/7')
     async def test_privacy_status_has_no_destructive_tools(self):
         api=DraftApi()
         async with Client(build_server(api)) as client:

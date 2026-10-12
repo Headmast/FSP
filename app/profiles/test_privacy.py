@@ -231,8 +231,15 @@ class PrivacyTests(TestCase):
         for company in self.companies:self.assertFalse(contacts_allowed(company,self.profile))
         self.assertTrue((self.ledger.parent/'privacy-floor-v1').exists())
         self.ledger.write_text('')
-        (self.ledger.parent/'privacy-floor-v1').write_text('2\n')
+        (self.ledger.parent/'privacy-floor-v1').write_text('3\n')
         self.assertEqual(self.api.get('/api/v1/me').status_code,503)
+
+    def test_non_object_ledger_records_fail_closed_instead_of_attribute_error(self):
+        import json
+        for value in [[],None,'text',7,False]:
+            with self.subTest(value=value):
+                self.ledger.write_text(json.dumps(value)+'\n')
+                self.assertEqual(self.api.get('/api/v1/me').status_code,503)
 
     def test_identity_mismatch_does_not_erase_a_reused_numeric_identifier(self):
         row={'id':str(uuid4()),'user_id':self.actor.pk,'identity':'0'*64,'action':'delete_account','company_id':None,'created_at':timezone.now().isoformat()}

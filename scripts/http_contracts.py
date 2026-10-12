@@ -10,6 +10,7 @@ from accounts.integrations import TokenForm
 from assistant.forms import NeedPromptForm, ProfileDraftForm
 from api.web import ApprovalForm
 from profiles.privacy_views import PrivacyActionForm
+from hiring.challenge_forms import ChallengeOfferForm,ChallengeActionForm,ChallengeReviewForm
 from api.drafts import ExperienceInput, PROFILE_FIELDS, COMPANY_FIELDS, NEED_FIELDS
 
 MAX_ID = 2**63 - 1
@@ -98,6 +99,13 @@ def schemas():
     result['PrivacyAction']['properties']['request_id'].update(format='uuid',description='Idempotency nonce; supplied by own browser form, immutable per action/subject.')
     result['PrivacyAction']['properties']['password'].update(writeOnly=True,description='Current password required for clear_profile/delete_account; never stored in the ledger.')
     result['PrivacyAction']['allOf']=[{'if':{'properties':{'action':{'enum':['clear_profile','delete_account']}}},'then':{'required':['password'],'properties':{'password':{'minLength':1}}}}]
+    result['ChallengeOffer']['properties']['request_id']['format']='uuid'
+    result['ChallengeOffer']['properties']['criteria']['description']='1–5 unique nonempty lines, <=180 characters each; two maximum points per criterion.'
+    result['ChallengeOffer']['properties']['deadline_at']['description']='datetime-local interpreted in Europe/Moscow; future, <=30 days. Accepted response due=min(deadline,start+budget).'
+    result['ChallengeAction']['allOf']=[{'if':{'properties':{'action':{'enum':['accept','submit','revoke','withdraw','credit']}}},'then':{'required':['acknowledge'],'properties':{'acknowledge':{'const':True}}}},
+        {'if':{'properties':{'action':{'const':'submit'}}},'then':{'required':['answer'],'properties':{'answer':{'minLength':1}}}}]
+    result['ChallengeMutation']={'anyOf':[ref('ChallengeAction'),ref('ChallengeReview')],
+        'description':'Browser-owned role action. Review requires score_0..score_N-1 for the actual immutable criterion count, no missing/out-of-range score; one fixed manual result.'}
     result['Profile']['properties']['name']['description'] = 'Letters, spaces, hyphens; required when published=true.'
     result['Profile']['properties']['city']['description'] = 'Letters, spaces, hyphens; contacts belong in private fields.'
     result['Profile']['properties']['published']['description'] = 'Separate publication consent. Omitted checkbox is false; Non-revoked accepted grants survive unpublishing; separate privacy actions revoke/erase them.'
@@ -175,7 +183,8 @@ def schemas():
 FORM_CLASSES = {'Registration': RegistrationForm, 'Login': AccessibleAuthenticationForm, 'Consent': ConsentForm,
     'Profile': ProfileForm, 'FspConnect': FspLinkForm, 'Company': CompanyForm, 'Need': NeedForm,
     'NeedPrompt': NeedPromptForm, 'ProfileDraft': ProfileDraftForm,'Recruiter':RecruiterForm,'Assignment':AssignmentForm,'Token':TokenForm,
-    'Approval':ApprovalForm,'ExperienceInput':ExperienceInput,'PrivacyAction':PrivacyActionForm}
+    'Approval':ApprovalForm,'ExperienceInput':ExperienceInput,'PrivacyAction':PrivacyActionForm,
+    'ChallengeOffer':ChallengeOfferForm,'ChallengeAction':ChallengeActionForm,'ChallengeReview':ChallengeReviewForm}
 
 
 def endpoint(path, methods, role, summary, detail, statuses, *, body=None, query=None, repeat='', effects=''):
@@ -185,6 +194,9 @@ def endpoint(path, methods, role, summary, detail, statuses, *, body=None, query
 
 # Statuses are explicit reviewed semantics, never inferred from a green response.
 ENDPOINTS = {
+    'challenges':endpoint('/challenges/','GET HEAD','both','Адресные задания','Owned list only; company answer/result closed until submit and after challenge/contact revoke. GET computes expiration without business mutation.',{200:'Owned safe list'}),
+    'challenge-detail':endpoint('/challenges/{pk}/','GET POST','both','Задание и отдельное согласие','Own candidate or Company only. Immutable terms and fixed rubric. Candidate accepts/declines/saves private draft/submits/revokes share; employer reviews/withdraws offered/credits sufficient result. Revision prevents stale save/review. Effective expiry blocks acceptance/save/submit. No professional grade or ranking write. Shared raw answer never goes to another company or MCP.',{200:'Owned details; company sees answer only after submit with valid original grant and task consent',302:'Success or identical repeat: same detail',400:'Invalid fields/ack/rubric/answer',403:'Wrong action role/unconfirmed email/CSRF',404:'Missing or foreign ID',409:'Expired/revoked/stale/opposite terminal action'},body='ChallengeMutation',repeat='Accept replay never extends timer; same submitted answer/manual result immutable. Changed stale payload conflicts.'),
+    'challenge-offer':endpoint('/invitations/{pk}/challenge/','GET POST','employer','Предложить короткое задание','Own non-revoked accepted invitation required; current Need skill, 1–5 criteria 0/1/2, pass_points<=2*N, 5–60 minute budget and future deadline<=30 days. Candidate consent is separate; text/code not executed.',{200:'Offer form',302:'Created/exact duplicate: challenge detail',400:'Invalid fields or domain constraints',404:'Foreign/missing invitation or nonce owner',409:'No active accepted grant or duplicate with changed immutable terms'},body='ChallengeOffer',repeat='Unique invitation/skill and request UUID; changed terms rejected.'),
     'action-drafts': endpoint('/drafts/','GET','both','Свои MCP/CLI черновики','Session only; active confirmed user and processing consent. Last 100 own immutable drafts, newest first. No apply on GET.',{200:'Own draft list HTML'}),
     'action-draft': endpoint('/drafts/{pk}/','GET POST','both','Подтверждение MCP/CLI V2','Owned UUID; kind must match current role. GET shows immutable payload and current before-state, including stale/expired/final state. POST action=apply requires acknowledgement and publication consent for profile.publish. action=cancel needs no acknowledgement. No bearer apply endpoint.',{200:'GET draft state',302:'Successful apply/cancel: same draft URL',400:'Missing acknowledgement, publication consent or failed payload revalidation',403:'Inactive/unconfirmed/wrong kind-role',404:'Missing/foreign draft or inaccessible target',409:'Stale target, cancelled/final conflict',410:'Expired pending draft'},body='ActionApproval',repeat='Applied apply returns same state without another mutation even after expiry. Cancel repeated cancelled safe; cancelling applied is 409. Expired pending draft can be cancelled.'),
     'learning': endpoint('/learning/','GET','candidate','Учебный маршрут','Own profile; selected track is persisted in Django session. Invalid track 404; missing track uses session then ios; invalid grade falls back Junior. Active exam shows return-to-exam screen with 200. Practice does not change category.',{200:'Track/progress or active-exam lock screen',404:'Unknown track/missing own profile'},query={'track':TRACK,'grade':GRADE},effects='Stores selected learning_track in session only.'),
@@ -241,6 +253,10 @@ ENDPOINTS = {
 }
 
 EXAMPLES = {
+    'ChallengeOffer':{'request_id':'33333333-3333-4333-8333-333333333333','skill':'Combine','title':'Проверка отмены запроса',
+        'instructions':'Покажите решение и объясните его ограничения.','criteria':'Объяснена отмена\nПоказана проверка','pass_points':3,
+        'duration_minutes':15,'deadline_at':'2026-11-01T12:00','acknowledge':True},
+    'ChallengeMutation':{'action':'accept','revision':0,'acknowledge':True},
     'LearningRead':{'read':'on'},'LearningStart':{'track':'android','grade':'Junior','topic':'all'},
     'LearningAnswers':{'action':'pause'},'ActionApproval':{'action':'apply','acknowledge':True,'publication_consent':True},
     'Recruiter':{'name':'Рекрутер'},'Assignment':{'need':1},'Token':{'name':'Локальный CLI','kind':'cli','contacts':False,'drafts':False},

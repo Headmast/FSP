@@ -23,7 +23,7 @@ async def check(values):
     for role in ['candidate','employer']:
         value=values[role]
         api=FspClient(base,value['cli'])
-        paths=['me','catalog','invitations',f'invitations/{value["invitation_id"]}']
+        paths=['me','catalog','invitations',f'invitations/{value["invitation_id"]}','challenges',f'challenges/{value["challenge_id"]}']
         paths += ['me/privacy','me/profile','me/profile/private','me/assessments',f'me/assessments/{value["result_id"]}/result','me/achievements'] if role=='candidate' else [
             'me/company','needs',f'needs/{value["need_id"]}','candidates',f'candidates/{value["candidate_id"]}',f'candidates/{value["candidate_id"]}/proofs']
         specification=api.client.get(base+'/api/v1/openapi.json').json()
@@ -43,6 +43,11 @@ async def check(values):
                 assert 'fsp_get_contacts' not in names
                 call=await client.call_tool('fsp_get_profile' if role=='candidate' else 'fsp_search_candidates',{} if role=='candidate' else {'need_id':value['need_id']})
                 assert not call.is_error and call.structured_content['meta']['data_mode']=='demo'
+                challenge=await client.call_tool('fsp_get_challenge',{'id':value['challenge_id']})
+                assert not challenge.is_error and challenge.structured_content['data']['result']['credited']
+                assert challenge.structured_content['data']['changes_professional_grade'] is False
+                assert 'PRIVATE' not in json.dumps(challenge.structured_content)
+                result[role+'_challenge_stdio_'+mode]=True
                 if role=='employer':
                     conditions=await client.call_tool('fsp_search_candidates',{'need_id':value['need_id'],'conditions':'compatible'})
                     assert not conditions.is_error
@@ -76,6 +81,10 @@ async def check(values):
                 assert config.load('qa')[1]==value['cli']
                 completed=subprocess.run([sys.executable,'-m','fsp_client.cli','--connection','qa','--json','me'],capture_output=True,text=True,check=True)
                 assert json.loads(completed.stdout)['data']['role']==role
+                completed=subprocess.run([sys.executable,'-m','fsp_client.cli','--connection','qa','--json','challenges','show',str(value['challenge_id'])],capture_output=True,text=True,check=True)
+                task=json.loads(completed.stdout)['data'];assert task['result']['points']==4 and task['result']['credited']
+                assert 'PRIVATE' not in completed.stdout
+                result[role+'_challenge_native_cli']=True
                 if role=='candidate':
                     command=['profile','draft'];payload={'preferred_work_formats':['remote'],'preferred_task_types':['testing']}
                     read_path='me/profile';condition_key='preferred_work_formats';unchanged=[]

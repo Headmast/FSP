@@ -111,6 +111,18 @@ class ConditionsClientTests(unittest.TestCase):
 
 
 class PrivacyCliTests(unittest.TestCase):
+    def test_challenge_commands_use_read_routes_and_cannot_submit(self):
+        requests=[]
+        def handle(request):
+            requests.append(request);return httpx.Response(200,json={'data':[],'meta':{'data_mode':'demo'}})
+        for command in [['challenges','list','--limit','5','--offset','2','--json'],['challenges','show','7','--json']]:
+            api=FspClient('https://demo.invalid','synthetic',transport=httpx.MockTransport(handle))
+            with patch.object(Connections,'load',return_value=({'server':'https://demo.invalid'},'synthetic')),patch('fsp_client.cli.FspClient',return_value=api),contextlib.redirect_stdout(io.StringIO()):
+                run(parser().parse_args(command))
+        self.assertTrue(all(r.method=='GET' for r in requests));self.assertEqual(requests[0].url.path,'/api/v1/challenges')
+        self.assertEqual(requests[0].url.params['limit'],'5');self.assertEqual(requests[1].url.path,'/api/v1/challenges/7')
+        with contextlib.redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):parser().parse_args(['challenges','submit','7'])
+
     def test_privacy_is_read_only_command(self):
         args=parser().parse_args(['privacy','show','--json'])
         self.assertEqual(args.path,'me/privacy')

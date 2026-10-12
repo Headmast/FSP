@@ -32,7 +32,7 @@ def owned_profile(request):
 def catalog(request):
     return reply(request, {'specializations':['ios_swift'],'grades':['Junior','Middle'],'skills':list(SKILLS),
         'roles':dict(ROLES),'soft_skills':dict(SOFT_SKILLS),'work_formats':dict(WORK_FORMATS),
-        'employment_types':dict(EMPLOYMENT_TYPES),'task_types':dict(TASK_TYPES),'features':['read','drafts','conditions-v1','privacy-web-actions'],'fsp_source':'mock'})
+        'employment_types':dict(EMPLOYMENT_TYPES),'task_types':dict(TASK_TYPES),'features':['read','drafts','conditions-v1','privacy-web-actions','company-challenges-v1'],'fsp_source':'mock'})
 
 
 @endpoint('candidate')
@@ -102,6 +102,21 @@ def achievements(request):
 def invitations(request):
     rows,pagination=paged(request,invitation_query(request.user).order_by('-created_at','-pk'))
     return reply(request,[invitation_data(obj,is_mcp(request)) for obj in rows],pagination=pagination)
+
+
+@endpoint()
+def challenges(request):
+    from hiring.challenges import own_query
+    from hiring.challenge_projection import data
+    rows,pagination=paged(request,own_query(request.user).order_by('-created_at','-pk'))
+    return reply(request,[data(obj,request.user) for obj in rows],pagination=pagination)
+
+
+@endpoint()
+def challenge(request,pk):
+    from hiring.challenges import owned
+    from hiring.challenge_projection import data
+    return reply(request,data(owned(request.user,parse_identifier(pk)),request.user))
 
 
 @endpoint()

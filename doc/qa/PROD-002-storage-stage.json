@@ -1,0 +1,18 @@
+{
+  "task": "PROD-002",
+  "status": "PASS",
+  "checks": [
+    "file-backed SQLite simultaneous submit/review: one fixed result and one conflict, no duplicates or overwrite",
+    "simultaneous owner revoke and company review: final share always closed, stale revision cannot block revoke",
+    "actual pre-task-revoke SQLite backup restores old consent; durable task UUID fence closes it before serving",
+    "actual pre-clear backup: profile fence erases all challenge text/results and detaches rows again",
+    "180-day challenge archive expiry, floor2 retained, secure_delete/WAL truncate remove task canary from live DB bytes"
+  ],
+  "database": "disposable own SQLite/ledger/fixtures removed; production untouched",
+  "source_sha256": {
+    "app/hiring/challenges.py": "db01e5c33a71c546290b20816724f7c96c8a301cd30d1430f181a88021aa29e7",
+    "app/hiring/models.py": "9a0a51e00d43dd2c829fc838185b2c1ec61c2fa467b50e3426333f1b26994552",
+    "app/profiles/privacy.py": "14d67127c2293d25e42bed91709c42e5ea371ef1c52e335d172e3767864629ec",
+    "scripts/check_challenge_storage.py": "91085f1104462eed6c596dee23104b7fe378d4e3ad64368c40ef9214a586bdb1"
+  }
+}

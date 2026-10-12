@@ -10,9 +10,12 @@ from profiles import views as profiles
 from profiles.privacy_views import dashboard as profile_privacy
 from assessments import views as assessments
 from hiring import views as hiring
+from hiring import challenge_views
 from hiring.dashboard import dashboard, team
 from assistant import views as assistant
 urlpatterns = [path("learning/", include("assessments.learning_urls")),
+path('challenges/',challenge_views.index,name='challenges'),path('challenges/<int:pk>/',challenge_views.detail,name='challenge-detail'),
+path('invitations/<int:pk>/challenge/',challenge_views.offer,name='challenge-offer'),
 path("drafts/",action_drafts,name="action-drafts"),path("drafts/<uuid:pk>/",action_draft,name="action-draft"),
 path("downloads/<str:filename>", download_client),
 path("api/v1/", include("api.urls")),

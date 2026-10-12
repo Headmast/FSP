@@ -25,6 +25,81 @@ OpenAPI request examples показывают допустимую форму т
 
 ## Маршруты
 
+### /challenges/ — Адресные задания
+
+Методы: **GET / HEAD**. Роль: **both**.
+
+Owned list only; company answer/result closed until submit and after challenge/contact revoke. GET computes expiration without business mutation.
+
+Повтор: Чтение текущего состояния.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Owned safe list |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
+| GET | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| HEAD | 200 | Owned safe list |
+| HEAD | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
+| HEAD | 302 | Unauthenticated: /accounts/login/?next=<path>; missing processing-v1: /accounts/consent/. Role/email checked before consent. |
+| HEAD | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| HEAD | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /challenges/{pk}/ — Задание и отдельное согласие
+
+Методы: **GET / POST**. Роль: **both**.
+
+Own candidate or Company only. Immutable terms and fixed rubric. Candidate accepts/declines/saves private draft/submits/revokes share; employer reviews/withdraws offered/credits sufficient result. Revision prevents stale save/review. Effective expiry blocks acceptance/save/submit. No professional grade or ranking write. Shared raw answer never goes to another company or MCP.
+
+Повтор: Accept replay never extends timer; same submitted answer/manual result immutable. Changed stale payload conflicts.
+
+POST schema: **ChallengeMutation**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Owned details; company sees answer only after submit with valid original grant and task consent |
+| GET | 302 | Success or identical repeat: same detail |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 404 | Missing or foreign ID |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | Owned details; company sees answer only after submit with valid original grant and task consent |
+| POST | 302 | Success or identical repeat: same detail |
+| POST | 400 | Invalid fields/ack/rubric/answer |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 404 | Missing or foreign ID |
+| POST | 409 | Expired/revoked/stale/opposite terminal action |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
+### /invitations/{pk}/challenge/ — Предложить короткое задание
+
+Методы: **GET / POST**. Роль: **employer**.
+
+Own non-revoked accepted invitation required; current Need skill, 1–5 criteria 0/1/2, pass_points<=2*N, 5–60 minute budget and future deadline<=30 days. Candidate consent is separate; text/code not executed.
+
+Повтор: Unique invitation/skill and request UUID; changed terms rejected.
+
+POST schema: **ChallengeOffer**; поля см. ниже.
+
+| Метод | Статус | Значение |
+| --- | --- | --- |
+| GET | 200 | Offer form |
+| GET | 302 | Created/exact duplicate: challenge detail |
+| GET | 404 | Foreign/missing invitation or nonce owner |
+| GET | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
+| GET | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| GET | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+| POST | 200 | Offer form |
+| POST | 302 | Created/exact duplicate: challenge detail |
+| POST | 400 | Invalid fields or domain constraints |
+| POST | 404 | Foreign/missing invitation or nonce owner |
+| POST | 409 | No active accepted grant or duplicate with changed immutable terms |
+| POST | 503 | Privacy ledger/restore fence unavailable: fail-closed JSON status=unavailable before dispatch. |
+| POST | 403 | Wrong role/unconfirmed email; POST additionally invalid CSRF. |
+| POST | 405 | Unsupported method for an authorized caller; Allow lists supported methods. Middleware CSRF or outer authentication may reject first. |
+
 ### /drafts/ — Свои MCP/CLI черновики
 
 Методы: **GET**. Роль: **both**.
@@ -1045,6 +1120,49 @@ Read queries required tables. DatabaseError -> 503 without secrets. Not a full u
 
 API не использует browser session и CSRF. Каждая операция требует активный Bearer token своей роли/скоупа, подтверждённый аккаунт и processing consent. 60 запросов/минуту, срок 30 дней; revoke/expiry → 401, scope/role/consent → 403. Данные/ошибки JSON без HTML redirect. Cache-Control=no-store, X-Request-ID; 429 также Retry-After=60, 401 WWW-Authenticate=Bearer. На GET меняется только учёт использования токена, бизнес-данные не меняются. MCP не получает контакты/свободные приватные тексты/PDF; CLI private требует contacts.read и действующий grant. Все DTO приведены в схемах Api ниже.
 
+### GET /api/v1/challenges
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. Integer IDs use bounded positive parser; draft UUIDs use Python UUID parser; malformed/foreign IDs 404. candidate.read OR employer.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| limit | query | integer; minimum=1; maximum=100 |
+| offset | query | integer; minimum=0; maximum=2147483647 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
+### GET /api/v1/challenges/{pk}
+
+Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. Integer IDs use bounded positive parser; draft UUIDs use Python UUID parser; malformed/foreign IDs 404. candidate.read OR employer.read
+
+| Поле | Где | Тип / границы |
+| --- | --- | --- |
+| pk | path | integer; minimum=1; maximum=9223372036854775807 |
+
+| Статус | Ответ |
+| --- | --- |
+| 200 | Success; MCP omits free text and contact fields |
+| 400 | API error |
+| 401 | API error |
+| 403 | API error |
+| 404 | API error |
+| 405 | API error |
+| 409 | API error |
+| 429 | API error |
+| 503 | API error |
+| 500 | Token API error boundary, no HTML redirect or session/CSRF. See error.code; not every status applies to every route. |
+
 ### GET /api/v1/me/privacy
 
 Bearer token with role/scope checks; 60/minute, 30-day expiry. MCP omits private/free text, contacts and PDF. No business write on GET; token usage/last_used updated. No cookie authentication or CSRF. Integer IDs use bounded positive parser; draft UUIDs use Python UUID parser; malformed/foreign IDs 404. candidate.read
@@ -1948,6 +2066,53 @@ salary_min/max are positive rubles before tax per month; max >= min. Creates a n
 | password | нет | string | Current password required for clear_profile/delete_account; never stored in the ledger. |
 | csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
 
+### ChallengeOffer
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| request_id | да | string; minLength=1 | — |
+| skill | да | string; minLength=1; enum=Swift, SwiftUI, UIKit, Combine, CoreData, Git, XCTest, URLSession | — |
+| title | да | string; minLength=1; maxLength=120 | — |
+| instructions | да | string; minLength=1; maxLength=4000 | — |
+| criteria | да | string; minLength=1; maxLength=1000 | 1–5 unique nonempty lines, <=180 characters each; two maximum points per criterion. |
+| pass_points | да | integer; minimum=1; maximum=10 | — |
+| duration_minutes | да | integer; minimum=5; maximum=60 | — |
+| deadline_at | да | string; minLength=1 | datetime-local interpreted in Europe/Moscow; future, <=30 days. Accepted response due=min(deadline,start+budget). |
+| acknowledge | да | True | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### ChallengeAction
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| action | да | string; minLength=1; enum=accept, decline, save, submit, revoke, withdraw, credit | — |
+| revision | да | integer; minimum=0; maximum=2147483647 | — |
+| answer | нет | string; maxLength=12000 | — |
+| acknowledge | нет | boolean | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### ChallengeReview
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| action | да | string; minLength=1; enum=review | — |
+| revision | да | integer; minimum=0; maximum=2147483647 | — |
+| note | да | string; minLength=1; maxLength=2000 | — |
+| credit | нет | boolean | — |
+| acknowledge | да | True | — |
+| score_0 | нет | integer; minimum=0; maximum=2 | — |
+| score_1 | нет | integer; minimum=0; maximum=2 | — |
+| score_2 | нет | integer; minimum=0; maximum=2 | — |
+| score_3 | нет | integer; minimum=0; maximum=2 | — |
+| score_4 | нет | integer; minimum=0; maximum=2 | — |
+| csrfmiddlewaretoken | нет | string; minLength=32; maxLength=64 | CSRF token from this browser session. Cookie csrftoken is also required. X-CSRFToken can replace this field. |
+
+### ChallengeMutation
+
+Browser-owned role action. Review requires score_0..score_N-1 for the actual immutable criterion count, no missing/out-of-range score; one fixed manual result.
+
+Варианты: ChallengeAction, ChallengeReview
+
 ### LearningRead
 
 | Поле | Обязательно | Тип / границы | Правила |
@@ -2195,6 +2360,47 @@ Actual wheel and source archive of this client version; hashes and byte sizes ch
 | changes_grade | да | False | — |
 | external_id | да | ['string', 'null'] | — |
 | events | да | array[FspEvent] | — |
+
+### ApiChallengeResult
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| points | да | integer | — |
+| maximum | да | integer | — |
+| threshold | да | integer | — |
+| sufficient | да | boolean | — |
+| scores | да | array[integer; minimum=0; maximum=2] | — |
+| credited | да | boolean | — |
+
+### ApiChallenge
+
+| Поле | Обязательно | Тип / границы | Правила |
+| --- | --- | --- | --- |
+| id | да | integer | — |
+| invitation_id | да | ['integer', 'null'] | — |
+| candidate_id | да | ['integer', 'null'] | — |
+| company_id | да | integer | — |
+| need_id | да | integer | — |
+| title | да | string | — |
+| skill | да | object; enum=Swift, SwiftUI, UIKit, Combine, CoreData, Git, XCTest, URLSession | — |
+| gap_kind | да | object; enum=missing_declared, unverified_skill | — |
+| state | да | object; enum=offered, accepted, submitted, reviewed, declined, withdrawn, expired, revoked, erased | — |
+| revision | да | integer | — |
+| rubric_version | да | 'company-rubric-v1' | — |
+| criterion_count | да | integer | — |
+| duration_minutes | да | integer; minimum=5; maximum=60 | — |
+| deadline_at | да | string | — |
+| response_due_at | да | string | — |
+| accepted_at | да | ['string', 'null'] | — |
+| submitted_at | да | ['string', 'null'] | — |
+| reviewed_at | да | ['string', 'null'] | — |
+| consent_revoked_at | да | ['string', 'null'] | — |
+| candidate_erased_at | да | ['string', 'null'] | — |
+| pass_points | да | ['integer', 'null'] | — |
+| result | да | ApiChallengeResult / null | — |
+| changes_professional_grade | да | False | — |
+| actions_in_browser_only | да | True | — |
+| evaluation_source | да | 'company_manual' | — |
 
 ### ApiMeta
 

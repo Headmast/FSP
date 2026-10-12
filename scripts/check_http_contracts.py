@@ -382,13 +382,18 @@ def runtime_checks(spec, report):
     from http_contract_scenarios import learning_scenarios, action_scenarios
     learning_session=learning_scenarios(run,require,profile,other_profile)
     action_draft=action_scenarios(run,require,anonymous,users,profile,company,need,token_pairs)
+    from http_challenge_scenarios import challenge_scenarios
+    challenge,challenge_key,challenge_employer_key=challenge_scenarios(run,user,clients,password)
+    token_pairs[challenge_key]=issue_token(users[challenge_key],'contract-challenges','cli',contacts=True)
+    token_pairs[challenge_employer_key]=issue_token(users[challenge_employer_key],'contract-challenge-company','cli',contacts=True)
     api_pk={'/api/v1/drafts/{pk}':action_draft.pk,'/api/v1/me/assessments/{pk}/result':attempt.pk,'/api/v1/needs/{pk}':need.pk,
-        '/api/v1/invitations/{pk}':invitation.pk,'/api/v1/invitations/{pk}/contacts':invitation.pk}
+        '/api/v1/invitations/{pk}':invitation.pk,'/api/v1/invitations/{pk}/contacts':invitation.pk,'/api/v1/challenges/{pk}':challenge.pk}
     for path,operations in spec['paths'].items():
         if not path.startswith('/api/v1'):continue
         if 'get' not in operations:continue
         op=operations['get'];scopes=' '.join(op.get('x-required-scopes',[]))
         key='employer' if 'employer.read' in scopes and ' OR ' not in scopes else 'candidate'
+        if path=='/api/v1/challenges/{pk}':key=challenge_key
         pk=api_pk.get(path,profile.pk);rendered=path.replace('{pk}',str(pk)).replace('{unknown}','not-a-route')
         query='?need_id='+str(need.pk) if path=='/api/v1/candidates' else ''
         expected=404 if path in {'/api/v1/','/api/v1/{unknown}'} else 200
@@ -414,10 +419,12 @@ def runtime_checks(spec, report):
     pk_map={'/drafts/{pk}/':action_draft.pk,'/learning/sessions/{pk}/':learning_session.pk,'/learning/sessions/{pk}/answer/':learning_session.pk,'/candidates/{pk}/':profile.pk,'/candidates/{pk}/resume.pdf':profile.pk,
         '/assessments/{pk}/':attempt.pk,'/assessments/{pk}/proof/':attempt.pk,
         '/assessments/{pk}/answer/':attempt.pk,'/assessments/{pk}/finish/':attempt.pk,
-        '/assistant/drafts/{pk}/':draft.pk,'/invitations/{pk}/accept/':invitation.pk,'/invitations/{pk}/decline/':invitation.pk}
+        '/assistant/drafts/{pk}/':draft.pk,'/invitations/{pk}/accept/':invitation.pk,'/invitations/{pk}/decline/':invitation.pk,
+        '/challenges/{pk}/':challenge.pk,'/invitations/{pk}/challenge/':invitation.pk}
     for path, operations in spec['paths'].items():
         if path.startswith('/api/v1'):continue
         role=next(iter(operations.values()))['x-role'];key='employer' if role=='employer' else 'candidate'
+        if path=='/challenges/{pk}/':key=challenge_key
         if role in {'public','pending-session'}:key=anonymous
         rendered=rendered_path(path,pk_map.get(path,1))
         if path=='/accounts/confirm/':
@@ -434,6 +441,11 @@ def runtime_checks(spec, report):
         if '{pk}' in path:
             method='GET' if 'get' in operations else 'POST'
             run('foreign-object-'+path,key,rendered_path(path,9223372036854775807),method,{},404,template=path)
+    run('challenge-owned-revoke',challenge_key,f'/challenges/{challenge.pk}/','POST',{'action':'revoke','revision':0,'acknowledge':True},302,template='/challenges/{pk}/',valid_body='ChallengeMutation')
+    _,body=run('challenge-revoked-company-safe',anonymous,f'/api/v1/challenges/{challenge.pk}',template='/api/v1/challenges/{pk}',bearer=token_pairs[challenge_employer_key][1])
+    require(json.loads(body)['data']['result'] is None,'Revoked task score leaked to company')
+    _,body=run('challenge-revoked-company-body',challenge_employer_key,f'/challenges/{challenge.pk}/',template='/challenges/{pk}/')
+    require('ANSWER_HTTP_PRIVATE' not in body.decode(),'Revoked task answer leaked to company')
     from http_privacy_scenarios import privacy_checks
     privacy_checks(run,user,clients,password)
     from api.views import client_version
@@ -508,7 +520,7 @@ def main():
                 runtime_checks(spec,report)
             from django.db import connections
             connections.close_all()
-        source_names=['app/config/urls.py','app/accounts/views.py','app/profiles/views.py','app/assessments/views.py','app/hiring/views.py','app/assistant/views.py',
+        source_names=['app/hiring/challenges.py','app/hiring/challenge_forms.py','app/hiring/challenge_views.py','app/hiring/challenge_projection.py','scripts/http_challenge_scenarios.py','app/config/urls.py','app/accounts/views.py','app/profiles/views.py','app/assessments/views.py','app/hiring/views.py','app/assistant/views.py',
             'app/accounts/forms.py','app/profiles/forms.py','app/profiles/models.py','app/assessments/models.py','app/assessments/learning_tracks.py','app/accounts/integrations.py','app/api/tests.py','app/api/drafts.py','app/api/web.py','app/api/models.py','app/assessments/learning_views.py','app/assessments/learning.py','app/assessments/learning_urls.py','app/hiring/dashboard.py','app/hiring/forms.py','app/api/urls.py','app/api/core.py','app/api/schema.py','app/api/views.py','app/api/serializers.py',
             'app/accounts/models.py','app/config/settings.py','app/profiles/apps.py','app/profiles/privacy.py','app/profiles/privacy_views.py','app/profiles/privacy_middleware.py','app/profiles/management/commands/privacy_maintenance.py','app/profiles/conditions.py','app/hiring/models.py','app/hiring/services.py','scripts/http_privacy_scenarios.py','scripts/check_privacy_restore.py','scripts/run_app.py','scripts/deploy_mvp_remote.py','scripts/maintain_demo.py','scripts/http_contracts.py','scripts/http_contract_scenarios.py','scripts/build_http_spec.py','scripts/check_http_contracts.py','doc/api/openapi.json']
         report['source_hashes']={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in source_names}
