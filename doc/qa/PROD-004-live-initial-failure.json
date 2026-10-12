@@ -1,0 +1,49 @@
+{
+  "status": "FAIL",
+  "commit": "61479bff0b0317a3dedb46301a4bf1d6d46c61a0",
+  "url": "https://elrrg-194-226-126-123.run.pinggy-free.link",
+  "checked_at": "2026-10-12T02:15:24.639147+00:00",
+  "checks": [
+    "public version and database readiness",
+    "two HTTPS registrations with CSRF, explicit consent and session-bound demo confirmation",
+    "full profile persistence and distinct publication consent",
+    "optional candidate preferences persist and safe token projection excludes contacts",
+    "candidate edits and applies private draft; replay and foreign draft protected",
+    "own mock FSP binding and achievement",
+    "assessment completion and versioned safe witness over HTTPS",
+    "fresh employer reviews draft before company/need exists; one paid need on replay",
+    "company profile and concrete paid need",
+    "employer sees explanation and proof while private text and contacts stay hidden",
+    "matching condition filter and safe MCP DTO over HTTPS before contact",
+    "safe mock matching and invitation preview do not send automatically",
+    "selected result and company details visible to candidate before acceptance",
+    "candidate conversation uses snapshot and preserves pending decision",
+    "changed preferences create a current conflict while the sent invitation snapshot stays matched",
+    "acceptance opens HTML and PDF access for invitation sender",
+    "employer conversation after explicit acceptance",
+    "publication withdrawal removes search while preserving documented prior grant",
+    "two owned companies have independently accepted contact grants"
+  ],
+  "failure_type": "AssertionError",
+  "failure_location": [
+    {
+      "file": "check_live_checkpoint.py",
+      "line": 201
+    },
+    {
+      "file": "live_privacy_checkpoint.py",
+      "line": 45
+    },
+    {
+      "file": "check_live_checkpoint.py",
+      "line": 81
+    }
+  ],
+  "privacy": true,
+  "driver_sha256": {
+    "check_live_checkpoint.py": "930e7e3c9eb5fd61055c0077a4d49495c5475bab296b1dd795ca0f13c1abc317",
+    "live_privacy_checkpoint.py": "360cce4b0f1d5f15c97b4bb96a6ab56d8e92b9d943726a36a9a03af632c83f17"
+  },
+  "synthetic_accounts_removed": true,
+  "scope": "HTTPS journey; no existing account reset; perfect-answer synthetic fixture is not QA-001 validation"
+}

@@ -1,5 +1,8 @@
 """HTTPS privacy acceptance using only accounts freshly registered by check_live_checkpoint.py."""
 import json
+import hashlib
+import tempfile
+from pathlib import Path
 import urllib.error
 from accounts.models import User,ApiToken
 from api.core import issue_token
@@ -8,7 +11,7 @@ from assessments.models import Attempt,LessonProgress,PracticeSession
 from hiring.models import Company,Need,Invitation
 
 
-def run(candidate,employer,Actor,Fields,profile,company,offer,attempt,data,emails,password,api_read,passed):
+def run(candidate,employer,Actor,Fields,profile,company,offer,attempt,data,emails,password,api_read,passed,artifacts):
     # Re-publication is explicit through this owned candidate's form, after the prior test of withdrawal.
     data['published']='on';candidate.request('/profile/',data)
     second=Actor();second.register(emails[2],'employer');second.request('/company/')
@@ -42,7 +45,12 @@ def run(candidate,employer,Actor,Fields,profile,company,offer,attempt,data,email
     denied(f'candidates/{profile.pk}/private',tokens[emails[1]])
     denied(f'candidates/{profile.pk}/resume.pdf?with_contacts=true',tokens[emails[1]])
     denied(f'invitations/{offer.pk}/contacts',tokens[emails[1]])
-    employer.expect_status(f'/candidates/{profile.pk}/resume.pdf',403)
+    # Published profiles still have a public PDF. Contact-bearing API PDF is denied above.
+    public_pdf=employer.request(f'/candidates/{profile.pk}/resume.pdf');assert public_pdf.startswith(b'%PDF')
+    directory=Path.cwd()/'.runtime/qa';directory.mkdir(parents=True,exist_ok=True)
+    with tempfile.NamedTemporaryFile(prefix='privacy-public-',suffix='.pdf',dir=directory,delete=False) as stream:
+        stream.write(public_pdf)
+        artifacts.append({'kind':'public PDF after contact revoke','path':stream.name,'sha256':hashlib.sha256(public_pdf).hexdigest()})
     assert 'private-checkpoint@demo.invalid' not in employer.request(f'/candidates/{profile.pk}/')
     assert 'private-checkpoint@demo.invalid' in json.dumps(api_read(f'candidates/{profile.pk}/private',tokens[emails[2]]))
     candidate.request(f'/invitations/{offer.pk}/accept/',{})

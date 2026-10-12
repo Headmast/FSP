@@ -85,6 +85,7 @@ emails=[f'checkpoint-{suffix}-{role}@demo.invalid' for role in ['candidate','emp
 if args.privacy:emails.append(f'checkpoint-{suffix}-privacy-employer@demo.invalid')
 password=secrets.token_urlsafe(24)
 checks=[]
+privacy_artifacts=[]
 def passed(name):
     checks.append(name)
     print(json.dumps({'step':name,'status':'PASS'}),flush=True)
@@ -198,7 +199,7 @@ try:
     passed('publication withdrawal removes search while preserving documented prior grant')
     if args.privacy:
         from live_privacy_checkpoint import run as privacy_acceptance
-        privacy_acceptance(candidate,employer,Actor,Fields,profile,company,offer,attempt,data,emails,password,api_read,passed)
+        privacy_acceptance(candidate,employer,Actor,Fields,profile,company,offer,attempt,data,emails,password,api_read,passed,privacy_artifacts)
 except Exception as exc:
     failure=type(exc).__name__
     failure_location=[{'file':Path(frame.filename).name,'line':frame.lineno} for frame in traceback.extract_tb(exc.__traceback__)]
@@ -211,6 +212,7 @@ finally:
 report={'status':'FAIL' if failure else 'PASS','commit':locals().get('version'),'url':base,
     'checked_at':datetime.now(timezone.utc).isoformat(),'checks':checks,'failure_type':failure,
     'failure_location':locals().get('failure_location',[]),'privacy':args.privacy,
+    'privacy_artifacts':privacy_artifacts,
     'driver_sha256':{name:hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()
         for name in ['check_live_checkpoint.py']+(['live_privacy_checkpoint.py'] if args.privacy else [])},
     'synthetic_accounts_removed':cleaned,'scope':'HTTPS journey; no existing account reset; perfect-answer synthetic fixture is not QA-001 validation'}
