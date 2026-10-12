@@ -1,0 +1,210 @@
+{
+  "task": "PROD-004",
+  "code_commit": "84eeb7a64b6b5830021d41942d00fecca620dd26",
+  "status": "PASS",
+  "checks": [
+    "clean local clone",
+    "isolated worktree/env/database",
+    "locked installation",
+    "fresh migrations/static/system/drift",
+    "synthetic fixtures",
+    "packaged client",
+    "Gunicorn health/version actual SHA",
+    "browser journey and privacy",
+    "actual Chromium recording",
+    "screenshots"
+  ],
+  "driver_sha256": {
+    "record_delivery.py": "2a704715d390b5776e6059a120012f74989ba8dd039ca8b1fe1ad07e2467dbac",
+    "record_delivery.cjs": "e2936c6b8ac33e7ff0fc28a01a96622d848123e11ff8f19f100dba14914ab556",
+    "record_privacy.cjs": "6f60e600bdb2255837c414740c40cf748943129eb66ff70094bcecb1ad1be3e3"
+  },
+  "browser": {
+    "status": "PASS",
+    "engine": "Chromium",
+    "code_commit": "84eeb7a64b6b5830021d41942d00fecca620dd26",
+    "automated": true,
+    "fixture_answers": "read only from private disposable synthetic DB; not exported",
+    "duration_seconds": 19.049,
+    "phases": [
+      {
+        "label": "Демо текущего приложения",
+        "seconds": 1.195,
+        "path": "/"
+      },
+      {
+        "label": "Регистрация и demo email",
+        "seconds": 1.642,
+        "path": "/profile/"
+      },
+      {
+        "label": "Профиль и отдельная публикация",
+        "seconds": 2.074,
+        "path": "/profile/"
+      },
+      {
+        "label": "Мок помощника: проверяемый черновик",
+        "seconds": 2.198,
+        "path": "/assistant/"
+      },
+      {
+        "label": "Тест категории: восемь вопросов",
+        "seconds": 2.502,
+        "path": "/assessments/41/"
+      },
+      {
+        "label": "Результат категории Junior",
+        "seconds": 7.539,
+        "path": "/assessments/41/"
+      },
+      {
+        "label": "Переносимое свидетельство",
+        "seconds": 7.584,
+        "path": "/assessments/41/proof/"
+      },
+      {
+        "label": "Работодатель: условия и выдача",
+        "seconds": 8.378,
+        "path": "/candidates/"
+      },
+      {
+        "label": "До согласия контакты закрыты",
+        "seconds": 10.832,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Приглашение с вилкой и зачтённым результатом",
+        "seconds": 11.287,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Явное согласие кандидата",
+        "seconds": 11.581,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Контакты открыты только отправителю",
+        "seconds": 11.983,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Другая компания контакты не получает",
+        "seconds": 12.392,
+        "path": "/candidates/45/"
+      },
+      {
+        "label": "Учебный трек Android",
+        "seconds": 12.678,
+        "path": "/learning/"
+      },
+      {
+        "label": "Сохранение практики без изменения категории",
+        "seconds": 12.883,
+        "path": "/learning/"
+      },
+      {
+        "label": "Подключения MCP/CLI: персональные права",
+        "seconds": 12.938,
+        "path": "/accounts/integrations/"
+      },
+      {
+        "label": "Дашборд владельца и результаты HR",
+        "seconds": 13.283,
+        "path": "/company/dashboard/"
+      },
+      {
+        "label": "Режим доступности",
+        "seconds": 13.359,
+        "path": "/company/dashboard/"
+      },
+      {
+        "label": "Приватность: два независимых доступа",
+        "seconds": 16.245,
+        "path": "/profile/privacy/"
+      },
+      {
+        "label": "Отзыв одной компании: другая сохраняет доступ",
+        "seconds": 16.343,
+        "path": "/profile/privacy/"
+      },
+      {
+        "label": "Отзыв всех компаний",
+        "seconds": 16.493,
+        "path": "/profile/privacy/"
+      },
+      {
+        "label": "Ошибка пароля: данные сохранены",
+        "seconds": 17.111,
+        "path": "/profile/privacy/"
+      },
+      {
+        "label": "Профиль очищен: сессии и токены закрыты",
+        "seconds": 17.569,
+        "path": "/"
+      },
+      {
+        "label": "Компания: обезличенный архив без старых ссылок",
+        "seconds": 17.836,
+        "path": "/invitations/"
+      },
+      {
+        "label": "Аккаунт удалён: повторный вход невозможен",
+        "seconds": 18.824,
+        "path": "/accounts/login/"
+      },
+      {
+        "label": "Версия проверенного кода",
+        "seconds": 18.891,
+        "path": "/version/"
+      }
+    ],
+    "privacy": {
+      "status": "PASS",
+      "checks": [
+        "two independently accepted grants expose own synthetic contact only to their companies",
+        "keyboard single-company revoke denies private/PDF/old invitation and replay; second grant remains",
+        "revoke all closes both companies without unpublishing profile",
+        "wrong clear password returns error and changes no personal data or history",
+        "clear logs out both browser sessions, revokes tokens, erases linked assessment/practice, keeps retry holds and anonymous archives",
+        "clear keeps login; later explicit account delete removes user and prevents login"
+      ],
+      "fixture_scope": "Only own candidate and two own companies in disposable clone",
+      "secrets_exported": false
+    },
+    "browser_errors": []
+  },
+  "visual_acceptance": {
+    "status": "PASS",
+    "screens": [
+      "desktop",
+      "mobile 390px no overflow",
+      "wrong password single alert and Russian label",
+      "anonymous archive",
+      "failed login after account delete"
+    ],
+    "scope": "PNG inspection plus browser assertions; actual screen reader not run"
+  },
+  "failures_corrected": [
+    {
+      "step": "First clean clone",
+      "reason": "Standalone Django settings absent; fixed and accepted in b786ad9",
+      "evidence": "doc/qa/PROD-004-startup.json"
+    },
+    {
+      "step": "Keyboard revoke",
+      "reason": "Driver did not await navigation before counting forms",
+      "resolution": "Wait for real keyboard submission navigation"
+    },
+    {
+      "step": "Wrong password error",
+      "reason": "Technical password field key and multiple nested announcements",
+      "resolution": "Russian label and single list fixed in 84eeb7a; browser asserts one alert"
+    }
+  ],
+  "not_run": [
+    "Integrated main acceptance",
+    "Deployment/HTTPS privacy acceptance",
+    "Actual server daily sweep and downgrade floor",
+    "Manual VoiceOver/NVDA"
+  ]
+}

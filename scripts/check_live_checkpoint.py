@@ -5,6 +5,7 @@ Run on the application host from current/ with its FSP_ENV_FILE. This check uses
 server-only keys for its newly created perfect-answer fixture; it is not a grading validation.
 """
 import argparse
+import hashlib
 import http.cookiejar
 import json
 import os
@@ -14,12 +15,14 @@ import urllib.parse
 import urllib.request
 import urllib.error
 import uuid
+import traceback
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--release-config',required=True)
+parser.add_argument('--privacy',action='store_true',help='Accept privacy with only this run\'s candidate and two owned companies')
 args=parser.parse_args()
 base=json.loads(Path(args.release_config).read_text())['url'].rstrip('/')
 parsed=urllib.parse.urlsplit(base)
@@ -68,6 +71,9 @@ class Actor:
         token=Fields(text).values['token']
         self.request('/accounts/confirm/',{'token':token})
         assert User.objects.get(username=email).has_processing_consent
+    def login(self,email,secret):
+        self.request('/accounts/login/')
+        self.request('/accounts/login/',{'username':email,'password':secret})
     def expect_status(self,path,status,data=None):
         try:self.request(path,data)
         except urllib.error.HTTPError as exc:
@@ -76,6 +82,7 @@ class Actor:
 
 suffix=uuid.uuid4().hex
 emails=[f'checkpoint-{suffix}-{role}@demo.invalid' for role in ['candidate','employer']]
+if args.privacy:emails.append(f'checkpoint-{suffix}-privacy-employer@demo.invalid')
 password=secrets.token_urlsafe(24)
 checks=[]
 def passed(name):
@@ -189,16 +196,23 @@ try:
     assert 'Тестовый Кандидат' not in employer.request(f'/candidates/?need={need.pk}&grade=Junior')
     assert 'private-checkpoint@demo.invalid' in employer.request(f'/candidates/{profile.pk}/')
     passed('publication withdrawal removes search while preserving documented prior grant')
+    if args.privacy:
+        from live_privacy_checkpoint import run as privacy_acceptance
+        privacy_acceptance(candidate,employer,Actor,Fields,profile,company,offer,attempt,data,emails,password,api_read,passed)
 except Exception as exc:
     failure=type(exc).__name__
+    failure_location=[{'file':Path(frame.filename).name,'line':frame.lineno} for frame in traceback.extract_tb(exc.__traceback__)]
 finally:
-    # No broad fixture reset: only these two random synthetic accounts and their dependent data.
+    # Only this run's random synthetic accounts; erased invitations remain scoped by their owned companies.
     Invitation.objects.filter(candidate__user__username=emails[0]).delete()
-    Invitation.objects.filter(company__user__username=emails[1]).delete()
+    Invitation.objects.filter(company__user__username__in=emails[1:]).delete()
     User.objects.filter(username__in=emails).delete()
     cleaned=not User.objects.filter(username__in=emails).exists()
 report={'status':'FAIL' if failure else 'PASS','commit':locals().get('version'),'url':base,
     'checked_at':datetime.now(timezone.utc).isoformat(),'checks':checks,'failure_type':failure,
+    'failure_location':locals().get('failure_location',[]),'privacy':args.privacy,
+    'driver_sha256':{name:hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()
+        for name in ['check_live_checkpoint.py']+(['live_privacy_checkpoint.py'] if args.privacy else [])},
     'synthetic_accounts_removed':cleaned,'scope':'HTTPS journey; no existing account reset; perfect-answer synthetic fixture is not QA-001 validation'}
 print(json.dumps(report,ensure_ascii=False,indent=2),flush=True)
 raise SystemExit(1 if failure or not cleaned else 0)

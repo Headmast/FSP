@@ -56,7 +56,9 @@ if(!url||!output||!process.env.DATABASE_PATH)throw new Error('Use record_deliver
  await page.goto(url+'/accounts/integrations/');await stop('Подключения MCP/CLI: персональные права','integrations');
  await logout();await login('fixture-owner@demo.invalid','Fsp-demo-2026!');await page.goto(url+'/company/dashboard/');await stop('Дашборд владельца и результаты HR','dashboard');
  await page.getByRole('button',{name:'Упрощённая версия',exact:true}).click();await stop('Режим доступности');
+ let privacy;
+ if(process.env.FSP_RECORD_PRIVACY==='1')privacy=await require('./record_privacy.cjs')({browser,page,context,url,output,stop,register,logout,login,candidate,employer,password,profilePath});
  await page.goto(url+'/version/');const version=JSON.parse(await page.locator('body').innerText());await stop('Версия проверенного кода');
  assert.deepEqual(errors,[]);const video=page.video();await context.close();const raw=await video.path();await browser.close();
- fs.writeFileSync(path.join(output,'browser.json'),JSON.stringify({status:'PASS',engine:'Chromium',code_commit:version.commit,automated:true,fixture_answers:'read only from private disposable synthetic DB; not exported',duration_seconds:(Date.now()-started)/1000,phases,browser_errors:errors,raw_video:path.relative(output,raw)},null,2)+'\n');
-})().catch(e=>{console.error(e.message);process.exit(1)});
+ fs.writeFileSync(path.join(output,'browser.json'),JSON.stringify({status:'PASS',engine:'Chromium',code_commit:version.commit,automated:true,fixture_answers:'read only from private disposable synthetic DB; not exported',duration_seconds:(Date.now()-started)/1000,phases,privacy,browser_errors:errors,raw_video:path.relative(output,raw)},null,2)+'\n');
+})().catch(e=>{console.error(e.stack);process.exit(1)});
