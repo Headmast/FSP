@@ -295,16 +295,18 @@ python3 -m unittest discover -s scripts/tests -v
 Публикация статических материалов: `python3 scripts/deploy_public_site.py --ref <SHA>` после выпуска MVP. Передаются только перечисленные публичные файлы коммита, проверяется SHA-256 каждого загруженного файла. Секреты остаются на сервере.
 
 
-[Что ещё реализовать — актуальная сверка 12 октября](doc/plan/implementation-gaps-2026-10-12.md): 10 открытых задач исходной цели, дополнительные поручения, приоритеты и проверки завершения.
+[Что ещё реализовать — актуальная сверка 12 октября](doc/plan/implementation-gaps-2026-10-12.md): 9 открытых задач исходной цели, дополнительные поручения, приоритеты и проверки завершения.
 
 
 DOC-003 завершена: [полный HTTP/OpenAPI контракт и проверки](doc/responses/DOC-003-contracts.md). Исторический счёт после DOC-003 — 14/27; DEL-001 впоследствии завершена.
 
 
-[Актуальный комплект сдачи DEL-001](doc/delivery/README.md): руководство PDF, PPTX/HTML/PDF, карта требований, реальные записи и manifest. [Открыть публично](https://llmlove.ru/dreamwork/doc/delivery/index.html). Текущий прогресс: 17/27 DONE, 10 открыты; следующая PROD-002.
+[Актуальный комплект сдачи DEL-001](doc/delivery/README.md): руководство PDF, PPTX/HTML/PDF, карта требований, реальные записи и manifest. [Открыть публично](https://llmlove.ru/dreamwork/doc/delivery/index.html). Текущий прогресс: 18/27 DONE, 9 открыты; следующая PROD-003.
 
 PROD-001 опубликована: [условия кандидата и сравнение до контакта](doc/architecture/conditions.md), [проверки и результат](doc/responses/PROD-001-conditions.md). Прежний комплект DEL-001 сохраняет явный SHA своего проверенного снимка; итоговый сводный экспорт обновляется перед полной сдачей.
 
 PROD-004 опубликована на `11399cc`: [отзыв доступа и удаление](doc/architecture/privacy-controls.md), [результат](doc/responses/PROD-004-privacy.md), [проверки](doc/qa/PROD-004-complete.json). В кабинете кандидата — «Доступ и удаление данных». Общая цель 27 задач остаётся активной.
 
-[Повторная проверка полноты DOC-011](doc/responses/DOC-011-completeness.md): 17/27 DONE, 10 открыты; PROD-002 прошла browser33 и интеграцию, публикация ещё не принята.
+[Историческая проверка полноты DOC-011](doc/responses/DOC-011-completeness.md): 17/27 DONE, 10 открыты; PROD-002 прошла browser33 и интеграцию, публикация ещё не принята.
+
+PROD-002 завершена: [адресное задание](doc/architecture/gap-challenges.md), [приёмка](doc/qa/PROD-002-complete.json), [результат](doc/responses/PROD-002-challenges.md). 18/27 DONE, 9 открыты; browser33/live29, cron/floor2 приняты.

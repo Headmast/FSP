@@ -54,3 +54,7 @@ privacy-floor-v1 переживает очистку журнала. Текущ�
 Веб: /profile/privacy/. API: только GET /api/v1/me/privacy. CLI: fsp privacy show. MCP: fsp_get_privacy_status — read-only. У API/MCP нет delete/erase/revoke/apply действий. Ответ приглашения включает nullable candidate_id, contact_revoked_at, candidate_erased_at, privacy_redacted. [HTTP схемы](../api/contracts.md).
 
 Новая модель с данными кандидата должна включаться в очистку и restore/retention проверки до своей приёмки. Это относится к будущим заданиям, чатам, ATS и исполнению кода. Реальные интеграции/пилот/ручной диктор не закрываются этим этапом.
+
+## Версия2 после адресных заданий
+
+PROD-002 добавляет собственный отзыв ответа revoke_challenge с неизменным UUID, очистку и 180-дневный срок архивной строки задания. Privacy format теперь2; имя файла privacy-floor-v1 сохранено, содержимое —2. Код версии1 не очищает новую модель и потому запрещён для отката. [Контракт](gap-challenges.md), [фактический live/cron/floor результат](../qa/PROD-002-ops.json). Результаты прежней PROD-004 с floor1 исторические; правила её четырёх действий сохраняются.

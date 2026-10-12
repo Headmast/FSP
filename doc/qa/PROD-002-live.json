@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "commit": "fd2d1ee4827b5f2833026391bdbd2c06a806da9d",
+  "url": "https://nvckx-194-226-126-123.free.pinggy.net",
+  "checked_at": "2026-10-12T04:46:47.872629+00:00",
+  "checks": [
+    "public version and database readiness",
+    "two HTTPS registrations with CSRF, explicit consent and session-bound demo confirmation",
+    "full profile persistence and distinct publication consent",
+    "optional candidate preferences persist and safe token projection excludes contacts",
+    "candidate edits and applies private draft; replay and foreign draft protected",
+    "own mock FSP binding and achievement",
+    "assessment completion and versioned safe witness over HTTPS",
+    "fresh employer reviews draft before company/need exists; one paid need on replay",
+    "company profile and concrete paid need",
+    "employer sees explanation and proof while private text and contacts stay hidden",
+    "matching condition filter and safe MCP DTO over HTTPS before contact",
+    "safe mock matching and invitation preview do not send automatically",
+    "selected result and company details visible to candidate before acceptance",
+    "candidate conversation uses snapshot and preserves pending decision",
+    "changed preferences create a current conflict while the sent invitation snapshot stays matched",
+    "acceptance opens HTML and PDF access for invitation sender",
+    "employer conversation after explicit acceptance",
+    "publication withdrawal removes search while preserving documented prior grant",
+    "HTTPS accepted paid invitation task: immutable rules visible before separate consent, send replay one row",
+    "HTTPS separate consent, stable timer and private saved draft; stale draft rejected",
+    "HTTPS immutable submission/manual company rubric, separate scoped credit and safe read DTO for both roles",
+    "HTTPS answer revoke closes company content/result, preserves owner history and independent contacts; professional grade/rank unchanged",
+    "two owned companies have independently accepted contact grants",
+    "single-company revoke closes HTML PDF API and old-invitation replay; other grant stays",
+    "revoke all closes remaining grant and readonly privacy projection confirms no companies",
+    "wrong clear password cannot change owned profile or receipts over HTTPS",
+    "clear erases linked data and tokens, logs out another session, keeps anonymous company archives and retry holds",
+    "HTTPS clear erases task answer/rubric/review/credit, detaches owner and exposes only anonymous company archive",
+    "clear preserves login; later explicit delete prevents login and old token access without erasing anonymous outcome"
+  ],
+  "failure_type": null,
+  "failure_location": [],
+  "privacy": true,
+  "challenges": true,
+  "privacy_artifacts": [
+    {
+      "kind": "public PDF after contact revoke",
+      "path": "/home/digitarium/fsp-mvp/releases/fd2d1ee4827b5f2833026391bdbd2c06a806da9d/.runtime/qa/privacy-public-9hndgi7w.pdf",
+      "sha256": "1e0c6b66a4929e0441887d7b23280d10da86e276df3b7b5d6e2df7f42471e183"
+    }
+  ],
+  "driver_sha256": {
+    "check_live_checkpoint.py": "e383dd3c00b6daf699081c6b1745e241415dba256e381022a5af0a659592f483",
+    "live_privacy_checkpoint.py": "262762ccd9b2532aaa8e8fe94dec73b07acce27507356b48bf0bee07c8132cf2",
+    "live_challenge_checkpoint.py": "4e448cd024b8cd5b9c1f22369058c53f637730ed68eb99a76f8c683f6f70ec40"
+  },
+  "synthetic_accounts_removed": true,
+  "scope": "HTTPS journey; no existing account reset; perfect-answer synthetic fixture is not QA-001 validation",
+  "driver_commit": "533f88d517aba84e81e73c338d632a4fcba91480",
+  "runner_location": "committed QA drivers copied to release .runtime/qa; application release files unchanged"
+}

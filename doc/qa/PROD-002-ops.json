@@ -1,0 +1,69 @@
+{
+  "task": "PROD-002",
+  "status": "PASS",
+  "release_commit": "fd2d1ee4827b5f2833026391bdbd2c06a806da9d",
+  "cron": {
+    "checked_at": "2026-10-12T04:49:29.175334+00:00",
+    "state": {
+      "failures": 0,
+      "privacy_sweep_day": "2026-10-12"
+    },
+    "status": {
+      "schema_version": 1,
+      "available": true,
+      "url": "https://nvckx-194-226-126-123.free.pinggy.net",
+      "prototype_url": "https://nvckx-194-226-126-123.free.pinggy.net/static/prototype/index.html",
+      "commit": "fd2d1ee4827b5f2833026391bdbd2c06a806da9d",
+      "checked_at": "2026-10-12T04:49:03.255021+00:00",
+      "message": "Демо доступно",
+      "assistant": "mock"
+    },
+    "public": {
+      "schema_version": 1,
+      "available": true,
+      "url": "https://nvckx-194-226-126-123.free.pinggy.net",
+      "prototype_url": "https://nvckx-194-226-126-123.free.pinggy.net/static/prototype/index.html",
+      "commit": "fd2d1ee4827b5f2833026391bdbd2c06a806da9d",
+      "checked_at": "2026-10-12T04:49:03.255021+00:00",
+      "message": "Демо доступно",
+      "assistant": "mock"
+    },
+    "public_http": 200,
+    "watchdog_code": {
+      "commit": "fd2d1ee4827b5f2833026391bdbd2c06a806da9d"
+    },
+    "cron_lines": [
+      "* * * * * /usr/bin/python3 /home/digitarium/fsp-mvp/shared/tools/maintain_demo.py --root /home/digitarium/fsp-mvp >> /home/digitarium/fsp-mvp/shared/logs/watchdog.log 2>&1"
+    ],
+    "floor": 2,
+    "modes": {
+      ".env": "0o600",
+      "privacy-ledger.jsonl": "0o600",
+      "privacy-floor-v1": "0o600"
+    },
+    "watchdog_sha256": "27e2fbe5ca873379cbd50cfe3978db03a86358edf1335d28058b3edaf6e2ca9d",
+    "armed_at": "2026-10-12T04:47:37.355582+00:00",
+    "trigger": "only privacy_sweep_day marker removed under maintenance lock; real crontab restored it after successful maintenance; no manual watchdog invocation"
+  },
+  "downgrade_preflight": {
+    "status": "PASS",
+    "checked_at": "2026-10-12T04:48:12.698645+00:00",
+    "floor": 2,
+    "target_release": "11399cc26ea4d0e544d659ed9d984a2daa1764c1",
+    "refusal": "Privacy floor: refuse a release without current revoke/restore enforcement",
+    "before": {
+      "revision": "fd2d1ee4827b5f2833026391bdbd2c06a806da9d",
+      "pid": "306403"
+    },
+    "after": {
+      "revision": "fd2d1ee4827b5f2833026391bdbd2c06a806da9d",
+      "pid": "306403"
+    },
+    "health": "ok",
+    "scope": "exact committed preflight prefix only; no stop/migration/deploy body executed"
+  },
+  "not_run": [
+    "OS reboot",
+    "full OPS-004 acceptance"
+  ]
+}
