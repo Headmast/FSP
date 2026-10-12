@@ -5,3 +5,7 @@
 [Архитектура и точные правила](../architecture/privacy-controls.md). Политика 180 дней для сокращённой истории, 7 дней для backup, максимум 30 дней для экзаменационных ограничений реализована maintenance; floor не допускает старый код без enforcement. Отдельная проверка фактической SQLite restore/retention прошла.
 
 182 серверных теста (20 новых), 13 клиентских и 23 инструментальных; 602 HTTP случая, 71 path / 114 operations, 118 примеров и четыре контрпроверки — PASS. Реальные HTTP/native CLI/modern+legacy MCP и четыре фактические SQLite restore/retention проверки — PASS. [Evidence этапа](../qa/PROD-004-stage.json), [HTTP](../qa/PROD-004-http-stage.json), [restore](../qa/PROD-004-restore-stage.json). Для DONE ещё нужны clean clone/browser обеих ролей, визуальная приёмка destructive flow, интеграция/публикация и live checkpoint на собственных синтетических аккаунтах. Пока **16/27 DONE, 11 открыты**, PROD-004 IN_PROGRESS. Реальные данные VPS не удалялись.
+
+## Самостоятельный запуск
+
+Первый clean clone остановился до browser: `run_app.py` вызвал `django.setup()` без `DJANGO_SETTINGS_MODULE`. Прежняя приёмка использовала заданную переменную и не покрывала самостоятельный запуск. Добавлен стандартный `config.settings` до инициализации; явно заданное окружение сохраняется. [Проверка](../qa/PROD-004-startup.json): реальный Gunicorn на свежей изолированной базе, health/version с удалённой переменной и корректное завершение собственного процесса — PASS. Задача остаётся IN_PROGRESS; browser из нового закоммиченного SHA выполняется отдельно.
